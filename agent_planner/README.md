@@ -56,3 +56,7 @@ uv run python -m agent_planner.main   # → agent_planner/apelacja.txt
 ```
 
 Wymaga klucza LLM w `.env`. Przy `ask_human` graf zatrzyma się i poprosi o decyzję.
+
+Interaktywnie (z diagramem i podglądem przebiegu): notebook
+[`notebooks/planner_walkthrough.ipynb`](../notebooks/planner_walkthrough.ipynb)
+(`uv run jupyter lab`).

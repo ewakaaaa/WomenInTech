@@ -105,7 +105,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # walkthrough.ipynb — interaktywny przebieg umiejętności krok po kroku
+├── notebooks/         # walkthrough.ipynb (umiejętności krok po kroku) + planner_walkthrough.ipynb (agent nieliniowy)
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -148,8 +148,10 @@ WomenInTech/
 - **`agent_planner/`** — agent **nieliniowy**: planer („mózg operacji") w centrum
   grafu decyduje, co dalej (analizuj / zapytaj człowieka / pisz / brak podstaw), więc
   graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
-  potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline. — interaktywny przebieg: uruchamia umiejętności
-  po kolei i pokazuje wynik każdego etapu (`uv run jupyter lab`).
+  potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline.
+- **`notebooks/`** — interaktywne przebiegi (`uv run jupyter lab`):
+  `walkthrough.ipynb` (umiejętności krok po kroku) oraz `planner_walkthrough.ipynb`
+  (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
 ## 🛠️ Wymagania
