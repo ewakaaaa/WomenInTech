@@ -1,14 +1,14 @@
 """Run the LangGraph agent.
 
-    uv run python -m langgraph_agent.main
+    uv run python -m agent_langgraph.main
 """
 
 from pathlib import Path
 
-from langgraph_agent.graph import graph
+from agent_langgraph.graph import graph
 
 GOAL = "Wygeneruj apelację z perspektywy obrony"
-OUTPUT_PATH = "langgraph_agent/apelacja.txt"
+OUTPUT_PATH = "agent_langgraph/apelacja.txt"
 
 if __name__ == "__main__":
     result = graph.invoke({"goal": GOAL})

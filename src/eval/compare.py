@@ -14,8 +14,9 @@ from src.eval.coverage import CoverageResult, evaluate_file
 
 APPROACHES: list[tuple[str, str]] = [
     ("baseline", "baseline/apelacja_baseline.txt"),
-    ("linear_agent", "linear_agent/apelacja.txt"),
-    ("langgraph_agent", "langgraph_agent/apelacja.txt"),
+    ("agent_linear", "agent_linear/apelacja.txt"),
+    ("agent_langgraph", "agent_langgraph/apelacja.txt"),
+    ("agent_planner", "agent_planner/apelacja.txt"),
 ]
 
 

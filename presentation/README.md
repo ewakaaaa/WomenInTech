@@ -98,7 +98,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     Co dostajemy w zamian: — *~6 min*
     - **wspólny State przenoszony między krokami** — jawny i czysty,
     - **równoległość (fan-out `Send`)** — opisy plików i wykonanie zadań liczą się
-      **współbieżnie**, podczas gdy w `linear_agent` były to sekwencyjne pętle `for`
+      **współbieżnie**, podczas gdy w `agent_linear` były to sekwencyjne pętle `for`
       → to samo, ale szybciej,
     - **diagram grafu z kodu** — LangGraph rysuje graf w **mermaid** automatycznie
       (`graph.get_graph().draw_mermaid()`), więc obrazek na slajd robi się sam,
@@ -120,10 +120,10 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 ## Demo — checklista
 
 - [ ] `.env` z działającym kluczem LLM (zapasowy backend: Ollama / proxy)
-- [ ] Wygenerowane apelacje w `baseline/`, `linear_agent/`, `langgraph_agent/` (na wypadek braku sieci)
+- [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
 - [ ] Wyniki `uv run python -m src.eval.compare` zrzucone do slajdu (plan B bez live)
 - [ ] `uv run jupyter lab` — sprawdzony `notebooks/walkthrough.ipynb`
-- [ ] Diagram grafu (mermaid z `langgraph_agent`)
+- [ ] Diagram grafu (mermaid z `agent_langgraph`)
 - [ ] *(opcjonalnie)* `uv run langgraph dev` — Studio jako bonus, jeśli zostanie czas
 - [ ] Skren z LinkedIna (slajd 16 — oddech/anegdota)
 

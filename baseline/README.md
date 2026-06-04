@@ -64,4 +64,4 @@ Naiwne podejście „wszystko → jeden prompt" rodzi konkretne problemy:
   etapu w oderwaniu od reszty.
 
 Jak te problemy rozwiązuje podejście wieloetapowe (i co robi każdy klocek) —
-opisane w [`linear_agent/README.md`](../linear_agent/README.md).
+opisane w [`agent_linear/README.md`](../agent_linear/README.md).

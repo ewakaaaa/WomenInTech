@@ -1,6 +1,6 @@
 # Agent w wersji LangGraph
 
-> Te same umiejętności (`src/skills/*`) co w `linear_agent/`, spięte w graf.
+> Te same umiejętności (`src/skills/*`) co w `agent_linear/`, spięte w graf.
 > **Wynik jest taki sam — bo to ta sama logika.** Pytanie brzmi więc: skoro
 > rezultat identyczny, **co właściwie daje LangGraph?**
 
@@ -15,7 +15,7 @@ inżynierii wokół niej.
 ## Co realnie zyskujemy (przy identycznym wyniku)
 
 1. **Równoległość za darmo (fan-out przez `Send`)**
-   W `linear_agent` opis 16 plików i wykonanie zadań idą w pętli `for` —
+   W `agent_linear` opis 16 plików i wykonanie zadań idą w pętli `for` —
    jeden po drugim. W grafie `Send` rozsyła je **równolegle**, a reducery
    (`operator.add` na `files_out`/`tasks_out`) same scalają wyniki. Ten sam
    rezultat, krótszy czas.
@@ -53,7 +53,7 @@ oddzielić logikę od frameworka.
 Wniosek: LangGraph jest **świetny do POC** i szybkiego prototypowania (dostajesz
 równoległość, Studio, checkpointing „za darmo"), ale do **systemu produkcyjnego**
 warto świadomie rozważyć, czy chcemy się na nim opierać — czasem własna, lekka
-orkiestracja (jak `linear_agent/`) jest tańsza w utrzymaniu niż dług zależności.
+orkiestracja (jak `agent_linear/`) jest tańsza w utrzymaniu niż dług zależności.
 
 ## Morał warsztatowy
 
@@ -65,13 +65,13 @@ by „model pisał lepiej".
 ## Uruchomienie (CLI)
 
 ```bash
-uv run python -m langgraph_agent.main   # → langgraph_agent/apelacja.txt
+uv run python -m agent_langgraph.main   # → agent_langgraph/apelacja.txt
 ```
 
 ## LangGraph Studio
 
 Graf jest wystawiony w `langgraph.json` (w korzeniu repo) jako `appeal_agent`,
-wskazując na `langgraph_agent/graph.py:graph`.
+wskazując na `agent_langgraph/graph.py:graph`.
 
 ```bash
 uv run langgraph dev

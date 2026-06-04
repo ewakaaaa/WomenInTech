@@ -83,21 +83,28 @@ WomenInTech/
 │       ├── tasks/             # generate_tasks
 │       ├── make_task/         # make_task
 │       ├── strategy/          # generate_strategy
-│       └── document/          # generate_document
+│       ├── document/          # generate_document
+│       └── planner/           # plan_next — decyzja: analyze / ask_human / write / no_grounds
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
 │   ├── prompts.py             # system prompt
 │   ├── main.py                # generuje apelację → baseline/apelacja_baseline.txt
 │   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
 │   └── README.md              # podsumowanie i wyniki baseline
-├── linear_agent/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
-│   ├── pipeline.py    # run() spina umiejętności → linear_agent/apelacja.txt
+├── agent_linear/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
+│   ├── pipeline.py    # run() spina umiejętności → agent_linear/apelacja.txt
 │   └── README.md      # opis procesu krok po kroku
-├── langgraph_agent/   # ten sam agent jako graf LangGraph (fan-out przez Send)
+├── agent_langgraph/   # ten sam agent jako graf LangGraph (fan-out przez Send)
 │   ├── state.py       # OverallState (z reducerami) + payloady Send
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
-│   ├── main.py        # uruchomienie → langgraph_agent/apelacja.txt
+│   ├── main.py        # uruchomienie → agent_langgraph/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid, generowany z kodu)
 │   └── README.md      # po co LangGraph, skoro wynik ten sam co liniowo
+├── agent_planner/     # agent nieliniowy — planer w centrum, pętle + human-in-the-loop
+│   ├── state.py       # PlannerState + payloady Send
+│   ├── graph.py       # graf cykliczny (planer = hub) + interrupt
+│   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
+│   ├── graph.md       # diagram grafu (mermaid)
+│   └── README.md      # jak działa planer i human-in-the-loop
 ├── notebooks/         # walkthrough.ipynb — interaktywny przebieg umiejętności krok po kroku
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
@@ -127,18 +134,21 @@ WomenInTech/
   i wersję LangGraph.
 - **`src/skills/`** — umiejętności agenta, każda w osobnym folderze (`main.py` =
   czysta funkcja, `prompts.py`, `schemas.py`): `file_description`, `tasks`,
-  `make_task`, `strategy`, `document`.
+  `make_task`, `strategy`, `document`, `planner`.
 - **`baseline/`** — naiwna „wersja 0": całe akta + jeden prompt „napisz apelację".
   Punkt wyjścia warsztatu (szczegóły w `baseline/README.md`).
-- **`linear_agent/`** — agent liniowy: te same umiejętności (`src/skills/*`) spięte
+- **`agent_linear/`** — agent liniowy: te same umiejętności (`src/skills/*`) spięte
   po kolei, bez LangGraph. Pętle `for` to miejsca, które później zastąpi fan-out
   grafu.
-- **`langgraph_agent/`** — ten sam agent jako graf LangGraph: węzły to cienkie
+- **`agent_langgraph/`** — ten sam agent jako graf LangGraph: węzły to cienkie
   opakowania umiejętności, a pętle z agenta liniowego zastępuje fan-out przez `Send`
   (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Można go
   uruchomić w **LangGraph Studio** (`uv run langgraph dev`) — szczegóły i odpowiedź
-  „po co LangGraph" w `langgraph_agent/README.md`.
-- **`notebooks/walkthrough.ipynb`** — interaktywny przebieg: uruchamia umiejętności
+  „po co LangGraph" w `agent_langgraph/README.md`.
+- **`agent_planner/`** — agent **nieliniowy**: planer („mózg operacji") w centrum
+  grafu decyduje, co dalej (analizuj / zapytaj człowieka / pisz / brak podstaw), więc
+  graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
+  potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline. — interaktywny przebieg: uruchamia umiejętności
   po kolei i pokazuje wynik każdego etapu (`uv run jupyter lab`).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 

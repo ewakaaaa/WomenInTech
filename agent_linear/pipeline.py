@@ -4,7 +4,7 @@ The same skills (``src/skills/*``) run one after another over plain Python
 variables. Later, LangGraph will replace this hand-written sequencing and the
 ``for`` loops with conditional edges + Send — the skills themselves won't change.
 
-    uv run python -m linear_agent.pipeline
+    uv run python -m agent_linear.pipeline
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ from src.skills.tasks.main import generate_tasks
 from src.sources import prepare_input_texts
 
 GOAL = "Wygeneruj apelację z perspektywy obrony"
-OUTPUT_PATH = "linear_agent/apelacja.txt"
+OUTPUT_PATH = "agent_linear/apelacja.txt"
 
 
 def run(goal: str = GOAL, model: str | None = None) -> GeneratedDocument:

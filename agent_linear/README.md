@@ -25,7 +25,7 @@ load_all (16 PDF-ów z data/input)
 5. generate_document           ── pełna apelacja na podstawie strategii i analiz
         │
         ▼
-   linear_agent/apelacja.txt
+   agent_linear/apelacja.txt
 ```
 
 ## Sedno — selektywny kontekst
@@ -57,14 +57,14 @@ i powtórzenia kroku** — to jest to, czego baseline nie daje.
 
 Każdy krok to czysta funkcja z `src/skills/<umiejętność>/main.py` (wejście → wyjście
 Pydantic). `pipeline.py` tylko je wywołuje i przekazuje wyniki dalej. Pętle `for`
-(opis plików, wykonywanie zadań) to dokładnie te miejsca, które w `langgraph_agent/`
+(opis plików, wykonywanie zadań) to dokładnie te miejsca, które w `agent_langgraph/`
 zastępuje równoległy fan-out przez `Send`.
 
 ## Uruchomienie
 
 ```bash
-# wygenerowanie apelacji → linear_agent/apelacja.txt
-uv run python -m linear_agent.pipeline
+# wygenerowanie apelacji → agent_linear/apelacja.txt
+uv run python -m agent_linear.pipeline
 
 # ewaluacja (wspólny runner porównuje wszystkie podejścia)
 uv run python -m src.eval.compare

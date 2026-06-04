@@ -11,7 +11,7 @@ from __future__ import annotations
 from langgraph.constants import END, START, Send
 from langgraph.graph import StateGraph
 
-from langgraph_agent.state import DescribeFileIn, OverallState, RunTaskIn
+from agent_langgraph.state import DescribeFileIn, OverallState, RunTaskIn
 from src.skills.document.main import generate_document
 from src.skills.file_description.main import generate_file_description
 from src.skills.make_task.main import make_task
