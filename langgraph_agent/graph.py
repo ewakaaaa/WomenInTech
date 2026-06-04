@@ -17,10 +17,16 @@ from src.skills.file_description.main import generate_file_description
 from src.skills.make_task.main import make_task
 from src.skills.strategy.main import generate_strategy
 from src.skills.tasks.main import generate_tasks
+from src.loader import load_all
 from src.sources import prepare_input_texts
 
 
 # --- nodes (wrap the skills, return state updates) ---
+
+
+def load_node(state: OverallState) -> dict:
+    """Entry node: load the case files so Studio input is just the goal."""
+    return {"documents": load_all()}
 
 
 def file_description_node(payload: DescribeFileIn) -> dict:
@@ -74,13 +80,15 @@ def fan_out_tasks(state: OverallState) -> list[Send]:
 def build_graph():
     graph = StateGraph(OverallState)
 
+    graph.add_node("load", load_node)
     graph.add_node("generate_file_description", file_description_node)
     graph.add_node("generate_tasks", tasks_node)
     graph.add_node("make_task", make_task_node)
     graph.add_node("generate_strategy", strategy_node)
     graph.add_node("generate_document", document_node)
 
-    graph.add_conditional_edges(START, fan_out_files, ["generate_file_description"])
+    graph.add_edge(START, "load")
+    graph.add_conditional_edges("load", fan_out_files, ["generate_file_description"])
     graph.add_edge("generate_file_description", "generate_tasks")
     graph.add_conditional_edges("generate_tasks", fan_out_tasks, ["make_task"])
     graph.add_edge("make_task", "generate_strategy")

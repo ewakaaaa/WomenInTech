@@ -11,3 +11,8 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "tiktoken>=0.13.0",
 ]
+
+[dependency-groups]
+dev = [
+    "langgraph-cli[inmem]>=0.4.27",
+]

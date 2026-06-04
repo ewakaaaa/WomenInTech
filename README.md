@@ -97,6 +97,7 @@ WomenInTech/
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
 │   ├── main.py        # uruchomienie → langgraph_agent/apelacja.txt
 │   └── README.md      # po co LangGraph, skoro wynik ten sam co liniowo
+├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -129,7 +130,9 @@ WomenInTech/
   grafu.
 - **`langgraph_agent/`** — ten sam agent jako graf LangGraph: węzły to cienkie
   opakowania umiejętności, a pętle z agenta liniowego zastępuje fan-out przez `Send`
-  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki.
+  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Można go
+  uruchomić w **LangGraph Studio** (`uv run langgraph dev`) — szczegóły i odpowiedź
+  „po co LangGraph" w `langgraph_agent/README.md`.
 
 ## 🛠️ Wymagania
 

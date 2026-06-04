@@ -6,13 +6,12 @@
 from pathlib import Path
 
 from langgraph_agent.graph import graph
-from src.loader import load_all
 
 GOAL = "Wygeneruj apelację z perspektywy obrony"
 OUTPUT_PATH = "langgraph_agent/apelacja.txt"
 
 if __name__ == "__main__":
-    result = graph.invoke({"goal": GOAL, "documents": load_all()})
+    result = graph.invoke({"goal": GOAL})
 
     output = Path(OUTPUT_PATH)
     output.parent.mkdir(parents=True, exist_ok=True)
