@@ -5,7 +5,7 @@ Pydantic model. The client is OpenAI-compatible, so by changing `base_url`/
 `api_key` in the `.env` file you can plug in any backend:
 
 - OpenAI          -> https://api.openai.com/v1
-- local model     -> Ollama: http://localhost:11434/v1 (e.g. mistral)
+- local model     -> Ollama: http://localhost:11434/v1 (e.g. qwen2.5:14b)
 - workshop proxy  -> https://llm-api.dataworkshop.eu
 
 Configured via environment variables (see `.env.example`):

@@ -29,7 +29,7 @@ os.environ["LLM_MODEL"] = "gpt-4o-mini"
 # ── B. Lokalnie przez Ollamę (odkomentuj te 3 linie, zakomentuj sekcję A) ──
 # os.environ["LLM_BASE_URL"] = "http://localhost:11434/v1"
 # os.environ["LLM_API_KEY"]  = "ollama"      # dowolny placeholder — Ollama nie wymaga klucza
-# os.environ["LLM_MODEL"]    = "mistral"     # najpierw: ollama pull mistral
+# os.environ["LLM_MODEL"]    = "qwen2.5:14b" # najpierw: ollama pull qwen2.5:14b
 
 print("base_url:", os.environ["LLM_BASE_URL"])
 print("model:   ", os.environ["LLM_MODEL"])
@@ -67,5 +67,5 @@ print(result)
 #
 # **Nie działa?**
 # - Klucz API: sprawdź `LLM_API_KEY`, `LLM_BASE_URL` i czy masz środki na koncie.
-# - Ollama: czy działa `ollama serve` i czy pobrałeś model (`ollama pull mistral`)?
+# - Ollama: czy działa `ollama serve` i czy pobrałeś model (`ollama pull qwen2.5:14b`)?
 #   Zob. sekcję *Konfiguracja LLM* w głównym `README.md`.
