@@ -97,6 +97,8 @@ WomenInTech/
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
 │   ├── main.py        # uruchomienie → langgraph_agent/apelacja.txt
 │   └── README.md      # po co LangGraph, skoro wynik ten sam co liniowo
+├── notebooks/         # walkthrough.ipynb — interaktywny przebieg umiejętności krok po kroku
+├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
@@ -135,6 +137,9 @@ WomenInTech/
   (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Można go
   uruchomić w **LangGraph Studio** (`uv run langgraph dev`) — szczegóły i odpowiedź
   „po co LangGraph" w `langgraph_agent/README.md`.
+- **`notebooks/walkthrough.ipynb`** — interaktywny przebieg: uruchamia umiejętności
+  po kolei i pokazuje wynik każdego etapu (`uv run jupyter lab`).
+- **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
 ## 🛠️ Wymagania
 
