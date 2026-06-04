@@ -44,5 +44,24 @@ podstawie `data/eval.json`.
 
 ## Ograniczenia (czyli po co agent)
 
-_TODO: uzupełnić po ewaluacji baseline — które zagadnienia z `eval.json` model
-pominął, gdzie halucynował, jak wypadł na tle podejścia wieloetapowego._
+Naiwne podejście „wszystko → jeden prompt" rodzi konkretne problemy:
+
+- **Zapchany kontekst.** W tej sprawie akta to ~20 tys. tokenów i mieszczą się w
+  oknie — ale prawdziwe sprawy mają setki stron. Wtedy albo przekraczamy limit, albo
+  model **gubi się w szumie** (zjawisko „lost in the middle" — informacje ze środka
+  długiego kontekstu wypadają z uwagi).
+- **Wszystko naraz.** Model w jednym kroku ma zrozumieć sprawę, odnaleźć fakty,
+  ustalić zarzuty, dobrać podstawy prawne i napisać pismo. Im więcej zadań na raz, tym
+  łatwiej któreś **pominąć** albo wykonać pobieżnie.
+- **Błąd „w połowie" psuje całość.** To jeden długi przebieg — jeśli model
+  zhalucynuje albo pomyli się w środku, **nie ma jak tego wyłapać ani powtórzyć
+  fragmentu**; błąd propaguje się do gotowej apelacji.
+- **Brak śladu / audytu.** Nie wiadomo, na podstawie którego dokumentu model coś
+  stwierdził — a tu radca musi móc **zweryfikować każdy etap**.
+- **Halucynacje.** Bez ukierunkowania model chętnie „dopowiada" fakty, których w
+  aktach nie ma. W piśmie procesowym to dyskwalifikuje wynik.
+- **Trudno iterować.** To monolit — nie da się poprawić ani przetestować pojedynczego
+  etapu w oderwaniu od reszty.
+
+Jak te problemy rozwiązuje podejście wieloetapowe (i co robi każdy klocek) —
+opisane w [`linear_agent/README.md`](../linear_agent/README.md).

@@ -90,7 +90,8 @@ WomenInTech/
 │   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
 │   └── README.md              # podsumowanie i wyniki baseline
 ├── linear_agent/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
-│   └── pipeline.py    # run() spina umiejętności → linear_agent/apelacja.txt
+│   ├── pipeline.py    # run() spina umiejętności → linear_agent/apelacja.txt
+│   └── README.md      # opis procesu krok po kroku
 ├── langgraph_agent/   # ten sam agent jako graf LangGraph (fan-out przez Send)
 │   ├── state.py       # OverallState (z reducerami) + payloady Send
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
