@@ -36,22 +36,11 @@ To jest różnica wobec `baseline/` (gdzie całe akta lecą w jeden prompt). Tut
 wycinek**. Model nigdy nie ogląda wszystkiego naraz — pracuje na małych, trafnych
 fragmentach.
 
-## Co robi każda umiejętność (i jaki problem baseline rozwiązuje)
+## Co robi każda umiejętność
 
-Baseline robił wszystko jednym promptem. Agent rozbija to na umiejętności — każda ma
-jedno zadanie i rozwiązuje konkretny problem naiwnego podejścia
-(lista problemów: [`baseline/README.md`](../baseline/README.md)).
-
-| Umiejętność | Co robi | Jaki problem baseline rozwiązuje |
-|-------------|---------|----------------------------------|
-| **generate_file_description** | Zamienia surowe akta w zwięzłe, ukierunkowane na cel opisy — „mapę" sprawy. | Mniej szumu: planer nie czyta 16 pełnych dokumentów, tylko wie, gdzie czego szukać. |
-| **generate_tasks** | Rozbija wielki cel na małe kroki; każdy wskazuje, **które** dokumenty są mu potrzebne. | „Wszystko naraz" → dziel i rządź. Plan jest też **śladem**, co i czemu robimy. |
-| **make_task** | Wykonuje **jeden** krok na **tylko** wskazanych dokumentach. | Zapchany kontekst i „lost in the middle"; **izolacja błędu** (zła analiza w jednym kroku nie psuje reszty, da się go powtórzyć); **audytowalność** (wiadomo, z czego wynika ustalenie). |
-| **generate_strategy** | Z zebranych analiz wybiera linię obrony / najlepsze podejście. | Świadomy, spójny kierunek zamiast przypadkowego — zanim zacznie się pisać. |
-| **generate_document** | Pisze pismo na **gotowej, ustalonej analizie i strategii**, a nie na surowych aktach. | Mniej halucynacji i pominięć — model opiera się na zweryfikowanych faktach, nie na całym worku akt. |
-
-Krótko: **mały, skupiony kontekst na każdym etapie + jawny plan + możliwość weryfikacji
-i powtórzenia kroku** — to jest to, czego baseline nie daje.
+Opis wszystkich umiejętności (co robią i jaki problem baseline rozwiązują) jest
+wspólny dla wszystkich podejść i mieszka w [`src/skills/README.md`](../src/skills/README.md).
+Tutaj liczy się tylko, że agent liniowy odpala je **po kolei**.
 
 ## Skąd biorą się umiejętności
 
