@@ -95,7 +95,8 @@ WomenInTech/
 ├── langgraph_agent/   # ten sam agent jako graf LangGraph (fan-out przez Send)
 │   ├── state.py       # OverallState (z reducerami) + payloady Send
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
-│   └── main.py        # uruchomienie → langgraph_agent/apelacja.txt
+│   ├── main.py        # uruchomienie → langgraph_agent/apelacja.txt
+│   └── README.md      # po co LangGraph, skoro wynik ten sam co liniowo
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
