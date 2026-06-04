@@ -70,18 +70,19 @@ pip install pdfplumber pydantic
 ```
 WomenInTech/
 ├── data/
-│   ├── input/         # akta sprawy (pojedyncze PDF-y) — ignorowane w gicie
+│   ├── input/         # akta sprawy (pojedyncze PDF-y)
 │   └── eval.json      # lista zagadnień, które apelacja powinna poruszyć
 ├── src/               # wspólne moduły
-│   ├── loader.py      # wczytywanie PDF do tekstu (model Document + load_pdf)
+│   ├── loader.py      # wczytywanie PDF do tekstu (Document, load_pdf, load_all)
 │   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
 │   ├── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
 │   └── eval.py        # ewaluacja apelacji względem data/eval.json (LLM-as-judge)
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
-│   ├── prompts.py     # system prompt
-│   ├── llm_call.py    # generuje apelację → data/output/apelacja_baseline.txt
-│   ├── eval.py        # czyta apelację i odpala evaluate() z src/eval.py
-│   └── README.md      # podsumowanie i wyniki baseline
+│   ├── prompts.py             # system prompt
+│   ├── main.py                # generuje apelację → baseline/apelacja_baseline.txt
+│   ├── eval.py                # czyta apelację i odpala evaluate() z src/eval.py
+│   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
+│   └── README.md              # podsumowanie i wyniki baseline
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -91,7 +92,8 @@ WomenInTech/
 ### Moduły
 
 - **`src/loader.py`** — `load_pdf(path)` wczytuje pojedynczy plik PDF i zwraca
-  `Document` (Pydantic) z nazwą pliku i wyekstrahowanym tekstem.
+  `Document` (Pydantic) z nazwą pliku i wyekstrahowanym tekstem; `load_all(dir)`
+  wczytuje wszystkie PDF-y z katalogu.
 - **`src/llm.py`** — `call_llm(messages, response_model, ...)` zwraca odpowiedź
   zwalidowaną względem modelu Pydantic. Klient jest zgodny z interfejsem OpenAI,
   więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolny backend

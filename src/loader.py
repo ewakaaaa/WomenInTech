@@ -25,3 +25,11 @@ def load_pdf(path: str | Path) -> Document:
         filename=path.name,
         text="\n\n".join(pages).strip(),
     )
+
+
+def load_all(input_dir: str | Path = "data/input") -> list[Document]:
+    """Load every PDF from a directory, sorted by filename."""
+    paths = sorted(Path(input_dir).glob("*.pdf"))
+    if not paths:
+        raise FileNotFoundError(f"No PDF files found in: {input_dir}")
+    return [load_pdf(p) for p in paths]

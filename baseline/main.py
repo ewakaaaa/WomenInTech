@@ -4,7 +4,7 @@ Dump ALL case files into the model with a single prompt: "you are a lawyer,
 write an appeal". Running this module generates the appeal and saves it to a
 text file, which the evaluator (``baseline/eval.py``) then reads.
 
-    uv run python -m baseline.llm_call
+    uv run python -m baseline.main
 """
 
 from __future__ import annotations
@@ -15,18 +15,10 @@ from pydantic import BaseModel, Field
 
 from baseline.prompts import SYSTEM_PROMPT
 from src.llm import call_llm
-from src.loader import Document, load_pdf
+from src.loader import Document, load_all
 from src.tokens import count_tokens
 
-OUTPUT_PATH = "data/output/apelacja_baseline.txt"
-
-
-def load_all(input_dir: str | Path = "data/input") -> list[Document]:
-    """Load every PDF from the directory, sorted by filename."""
-    paths = sorted(Path(input_dir).glob("*.pdf"))
-    if not paths:
-        raise FileNotFoundError(f"No PDF files found in: {input_dir}")
-    return [load_pdf(p) for p in paths]
+OUTPUT_PATH = "baseline/apelacja_baseline.txt"
 
 
 def build_context(docs: list[Document]) -> str:

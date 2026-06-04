@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from baseline.llm_call import OUTPUT_PATH
+from baseline.main import OUTPUT_PATH
 from src.eval import evaluate
 
 

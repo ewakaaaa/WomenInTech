@@ -16,14 +16,15 @@
 | Plik | Rola |
 |------|------|
 | `prompts.py` | system prompt |
-| `llm_call.py` | `load_all`, `build_context`, `generate_appeal`; uruchomiony generuje apelację i zapisuje do `.txt` |
+| `main.py` | `build_context`, `generate_appeal`; uruchomiony generuje apelację i zapisuje do `.txt` |
 | `eval.py` | czyta wygenerowaną apelację i odpala `evaluate()` z `src/eval.py` |
+| `apelacja_baseline.txt` | wygenerowana apelacja (artefakt) |
 
 ## Uruchomienie
 
 ```bash
-# 1) wygenerowanie apelacji → data/output/apelacja_baseline.txt
-uv run python -m baseline.llm_call
+# 1) wygenerowanie apelacji → baseline/apelacja_baseline.txt
+uv run python -m baseline.main
 
 # 2) ewaluacja apelacji względem data/eval.json
 uv run python -m baseline.eval
