@@ -72,9 +72,15 @@ WomenInTech/
 ├── data/
 │   ├── input/         # akta sprawy (pojedyncze PDF-y) — ignorowane w gicie
 │   └── eval.json      # lista zagadnień, które apelacja powinna poruszyć
-├── src/
+├── src/               # wspólne moduły
 │   ├── loader.py      # wczytywanie PDF do tekstu (model Document + load_pdf)
-│   └── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
+│   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
+│   └── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
+├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
+│   ├── prompts.py     # system prompt
+│   ├── baseline.py    # load_all, build_context, generate_appeal
+│   ├── __main__.py    # runner: uv run python -m baseline
+│   └── README.md      # podsumowanie i wyniki baseline
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -89,6 +95,10 @@ WomenInTech/
   zwalidowaną względem modelu Pydantic. Klient jest zgodny z interfejsem OpenAI,
   więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolny backend
   (OpenAI, lokalny model przez Ollama, proxy itp.).
+- **`src/tokens.py`** — pomocnicze liczenie tokenów (tiktoken) dla tekstu i listy
+  wiadomości.
+- **`baseline/`** — naiwna „wersja 0": całe akta + jeden prompt „napisz apelację".
+  Punkt wyjścia warsztatu (szczegóły w `baseline/README.md`).
 
 ## 🛠️ Wymagania
 
