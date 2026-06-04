@@ -13,9 +13,9 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie
 
-> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–22) ≈ **~58 min**, na końcu **10–15 min na
-> pytania** → ~68–73 min — napięte. Jak braknie czasu, najłatwiej skrócić demo na żywo:
-> kod (17) i graf nieliniowy (21).
+> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–23) ≈ **~61 min**, na końcu **10–15 min na
+> pytania** → ~71–76 min — **przeładowane, do ścięcia** (jutro przy slajdach). Najłatwiej
+> dociąć: demo na żywo (17, 22), pytania do sali (8, 20), LangGraph (21).
 
 ### Wstęp i kontekst — *~10 min*
 
@@ -85,7 +85,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     - **rozbicie dużego zadania na małe kawałki** → łatwiej i dokładniej, każdy krok robi jedno,
     - **przekazywanie głównego celu** (`goal`) przez wszystkie etapy → swego rodzaju **pamięć agenta**, dzięki której nie gubi kierunku.
 
-### Jak to się spina i wyniki — *~6 min*
+### Jak to się spina i wyniki — *~9 min*
 
 18. **Structured output — klej całego pipeline'u.** Bez tego nie dałoby się spiąć
     umiejętności w jeden przepływ. Nie ma tu żadnej magii — po prostu **polegamy** na
@@ -94,10 +94,13 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     te kroki by się nie połączyły. — *3 min*
 19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline
     (`uv run python -m src.eval.compare`): pokrycie `Y/12` vs `X/12`. — *3 min*
+20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
+    *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
+    człowiek w pętli, „domknie" zaraz LangGraph)* — *3 min*
 
 ### LangGraph, graf nieliniowy i puenta — *~12 min*
 
-20. **LangGraph — co wnosi, toole i koszt.** Mamy logikę **napisaną czystymi
+21. **LangGraph — co wnosi, toole i koszt.** Mamy logikę **napisaną czystymi
     funkcjami**, więc łatwo ją opakować w węzły — ta sama logika, tylko jako graf.
     Co dostajemy w zamian: — *~5 min*
     - **wspólny State przenoszony między krokami** — jawny i czysty,
@@ -115,7 +118,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
       przez radcę**, zanim agent napisze pismo → dokładnie to, czego potrzebujemy.
     - **⚠️ Przestroga:** to kolejna, niemała **zależność** (dług) — świetne do POC, na
       produkcji rozważ świadomie.
-21. **Graf nieliniowy: agent z planerem + wynik.** Dotąd graf był liniowy (to samo, co
+22. **Graf nieliniowy: agent z planerem + wynik.** Dotąd graf był liniowy (to samo, co
     pipeline). Teraz **`agent_planner`** — planer w centrum **sam decyduje** (analizuj /
     zapytaj człowieka / pisz / brak podstaw), więc graf **zawraca w pętli**. — *~4 min*
     - pokaż **diagram** (nieliniowy, „hub" — `agent_planner/graph.md`),
@@ -123,7 +126,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
       pyta mnie (radcę) o potwierdzenie — wpisuję decyzję, graf leci dalej,
     - pokaż **wynik** + ewaluację (`uv run python -m src.eval.compare`),
     - puenta: **tego nie zrobisz liniowym pipeline'em** — cykle + człowiek w pętli.
-22. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
+23. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
     przewinęły się przez warsztat: (1) **zaplanowanie rozwiązania**, (2) **rozmowa z
     biznesem i ekspertami** (szybko dostarcz proste → szybko zbierz feedback), (3)
     **ewaluacja ustalona na starcie**. Plus przestroga: **nie zaczynaj od frameworka ani
