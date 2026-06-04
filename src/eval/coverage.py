@@ -1,8 +1,8 @@
-"""Evaluation against ``data/eval.json`` — the list of issues an appeal must cover.
+"""Coverage evaluation against ``data/eval.json``.
 
-Used by every approach (baseline and the agent) so results are comparable on the
-same yardstick: how many of the required issues did the generated appeal actually
-address. Uses the LLM as a judge — each issue is graded independently.
+For each required issue in the key, the LLM judge decides whether the appeal
+actually addresses it. The shared yardstick across all approaches: how many of
+the required issues did the generated appeal cover.
 """
 
 from __future__ import annotations
@@ -36,8 +36,8 @@ class IssueResult(IssueVerdict):
     issue: str = Field(..., description="Treść zagadnienia z klucza")
 
 
-class EvalResult(BaseModel):
-    """Aggregated evaluation result for one appeal."""
+class CoverageResult(BaseModel):
+    """Aggregated coverage result for one appeal."""
 
     total: int = Field(..., description="Liczba zagadnień w kluczu")
     covered: int = Field(..., description="Liczba poruszonych zagadnień")
@@ -69,7 +69,7 @@ def evaluate(
     appeal_text: str,
     eval_path: str | Path = "data/eval.json",
     model: str | None = None,
-) -> EvalResult:
+) -> CoverageResult:
     """Evaluate an appeal against every issue in the evaluation key."""
     issues = load_eval(eval_path)
     results = [
@@ -78,9 +78,16 @@ def evaluate(
     ]
     covered = sum(r.covered for r in results)
     total = len(results)
-    return EvalResult(
+    return CoverageResult(
         total=total,
         covered=covered,
         score=covered / total if total else 0.0,
         results=results,
     )
+
+
+def evaluate_file(
+    path: str | Path, eval_path: str | Path = "data/eval.json", model: str | None = None
+) -> CoverageResult:
+    """Evaluate an appeal stored in a text file."""
+    return evaluate(Path(path).read_text(encoding="utf-8"), eval_path=eval_path, model=model)

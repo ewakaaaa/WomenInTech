@@ -77,7 +77,7 @@ WomenInTech/
 │   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
 │   ├── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
 │   ├── sources.py     # prepare_input_texts — selektywny kontekst (wybór dok. po nazwie)
-│   ├── eval.py        # ewaluacja apelacji względem data/eval.json (LLM-as-judge)
+│   ├── eval/          # ewaluacja: coverage.py (LLM-as-judge) + compare.py (tabela podejść)
 │   └── skills/        # umiejętności agenta — jeden folder per umiejętność
 │       ├── file_description/  # generate_file_description (main.py, prompts.py, schemas.py)
 │       ├── tasks/             # generate_tasks
@@ -87,7 +87,6 @@ WomenInTech/
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
 │   ├── prompts.py             # system prompt
 │   ├── main.py                # generuje apelację → baseline/apelacja_baseline.txt
-│   ├── eval.py                # czyta apelację i odpala evaluate() z src/eval.py
 │   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
 │   └── README.md              # podsumowanie i wyniki baseline
 ├── linear_agent/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
@@ -115,8 +114,10 @@ WomenInTech/
   (OpenAI, lokalny model przez Ollama, proxy itp.).
 - **`src/tokens.py`** — pomocnicze liczenie tokenów (tiktoken) dla tekstu i listy
   wiadomości.
-- **`src/eval.py`** — `evaluate(appeal_text)` ocenia apelację względem zagadnień
-  z `data/eval.json` (LLM-as-judge); wspólna miara dla każdego podejścia.
+- **`src/eval/`** — ewaluacja: `coverage.py` (`evaluate(appeal_text)` ocenia apelację
+  względem zagadnień z `data/eval.json`, LLM-as-judge) oraz `compare.py` — runner,
+  który ocenia wszystkie podejścia i drukuje tabelę porównawczą
+  (`uv run python -m src.eval.compare`).
 - **`src/sources.py`** — `prepare_input_texts(documents, names)` zwraca tekst tylko
   wybranych dokumentów (selektywny kontekst); współdzielone przez agenta liniowego
   i wersję LangGraph.

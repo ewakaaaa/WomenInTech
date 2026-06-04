@@ -17,7 +17,6 @@
 |------|------|
 | `prompts.py` | system prompt |
 | `main.py` | `build_context`, `generate_appeal`; uruchomiony generuje apelację i zapisuje do `.txt` |
-| `eval.py` | czyta wygenerowaną apelację i odpala `evaluate()` z `src/eval.py` |
 | `apelacja_baseline.txt` | wygenerowana apelacja (artefakt) |
 
 ## Uruchomienie
@@ -26,8 +25,8 @@
 # 1) wygenerowanie apelacji → baseline/apelacja_baseline.txt
 uv run python -m baseline.main
 
-# 2) ewaluacja apelacji względem data/eval.json
-uv run python -m baseline.eval
+# 2) ewaluacja — wspólny runner porównuje wszystkie podejścia
+uv run python -m src.eval.compare
 ```
 
 ## Wyniki (zużycie kontekstu)
