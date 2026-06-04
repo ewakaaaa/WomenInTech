@@ -31,7 +31,11 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 6. **Dane.** Udało się znaleźć świetne dane, bo: a) są **zanonimizowane**,
    b) mają **klucz odpowiedzi** → możemy *mierzyć* jakość, nie tylko „patrzeć, że ładne".
    Przybliżenie sprawy: **sprawa Daniela Dzika** — o co w niej chodzi (zob.
-   [`data/README.md`](../data/README.md)). — *3 min*
+   [`data/README.md`](../data/README.md)).
+   Przygotowanie danych: **bez wektorowej bazy i bez RAG-a** — możemy sobie na to
+   pozwolić, bo taką sprawę prowadzi się zwykle **raz** (nie budujemy wyszukiwarki po
+   tysiącach spraw). Liczy się dobre **przygotowanie danych** — i można z nich wyciągać
+   jeszcze więcej **metadanych**. — *3 min*
 
 ### Baseline i jego problemy — *~10 min*
 
@@ -105,7 +109,8 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     - **toole** — agentowi można dać narzędzia (function calling): model sam decyduje,
       którego użyć. U nas planer decyduje o akcjach i tworzy zadania — ten sam pomysł,
       zrealizowany przez **structured output** (bez formalnych tooli); LangGraph spina
-      toole bez wysiłku, gdyby były potrzebne,
+      toole bez wysiłku, gdyby były potrzebne. *(Przykład: tool sprawdzający najnowsze
+      przepisy — nie kodujemy go, ale łatwo byłoby dołożyć.)*
     - **łatwy human-in-the-loop** — możemy wstawić pauzę, np. na **potwierdzenie strategii
       przez radcę**, zanim agent napisze pismo → dokładnie to, czego potrzebujemy.
     - **⚠️ Przestroga:** to kolejna, niemała **zależność** (dług) — świetne do POC, na
@@ -118,11 +123,11 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
       pyta mnie (radcę) o potwierdzenie — wpisuję decyzję, graf leci dalej,
     - pokaż **wynik** + ewaluację (`uv run python -m src.eval.compare`),
     - puenta: **tego nie zrobisz liniowym pipeline'em** — cykle + człowiek w pętli.
-22. **Take-awaye.** Wracamy do **anegdoty o top-3 umiejętnościach DS** — pierwszą
-    (zaplanowanie całego rozwiązania) właśnie zobaczyliśmy w praktyce. Kluczowe przekazy
-    (poniżej), w tym przestroga: **nie zaczynaj od nauki frameworka ani od razu od
-    złożonego agenta** — zacznij od logiki i baseline, a LangGraph/agenta dokładaj
-    świadomie na końcu. — *~3 min*
+22. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
+    przewinęły się przez warsztat: (1) **zaplanowanie rozwiązania**, (2) **rozmowa z
+    biznesem i ekspertami** (szybko dostarcz proste → szybko zbierz feedback), (3)
+    **ewaluacja ustalona na starcie**. Plus przestroga: **nie zaczynaj od frameworka ani
+    od razu od złożonego agenta** — najpierw logika i baseline. (Szczegóły poniżej.) — *~3 min*
 
 ### Pytania (Q&A) — *10–15 min*
 
@@ -142,16 +147,28 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 ## Kluczowe przekazy (take-aways)
 
-1. Architektura > pojedynczy prompt — margines błędu zero wymusza etapowość.
-2. **Selektywny kontekst** zamiast wrzucania wszystkiego (bez chunkowania/wektorów).
-3. Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie.
-4. LangGraph daje równoległość/obserwowalność/Studio, ale to dług zależności.
-5. **Człowiek w pętli** jest częścią systemu, nie dodatkiem.
-6. **Nie zaczynaj od frameworka** ani od razu od złożonego agenta — najpierw logika
-   i baseline, framework dokładaj świadomie na końcu (inaczej uczysz się narzędzia
-   zamiast rozwiązywać problem).
-7. Callback do anegdoty: **planowanie całego rozwiązania** (mid → senior) to jedna z
-   top-3 umiejętności DS — i właśnie ją dziś przećwiczyliśmy.
+### Callback do anegdoty — 3 top umiejętności DS (przeplatają się przez cały warsztat)
+
+1. **Zaplanowanie całego rozwiązania** (mid → senior). To dziś przećwiczyliśmy: rozbić
+   problem na kroki, zanim się zacznie kodować.
+2. **Umiejętności miękkie — rozmowa z biznesem i ekspertami.** Dostaliśmy tylko
+   „generator dokumentów", ale każdy krok po drodze to **wiedza domenowa od radców** —
+   trzeba umieć z nimi rozmawiać i budować relacje. Im szybciej dostarczysz **proste**
+   rozwiązanie (jak `agent_linear`, gdzie widać krok po kroku, co się dzieje), tym
+   szybciej masz **feedback** — dlatego nie wskakuj od razu na framework i agenta
+   robiącego „nie wiadomo co".
+3. **Ewaluacja ustalona na starcie.** Na jaki rezultat się umawiamy i jak go mierzymy —
+   zanim zaczniemy. Bez kryteriów zostaje tylko „no, generuje, spoko" albo
+   bezterminowe czekanie na feedback ekspertów.
+
+### Techniczne
+
+- Architektura > pojedynczy prompt — margines błędu zero wymusza etapowość.
+- **Selektywny kontekst** zamiast wrzucania wszystkiego (bez chunkowania/wektorów/RAG-a).
+- Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie.
+- LangGraph daje równoległość/obserwowalność/human-in-the-loop, ale to **dług
+  zależności** — dokładaj świadomie, na końcu.
+- **Człowiek w pętli** jest częścią systemu, nie dodatkiem.
 
 ## Do uzupełnienia
 
