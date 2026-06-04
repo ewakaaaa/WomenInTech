@@ -65,6 +65,50 @@ pip install --upgrade pip
 pip install pdfplumber pydantic
 ```
 
+## 🤖 Konfiguracja LLM (klucz API lub Ollama)
+
+Model podłączasz przez `.env` (skopiuj z szablonu i uzupełnij):
+
+```bash
+cp .env.example .env
+```
+
+Są **dwa sposoby** (wybierz jeden). Najszybciej sprawdzisz konfigurację notebookiem
+`notebooks/setup.ipynb`.
+
+### A. Własny klucz API (OpenAI lub zgodny z OpenAI)
+
+```dotenv
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_API_KEY=sk-...        # twój klucz
+LLM_MODEL=gpt-4o-mini
+```
+
+Zadziała z każdym dostawcą zgodnym z interfejsem OpenAI — wystarczy zmienić `LLM_BASE_URL`.
+
+### B. Lokalnie przez Ollamę (bez klucza)
+
+1. Zainstaluj Ollamę:
+   ```bash
+   brew install ollama                                   # macOS
+   # lub pobierz z https://ollama.com/download (Win/Linux)
+   ```
+2. Uruchom serwer i pobierz model:
+   ```bash
+   ollama serve            # zostaw działające w tle
+   ollama pull mistral     # albo inny model, np. llama3.1
+   ```
+3. Ustaw `.env`:
+   ```dotenv
+   LLM_BASE_URL=http://localhost:11434/v1
+   LLM_API_KEY=ollama       # dowolny placeholder — Ollama nie wymaga klucza
+   LLM_MODEL=mistral
+   ```
+
+Ollama wystawia API zgodne z OpenAI (`/v1`), więc `call_llm` działa bez zmian.
+Uwaga: structured output (JSON wg schematu) lepiej wychodzi większym modelom
+instrukcyjnym — małe modele bywają zawodne przy złożonych schematach.
+
 ## 📂 Struktura projektu
 
 ```
@@ -105,7 +149,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # baseline_walkthrough.ipynb (umiejętności krok po kroku) + planner_walkthrough.ipynb (agent nieliniowy)
+├── notebooks/         # setup.ipynb (konfiguracja+test) + baseline_walkthrough.ipynb + planner_walkthrough.ipynb
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -149,9 +193,9 @@ WomenInTech/
   grafu decyduje, co dalej (analizuj / zapytaj człowieka / pisz / brak podstaw), więc
   graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
   potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline.
-- **`notebooks/`** — interaktywne przebiegi (`uv run jupyter lab`):
-  `baseline_walkthrough.ipynb` (umiejętności krok po kroku) oraz `planner_walkthrough.ipynb`
-  (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
+- **`notebooks/`** (`uv run jupyter lab`): `setup.ipynb` (konfiguracja LLM + test —
+  zacznij tutaj), `baseline_walkthrough.ipynb` (umiejętności krok po kroku) oraz
+  `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
 ## 🛠️ Wymagania
