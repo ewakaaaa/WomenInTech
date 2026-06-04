@@ -84,3 +84,7 @@ CLAUDE.md
 
 # Lokalne ustawienia Claude Code
 .claude/
+
+# Materiał referencyjny — do usunięcia po przepisaniu
+agent_legacy/
+DoGeDo_2/

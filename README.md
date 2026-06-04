@@ -76,13 +76,22 @@ WomenInTech/
 │   ├── loader.py      # wczytywanie PDF do tekstu (Document, load_pdf, load_all)
 │   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
 │   ├── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
-│   └── eval.py        # ewaluacja apelacji względem data/eval.json (LLM-as-judge)
+│   ├── sources.py     # prepare_input_texts — selektywny kontekst (wybór dok. po nazwie)
+│   ├── eval.py        # ewaluacja apelacji względem data/eval.json (LLM-as-judge)
+│   └── skills/        # umiejętności agenta — jeden folder per umiejętność
+│       ├── file_description/  # generate_file_description (main.py, prompts.py, schemas.py)
+│       ├── tasks/             # generate_tasks
+│       ├── make_task/         # make_task
+│       ├── strategy/          # generate_strategy
+│       └── document/          # generate_document
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
 │   ├── prompts.py             # system prompt
 │   ├── main.py                # generuje apelację → baseline/apelacja_baseline.txt
 │   ├── eval.py                # czyta apelację i odpala evaluate() z src/eval.py
 │   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
 │   └── README.md              # podsumowanie i wyniki baseline
+├── linear_agent/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
+│   └── pipeline.py    # run() spina umiejętności → linear_agent/apelacja.txt
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -102,8 +111,17 @@ WomenInTech/
   wiadomości.
 - **`src/eval.py`** — `evaluate(appeal_text)` ocenia apelację względem zagadnień
   z `data/eval.json` (LLM-as-judge); wspólna miara dla każdego podejścia.
+- **`src/sources.py`** — `prepare_input_texts(documents, names)` zwraca tekst tylko
+  wybranych dokumentów (selektywny kontekst); współdzielone przez agenta liniowego
+  i wersję LangGraph.
+- **`src/skills/`** — umiejętności agenta, każda w osobnym folderze (`main.py` =
+  czysta funkcja, `prompts.py`, `schemas.py`): `file_description`, `tasks`,
+  `make_task`, `strategy`, `document`.
 - **`baseline/`** — naiwna „wersja 0": całe akta + jeden prompt „napisz apelację".
   Punkt wyjścia warsztatu (szczegóły w `baseline/README.md`).
+- **`linear_agent/`** — agent liniowy: te same umiejętności (`src/skills/*`) spięte
+  po kolei, bez LangGraph. Pętle `for` to miejsca, które później zastąpi fan-out
+  grafu.
 
 ## 🛠️ Wymagania
 
