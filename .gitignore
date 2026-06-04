@@ -81,3 +81,8 @@ credentials.json
 
 # Claude Code
 CLAUDE.md
+
+# Dane wrażliwe — akta sądowe
+data/
+*.pdf
+*.docx
