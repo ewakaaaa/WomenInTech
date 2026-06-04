@@ -78,3 +78,6 @@ Thumbs.db
 *.local
 secrets.json
 credentials.json
+
+# Claude Code
+CLAUDE.md
