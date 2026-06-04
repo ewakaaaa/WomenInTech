@@ -3,7 +3,7 @@
     uv run python -m baseline
 """
 
-from baseline.baseline import build_context, load_all
+from baseline.llm_call import build_context, load_all
 from baseline.prompts import SYSTEM_PROMPT
 from src.tokens import count_tokens
 

@@ -16,13 +16,21 @@
 | Plik | Rola |
 |------|------|
 | `prompts.py` | system prompt |
-| `baseline.py` | `load_all`, `build_context`, `generate_appeal`, model `Appeal` |
+| `llm_call.py` | `load_all`, `build_context`, `generate_appeal`; uruchomiony generuje apelację i zapisuje do `.txt` |
+| `eval.py` | czyta wygenerowaną apelację i odpala `evaluate()` z `src/eval.py` |
 | `__main__.py` | runner — wczytuje akta i raportuje zużycie tokenów |
 
 ## Uruchomienie
 
 ```bash
+# 1) statystyki tokenów
 uv run python -m baseline
+
+# 2) wygenerowanie apelacji → data/output/apelacja_baseline.txt
+uv run python -m baseline.llm_call
+
+# 3) ewaluacja apelacji względem data/eval.json
+uv run python -m baseline.eval
 ```
 
 ## Wyniki (zużycie kontekstu)

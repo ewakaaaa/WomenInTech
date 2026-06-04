@@ -75,11 +75,13 @@ WomenInTech/
 ├── src/               # wspólne moduły
 │   ├── loader.py      # wczytywanie PDF do tekstu (model Document + load_pdf)
 │   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
-│   └── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
+│   ├── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
+│   └── eval.py        # ewaluacja apelacji względem data/eval.json (LLM-as-judge)
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
 │   ├── prompts.py     # system prompt
-│   ├── baseline.py    # load_all, build_context, generate_appeal
-│   ├── __main__.py    # runner: uv run python -m baseline
+│   ├── llm_call.py    # generuje apelację → data/output/apelacja_baseline.txt
+│   ├── eval.py        # czyta apelację i odpala evaluate() z src/eval.py
+│   ├── __main__.py    # runner statystyk tokenów: uv run python -m baseline
 │   └── README.md      # podsumowanie i wyniki baseline
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
@@ -97,6 +99,8 @@ WomenInTech/
   (OpenAI, lokalny model przez Ollama, proxy itp.).
 - **`src/tokens.py`** — pomocnicze liczenie tokenów (tiktoken) dla tekstu i listy
   wiadomości.
+- **`src/eval.py`** — `evaluate(appeal_text)` ocenia apelację względem zagadnień
+  z `data/eval.json` (LLM-as-judge); wspólna miara dla każdego podejścia.
 - **`baseline/`** — naiwna „wersja 0": całe akta + jeden prompt „napisz apelację".
   Punkt wyjścia warsztatu (szczegóły w `baseline/README.md`).
 
