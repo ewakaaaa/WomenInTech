@@ -81,7 +81,6 @@ WomenInTech/
 │   ├── prompts.py     # system prompt
 │   ├── llm_call.py    # generuje apelację → data/output/apelacja_baseline.txt
 │   ├── eval.py        # czyta apelację i odpala evaluate() z src/eval.py
-│   ├── __main__.py    # runner statystyk tokenów: uv run python -m baseline
 │   └── README.md      # podsumowanie i wyniki baseline
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)

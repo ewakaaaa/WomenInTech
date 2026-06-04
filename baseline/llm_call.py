@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 from baseline.prompts import SYSTEM_PROMPT
 from src.llm import call_llm
 from src.loader import Document, load_pdf
+from src.tokens import count_tokens
 
 OUTPUT_PATH = "data/output/apelacja_baseline.txt"
 
@@ -51,7 +52,14 @@ def generate_appeal(docs: list[Document], model: str | None = None) -> Appeal:
 
 if __name__ == "__main__":
     docs = load_all()
-    print(f"Loaded {len(docs)} documents — generating appeal...")
+    context = build_context(docs)
+    prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + context)
+
+    print(f"Documents loaded: {len(docs)}")
+    print(f"Context characters: {len(context):,}")
+    print(f"Prompt tokens (input): ~{prompt_tokens:,}")
+
+    print("Generating appeal...")
     appeal = generate_appeal(docs)
 
     output = Path(OUTPUT_PATH)
