@@ -36,14 +36,14 @@ To jest różnica wobec `baseline/` (gdzie całe akta lecą w jeden prompt). Tut
 wycinek**. Model nigdy nie ogląda wszystkiego naraz — pracuje na małych, trafnych
 fragmentach.
 
-## Co robi każdy klocek (i jaki problem baseline rozwiązuje)
+## Co robi każda umiejętność (i jaki problem baseline rozwiązuje)
 
-Baseline robił wszystko jednym promptem. Agent rozbija to na klocki — każdy ma jedno
-zadanie i rozwiązuje konkretny problem naiwnego podejścia
+Baseline robił wszystko jednym promptem. Agent rozbija to na umiejętności — każda ma
+jedno zadanie i rozwiązuje konkretny problem naiwnego podejścia
 (lista problemów: [`baseline/README.md`](../baseline/README.md)).
 
-| Klocek | Co robi | Jaki problem baseline rozwiązuje |
-|--------|---------|----------------------------------|
+| Umiejętność | Co robi | Jaki problem baseline rozwiązuje |
+|-------------|---------|----------------------------------|
 | **generate_file_description** | Zamienia surowe akta w zwięzłe, ukierunkowane na cel opisy — „mapę" sprawy. | Mniej szumu: planer nie czyta 16 pełnych dokumentów, tylko wie, gdzie czego szukać. |
 | **generate_tasks** | Rozbija wielki cel na małe kroki; każdy wskazuje, **które** dokumenty są mu potrzebne. | „Wszystko naraz" → dziel i rządź. Plan jest też **śladem**, co i czemu robimy. |
 | **make_task** | Wykonuje **jeden** krok na **tylko** wskazanych dokumentach. | Zapchany kontekst i „lost in the middle"; **izolacja błędu** (zła analiza w jednym kroku nie psuje reszty, da się go powtórzyć); **audytowalność** (wiadomo, z czego wynika ustalenie). |
