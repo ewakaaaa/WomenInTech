@@ -92,6 +92,10 @@ WomenInTech/
 │   └── README.md              # podsumowanie i wyniki baseline
 ├── linear_agent/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
 │   └── pipeline.py    # run() spina umiejętności → linear_agent/apelacja.txt
+├── langgraph_agent/   # ten sam agent jako graf LangGraph (fan-out przez Send)
+│   ├── state.py       # OverallState (z reducerami) + payloady Send
+│   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
+│   └── main.py        # uruchomienie → langgraph_agent/apelacja.txt
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -122,6 +126,9 @@ WomenInTech/
 - **`linear_agent/`** — agent liniowy: te same umiejętności (`src/skills/*`) spięte
   po kolei, bez LangGraph. Pętle `for` to miejsca, które później zastąpi fan-out
   grafu.
+- **`langgraph_agent/`** — ten sam agent jako graf LangGraph: węzły to cienkie
+  opakowania umiejętności, a pętle z agenta liniowego zastępuje fan-out przez `Send`
+  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki.
 
 ## 🛠️ Wymagania
 
