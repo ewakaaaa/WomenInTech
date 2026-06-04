@@ -118,8 +118,11 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
       pyta mnie (radcę) o potwierdzenie — wpisuję decyzję, graf leci dalej,
     - pokaż **wynik** + ewaluację (`uv run python -m src.eval.compare`),
     - puenta: **tego nie zrobisz liniowym pipeline'em** — cykle + człowiek w pętli.
-22. **Take-awaye.** Kluczowe przekazy (poniżej) — w tym: **człowiek w pętli jest częścią
-    systemu, nie dodatkiem**. — *~3 min*
+22. **Take-awaye.** Wracamy do **anegdoty o top-3 umiejętnościach DS** — pierwszą
+    (zaplanowanie całego rozwiązania) właśnie zobaczyliśmy w praktyce. Kluczowe przekazy
+    (poniżej), w tym przestroga: **nie zaczynaj od nauki frameworka ani od razu od
+    złożonego agenta** — zacznij od logiki i baseline, a LangGraph/agenta dokładaj
+    świadomie na końcu. — *~3 min*
 
 ### Pytania (Q&A) — *10–15 min*
 
@@ -144,6 +147,11 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 3. Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie.
 4. LangGraph daje równoległość/obserwowalność/Studio, ale to dług zależności.
 5. **Człowiek w pętli** jest częścią systemu, nie dodatkiem.
+6. **Nie zaczynaj od frameworka** ani od razu od złożonego agenta — najpierw logika
+   i baseline, framework dokładaj świadomie na końcu (inaczej uczysz się narzędzia
+   zamiast rozwiązywać problem).
+7. Callback do anegdoty: **planowanie całego rozwiązania** (mid → senior) to jedna z
+   top-3 umiejętności DS — i właśnie ją dziś przećwiczyliśmy.
 
 ## Do uzupełnienia
 
