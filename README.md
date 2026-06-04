@@ -65,9 +65,30 @@ pip install --upgrade pip
 pip install pdfplumber pydantic
 ```
 
-## 📂 Struktura projektu (propozycja)
+## 📂 Struktura projektu
 
-#TODO
+```
+WomenInTech/
+├── data/
+│   ├── input/         # akta sprawy (pojedyncze PDF-y) — ignorowane w gicie
+│   └── eval.json      # lista zagadnień, które apelacja powinna poruszyć
+├── src/
+│   ├── loader.py      # wczytywanie PDF do tekstu (model Document + load_pdf)
+│   └── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
+├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
+├── pyproject.toml     # zależności (uv)
+├── uv.lock            # zablokowane wersje
+└── requirements.txt   # fallback dla pip
+```
+
+### Moduły
+
+- **`src/loader.py`** — `load_pdf(path)` wczytuje pojedynczy plik PDF i zwraca
+  `Document` (Pydantic) z nazwą pliku i wyekstrahowanym tekstem.
+- **`src/llm.py`** — `call_llm(messages, response_model, ...)` zwraca odpowiedź
+  zwalidowaną względem modelu Pydantic. Klient jest zgodny z interfejsem OpenAI,
+  więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolny backend
+  (OpenAI, lokalny model przez Ollama, proxy itp.).
 
 ## 🛠️ Wymagania
 

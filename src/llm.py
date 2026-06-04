@@ -1,0 +1,74 @@
+"""Single entry point for calling the LLM.
+
+Uses the `instructor` library, which forces a structured response matching a
+Pydantic model. The client is OpenAI-compatible, so by changing `base_url`/
+`api_key` in the `.env` file you can plug in any backend:
+
+- OpenAI          -> https://api.openai.com/v1
+- local model     -> Ollama: http://localhost:11434/v1 (e.g. mistral)
+- workshop proxy  -> https://llm-api.dataworkshop.eu
+
+Configured via environment variables (see `.env.example`):
+    LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+"""
+
+from __future__ import annotations
+
+import os
+from typing import TypeVar
+
+import instructor
+from dotenv import load_dotenv
+from openai import OpenAI
+from pydantic import BaseModel
+
+load_dotenv()
+
+T = TypeVar("T", bound=BaseModel)
+
+DEFAULT_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+
+client = instructor.patch(
+    OpenAI(
+        base_url=os.getenv("LLM_BASE_URL", "https://api.openai.com/v1"),
+        # Ollama doesn't require a key — any placeholder works.
+        api_key=os.getenv("LLM_API_KEY", "not-needed"),
+    ),
+    mode=instructor.Mode.MD_JSON,
+)
+
+
+def call_llm(
+    messages: list[dict],
+    response_model: type[T],
+    model: str | None = None,
+    temperature: float = 0.0,
+) -> T:
+    """Call the model and return a response validated against `response_model`.
+
+    Args:
+        messages: list of messages in OpenAI format (role/content).
+        response_model: Pydantic class the response must match.
+        model: model name; defaults to LLM_MODEL.
+        temperature: defaults to 0.0 for reproducibility.
+    """
+    return client.chat.completions.create(
+        model=model or DEFAULT_MODEL,
+        messages=messages,
+        response_model=response_model,
+        temperature=temperature,
+    )
+
+
+if __name__ == "__main__":
+    # Quick smoke test — requires a configured .env.
+    class Capital(BaseModel):
+        country: str
+        capital: str
+
+    result = call_llm(
+        messages=[{"role": "user", "content": "What is the capital of Poland?"}],
+        response_model=Capital,
+    )
+    print(result)
+
