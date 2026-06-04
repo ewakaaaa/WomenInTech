@@ -9,9 +9,25 @@ Pliki pobrano ręcznie i podzielono na pojedyncze dokumenty (po jednym piśmie n
 
 ## Zawartość
 
-- `input/` — 16 pism z akt sprawy w PDF (notatka, protokoły, akt oskarżenia, opinia
-  biegłego, wyrok itd.). Nagłówek arkusza „EGZAMIN RADCOWSKI – PRAWO KARNE" jest
-  usuwany przy wczytywaniu (`clean_text` w `src/loader.py`).
+- `input/` — 16 pism z akt sprawy w PDF (po jednym piśmie na plik). Nagłówek arkusza
+  „EGZAMIN RADCOWSKI – PRAWO KARNE" jest usuwany przy wczytywaniu (`clean_text`
+  w `src/loader.py`). Co zawierają poszczególne pliki:
+
+  | Plik | Co to jest |
+  |------|------------|
+  | `02_Notatka_urzędowa...` | Ustalenia policji z interwencji wobec nietrzeźwego kierowcy |
+  | `03_Protokół_z_badania_stanu_trzeźwości...` | Wynik badania alkomatem (analizator wydechu) |
+  | `04_Postanowienie_o_wszczęciu_dochodzenia` | Formalne wszczęcie dochodzenia |
+  | `05_`, `06_`, `07_Protokół_przesłuchania_świadka` | Zeznania świadków (trzy osoby) |
+  | `08_Postanowienie_o_przedstawieniu_zarzutów` | Przedstawienie zarzutów oskarżonemu |
+  | `09_`, `10_Protokół_przesłuchania_podejrzanego` | Wyjaśnienia podejrzanego (dwa przesłuchania) |
+  | `11_Akt_oskarżenia` | Akt oskarżenia sporządzony przez prokuraturę |
+  | `12_`, `15_Protokół_rozprawy_głównej` | Przebieg rozpraw przed sądem I instancji |
+  | `13_Odpowiedź...zarządzania_cmentarzem` | Pismo o statusie/zarządcy alejki cmentarnej |
+  | `14_Opinia_biegłego...toksykologii_sądowej` | Opinia biegłego o stężeniu alkoholu w czasie |
+  | `16_Wyrok` | Wyrok sądu I instancji |
+  | `17_Wniosek_o_sporządzenie_uzasadnienia` | Wniosek o pisemne uzasadnienie wyroku |
+
 - `eval.json` — **lista zagadnień, które apelacja powinna poruszyć** (klucz oceny).
 
 > Dane są zanonimizowane/syntetyczne (fikcyjne osoby), więc nadają się do publicznego
@@ -33,16 +49,3 @@ Pliki pobrano ręcznie i podzielono na pojedyncze dokumenty (po jednym piśmie n
 | II | Umyślne zniszczenie drewnianej ławki (7 000 zł) na szkodę Ryszarda Rysia | art. 288 § 1 k.k. | wina; grzywna + **obowiązek naprawienia szkody 7 000 zł** |
 
 Kara łączna: 350 stawek dziennych grzywny po 20 zł.
-
-## Zadanie
-
-Wcielamy się w **obrońcę** i piszemy **apelację** od tego wyroku.
-
-> Uwaga: prawdziwe zadanie egzaminacyjne dopuszcza również wniosek, że apelacja jest
-> niezasadna — na potrzeby warsztatu **upraszczamy to do jednego celu**: napisać apelację.
-
-Kluczowe wątki, na których opiera się obrona (zob. `eval.json`), to m.in.: czy jazda
-po alejce cmentarnej to „ruch lądowy", błędne ustalenie nietrzeźwości w chwili dojazdu,
-zasada *in dubio pro reo* (art. 5 § 2 k.p.k.), dowód z wyjaśnień złożonych w stanie
-nietrzeźwości (art. 171 § 7 k.p.k.), brak wniosku o ściganie przy czynie z art. 288 k.k.
-oraz orzeczenie naprawienia szkody mimo toczącej się sprawy cywilnej.
