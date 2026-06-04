@@ -4,6 +4,8 @@
 > **Wynik jest taki sam — bo to ta sama logika.** Pytanie brzmi więc: skoro
 > rezultat identyczny, **co właściwie daje LangGraph?**
 
+📊 Diagram grafu (mermaid, generowany z kodu): [`graph.md`](graph.md).
+
 ## Krótka odpowiedź
 
 LangGraph nie zmienia *co* agent robi — zmienia *jak to jest wykonywane,

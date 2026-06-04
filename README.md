@@ -96,6 +96,7 @@ WomenInTech/
 │   ├── state.py       # OverallState (z reducerami) + payloady Send
 │   ├── graph.py       # węzły opakowujące umiejętności + routing + skompilowany graph
 │   ├── main.py        # uruchomienie → langgraph_agent/apelacja.txt
+│   ├── graph.md       # diagram grafu (mermaid, generowany z kodu)
 │   └── README.md      # po co LangGraph, skoro wynik ten sam co liniowo
 ├── notebooks/         # walkthrough.ipynb — interaktywny przebieg umiejętności krok po kroku
 ├── presentation/      # materiały i plan prezentacji warsztatowej
