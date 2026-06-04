@@ -24,5 +24,6 @@ def generate_file_description(
         ],
         response_model=FileDescription,
         model=model,
+        max_tokens=2000,
     )
     return DescribedFile(name=document.filename, **result.model_dump())

@@ -29,5 +29,6 @@ def make_task(
         ],
         response_model=TaskAnalysis,
         model=model,
+        max_tokens=16000,
     )
     return TaskOutput(action=task.action, output=result.output)

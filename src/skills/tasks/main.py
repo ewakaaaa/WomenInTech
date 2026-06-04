@@ -33,4 +33,5 @@ def generate_tasks(
         ],
         response_model=Tasks,
         model=model,
+        max_tokens=16000,
     )

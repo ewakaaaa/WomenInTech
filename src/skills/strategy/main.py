@@ -30,4 +30,5 @@ def generate_strategy(
         ],
         response_model=Strategy,
         model=model,
+        max_tokens=16000,
     )

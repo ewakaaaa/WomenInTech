@@ -43,6 +43,7 @@ def call_llm(
     response_model: type[T],
     model: str | None = None,
     temperature: float = 0.0,
+    max_tokens: int | None = None,
 ) -> T:
     """Call the model and return a response validated against `response_model`.
 
@@ -51,12 +52,18 @@ def call_llm(
         response_model: Pydantic class the response must match.
         model: model name; defaults to LLM_MODEL.
         temperature: defaults to 0.0 for reproducibility.
+        max_tokens: cap on output tokens; None lets the provider decide. Set it
+            higher for long outputs (e.g. the final document) to avoid truncation.
     """
+    kwargs = {}
+    if max_tokens is not None:
+        kwargs["max_tokens"] = max_tokens
     return client.chat.completions.create(
         model=model or DEFAULT_MODEL,
         messages=messages,
         response_model=response_model,
         temperature=temperature,
+        **kwargs,
     )
 
 

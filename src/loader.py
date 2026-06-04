@@ -2,16 +2,27 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pdfplumber
 from pydantic import BaseModel, Field
+
+# Powtarzający się nagłówek arkusza egzaminacyjnego — czysty szum w każdym pliku.
+_EXAM_HEADER = re.compile(
+    r"EGZAMIN\s+RADCOWSKI\s*[-–]\s*PRAWO\s+(CYWILNE|KARNE)", re.IGNORECASE
+)
 
 
 class Document(BaseModel):
     """A single document from the case files."""
     filename: str = Field(..., description="Source file name")
     text: str = Field(..., description="Extracted document text")
+
+
+def clean_text(text: str) -> str:
+    """Strip the repeated exam-sheet header from the extracted text."""
+    return _EXAM_HEADER.sub("", text)
 
 
 def load_pdf(path: str | Path) -> Document:
@@ -23,7 +34,7 @@ def load_pdf(path: str | Path) -> Document:
             pages.append(page.extract_text() or "")
     return Document(
         filename=path.name,
-        text="\n\n".join(pages).strip(),
+        text=clean_text("\n\n".join(pages)).strip(),
     )
 
 

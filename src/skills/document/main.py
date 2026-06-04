@@ -38,4 +38,5 @@ def generate_document(
         ],
         response_model=GeneratedDocument,
         model=model,
+        max_tokens=16000,
     )
