@@ -54,7 +54,7 @@ zastępuje równoległy fan-out przez `Send`.
 ```bash
 # wygenerowanie apelacji → agent_linear/apelacja.txt
 uv run python -m agent_linear.pipeline
-
-# ewaluacja (wspólny runner porównuje wszystkie podejścia)
-uv run python -m src.eval.compare
 ```
+
+Ewaluację (pokrycie + halucynacje) odpalasz w notebookach — porównanie z baseline
+przez odczyt wyników z `notebooks/baseline_and_eval.ipynb` i `linear_walkthrough.ipynb`.

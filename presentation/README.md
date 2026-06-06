@@ -93,7 +93,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     wiem, jakiego outputu się spodziewać i mogę go podać dalej. Bez structured output
     te kroki by się nie połączyły. — *3 min*
 19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline
-    (`uv run python -m src.eval.compare`): pokrycie `Y/12` vs `X/12`. — *3 min*
+    (odczyt z notebooków `baseline_and_eval` / `linear_walkthrough`): pokrycie `Y/12` vs `X/12`. — *3 min*
 20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
     *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
     człowiek w pętli, „domknie" zaraz LangGraph)* — *3 min*
@@ -124,7 +124,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     - pokaż **diagram** (nieliniowy, „hub" — `agent_planner/graph.md`),
     - **human-in-the-loop na żywo** (`notebooks/planner_walkthrough.ipynb`): planer pauzuje,
       pyta mnie (radcę) o potwierdzenie — wpisuję decyzję, graf leci dalej,
-    - pokaż **wynik** + ewaluację (`uv run python -m src.eval.compare`),
+    - pokaż **wynik** + ewaluację (w notebooku),
     - puenta: **tego nie zrobisz liniowym pipeline'em** — cykle + człowiek w pętli.
 23. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
     przewinęły się przez warsztat: (1) **zaplanowanie rozwiązania**, (2) **rozmowa z
@@ -141,7 +141,7 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 - [ ] `.env` z działającym kluczem LLM (zapasowy backend: Ollama / proxy)
 - [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
-- [ ] Wyniki `uv run python -m src.eval.compare` zrzucone do slajdu (plan B bez live)
+- [ ] Wyniki ewaluacji z notebooków zrzucone do slajdu (plan B bez live)
 - [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb` i `notebooks/planner_walkthrough.ipynb`
 - [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) + przećwiczone demo human-in-the-loop
 - [ ] Diagram grafu (mermaid z `agent_langgraph`)

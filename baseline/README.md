@@ -22,12 +22,12 @@
 ## Uruchomienie
 
 ```bash
-# 1) wygenerowanie apelacji → baseline/apelacja_baseline.txt
+# wygenerowanie apelacji → baseline/apelacja_baseline.txt
 uv run python -m baseline.main
-
-# 2) ewaluacja — wspólny runner porównuje wszystkie podejścia
-uv run python -m src.eval.compare
 ```
+
+Ewaluacja (pokrycie + halucynacje) krok po kroku — w notebooku
+`notebooks/baseline_and_eval.ipynb`.
 
 > ⚠️ **Lokalnie na Ollamie tego podejścia nie uruchomisz.** Prompt baseline to
 > ~19–20 tys. tokenów, a Ollama domyślnie obcina kontekst do **4096 tokenów** —

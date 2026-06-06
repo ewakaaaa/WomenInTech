@@ -3,8 +3,10 @@
 Wygenerować apelację to jedno — ale skąd wiadomo, że jest **dobra**? Ten moduł
 odpowiada na to liczbami. Zadajemy dwa niezależne pytania:
 
-1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`, `compare`)
+1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`)
 2. **Czy apelacja czegoś nie zmyśliła?** → ugruntowanie / halucynacje (`grounding`)
+
+Wyniki poszczególnych podejść porównujesz, odczytując je z notebooków.
 
 Klucz oceny to `data/eval.json` — lista zagadnień, które dobra apelacja powinna
 podnieść (zarzuty + wnioski).
@@ -24,18 +26,7 @@ Jedna liczba (`score`) porównywalna między wszystkimi podejściami. Powtarzaln
 oceny (kilka przebiegów → średnia) oraz koszt pokazuje notebook
 `notebooks/baseline_and_eval.ipynb`.
 
-## 2. Porównanie podejść — `compare.py`
-
-Ocenia gotowe apelacje (pliki `.txt`) z poszczególnych podejść tym samym
-miernikiem pokrycia i drukuje tabelę obok siebie + listę niepokrytych zagadnień.
-
-```bash
-uv run python -m src.eval.compare
-```
-
-Wymaga wcześniej wygenerowanych apelacji (np. `baseline/apelacja_baseline.txt`).
-
-## 3. Halucynacje / ugruntowanie — `grounding.py`
+## 2. Halucynacje / ugruntowanie — `grounding.py`
 
 Sprawdza, czy apelacja nie powołuje faktów (dat, kwot, nazwisk, zdarzeń,
 cytatów), których w aktach nie ma. Zbudowane **etapowo**:
