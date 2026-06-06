@@ -139,7 +139,7 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 ## Demo — checklista
 
-- [ ] `.env` z działającym kluczem LLM (zapasowy backend: Ollama / proxy)
+- [ ] `.env` z działającym kluczem LLM (`gpt-5.4`; zapasowo proxy zgodne z OpenAI)
 - [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
 - [ ] Wyniki ewaluacji z notebooków zrzucone do slajdu (plan B bez live)
 - [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb` i `notebooks/planner_walkthrough.ipynb`

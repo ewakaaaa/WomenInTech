@@ -26,17 +26,12 @@
 uv run python -m baseline.main
 ```
 
-Ewaluacja (pokrycie + halucynacje) krok po kroku — w notebooku
+Ewaluacja (pokrycie + jakość) krok po kroku — w notebooku
 `notebooks/baseline_and_eval.ipynb`.
 
-> ⚠️ **Lokalnie na Ollamie tego podejścia nie uruchomisz.** Prompt baseline to
-> ~19–20 tys. tokenów, a Ollama domyślnie obcina kontekst do **4096 tokenów** —
-> model dostaje ~⅕ akt, gubi instrukcję o formacie odpowiedzi i zwraca błędny
-> JSON (`ValidationError: tekst Field required`). Potrzebny jest model z **dużym
-> oknem kontekstu**: użyj dostawcy API (np. OpenAI), albo — kosztem RAM —
-> podnieś kontekst Ollamy (`OLLAMA_CONTEXT_LENGTH=32768`, restart serwera).
-> Agent liniowy/planer dzielą akta na małe kawałki, więc te działają na Ollamie
-> bez problemu — baseline jest tu wyjątkiem właśnie przez jeden wielki prompt.
+> ⚠️ Baseline wrzuca **całe akta w jeden prompt** (~19–20 tys. tokenów), więc
+> wymaga modelu z **dużym oknem kontekstu** — używamy `gpt-5.4`. (Agent
+> liniowy/planer dzielą akta na małe kawałki, więc są pod tym względem łagodniejsze.)
 
 ## Wyniki (zużycie kontekstu)
 
@@ -46,11 +41,10 @@ Ewaluacja (pokrycie + halucynacje) krok po kroku — w notebooku
 | znaki kontekstu | 53 100 |
 | tokeny wejścia (prompt) | ~19 761 |
 
-Całe akta to ~20 tys. tokenów — mieszczą się w jednym oknie kontekstu, **o ile
-model ma dość duże okno** (dostawcy API to mają; Ollama domyślnie nie — patrz
-ostrzeżenie wyżej). Przy modelu z dużym kontekstem naiwne podejście **technicznie
-zadziała**, więc pytanie warsztatowe brzmi nie „czy zadziała", tylko **„czy zrobi
-to dobrze"** — i to zweryfikujemy ewaluacją na podstawie `data/eval.json`.
+Całe akta to ~20 tys. tokenów — mieszczą się w jednym oknie kontekstu `gpt-5.4`,
+więc naiwne podejście **technicznie zadziała**. Pytanie warsztatowe brzmi jednak
+nie „czy zadziała", tylko **„czy zrobi to dobrze"** — i to zweryfikujemy ewaluacją
+na podstawie `data/eval.json`.
 
 ## Wyniki ewaluacji (przykładowy przebieg, `gpt-5.4-mini`)
 
@@ -60,7 +54,6 @@ Z `notebooks/baseline_and_eval.ipynb` (apelacja ~7,9 tys. znaków z jednego prom
 |-------|-------|
 | **koszt generacji apelacji** | ~**$0,0229** (19 473 wej + 1 851 wyj tok, 1 wywołanie) |
 | **pokrycie** (średnia z 5 przebiegów) | **47%** (42–50%) |
-| **halucynacje** (fakty bez oparcia / sprzeczne z aktami) | ~**17%** (5 z 30 twierdzeń) |
 
 > Liczby orientacyjne — zależą od modelu i losowości. Odpal notebook, by odtworzyć.
 

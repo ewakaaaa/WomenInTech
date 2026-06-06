@@ -56,5 +56,7 @@ zastępuje równoległy fan-out przez `Send`.
 uv run python -m agent_linear.pipeline
 ```
 
-Ewaluację (pokrycie + halucynacje) odpalasz w notebookach — porównanie z baseline
+Ewaluację (pokrycie + jakość) odpalasz w notebookach — porównanie z baseline
 przez odczyt wyników z `notebooks/baseline_and_eval.ipynb` i `linear_walkthrough.ipynb`.
+
+Z CLI: `uv run python -m agent_linear.pipeline` (generacja + pokrycie).

@@ -65,56 +65,29 @@ pip install --upgrade pip
 pip install pdfplumber pydantic
 ```
 
-## 🤖 Konfiguracja LLM (klucz API lub Ollama)
+## 🤖 Konfiguracja LLM
 
-Model podłączasz przez `.env` (skopiuj z szablonu i uzupełnij):
+Projekt korzysta z **OpenAI `gpt-5.4`**. Model podłączasz przez `.env`:
 
 ```bash
 cp .env.example .env
 ```
-
-Są **dwa sposoby** (wybierz jeden). Najszybciej sprawdzisz konfigurację notebookiem
-`notebooks/setup.ipynb`.
-
-### A. Własny klucz API (OpenAI lub zgodny z OpenAI)
-
 ```dotenv
 LLM_BASE_URL=https://api.openai.com/v1
-LLM_API_KEY=sk-...        # twój klucz
-LLM_MODEL=gpt-4o-mini
+LLM_API_KEY=sk-...        # twój klucz z platform.openai.com
+LLM_MODEL=gpt-5.4
 ```
 
-Zadziała z każdym dostawcą zgodnym z interfejsem OpenAI — wystarczy zmienić `LLM_BASE_URL`.
+Konfigurację sprawdzisz notebookiem `notebooks/setup.ipynb`.
 
-### B. Lokalnie przez Ollamę (bez klucza)
+### Dlaczego `gpt-5.4`?
 
-1. Zainstaluj Ollamę:
-   ```bash
-   brew install --cask ollama-app                        # macOS (aplikacja z działającym serwerem)
-   # lub pobierz z https://ollama.com/download (Win/Linux)
-   ```
-2. Uruchom serwer i pobierz model:
-   ```bash
-   open -a Ollama            # macOS: startuje serwer w tle (lub: ollama serve)
-   ollama pull qwen2.5:14b   # model warsztatowy; lżejszy: qwen2.5:7b
-   ```
-3. Ustaw `.env`:
-   ```dotenv
-   LLM_BASE_URL=http://localhost:11434/v1
-   LLM_API_KEY=ollama       # dowolny placeholder — Ollama nie wymaga klucza
-   LLM_MODEL=qwen2.5:14b
-   ```
-
-Ollama wystawia API zgodne z OpenAI (`/v1`), więc `call_llm` działa bez zmian.
-Uwaga: structured output (JSON wg schematu) lepiej wychodzi większym modelom
-instrukcyjnym — małe modele bywają zawodne przy złożonych schematach.
-
-**Szybki start qwena (Ollama):**
-```bash
-open -a Ollama            # uruchom serwer (raz; chodzi w tle)
-ollama pull qwen2.5:14b   # pobierz model (raz)
-ollama list               # sprawdź, że jest na liście
-```
+Zadanie wymaga **dużego okna kontekstu** (sam prompt baseline to ~19 tys. tokenów)
+oraz „skoków" prawniczych — wychwycenia subtelnych wątków proceduralnych. Próbowaliśmy
+taniego **`gpt-5.4-mini`** (kilka razy taniej), ale gubi on te niuanse — a użyty jako
+sędzia w ewaluacji dodatkowo ich nie zalicza. Dlatego dla wiarygodnych wyników
+(generacja i ocena) używamy `gpt-5.4`. Działa z każdym dostawcą zgodnym z interfejsem
+OpenAI — wystarczy zmienić `LLM_BASE_URL`.
 
 ## 📓 Notebooki — jak uruchomić
 
@@ -122,8 +95,8 @@ W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_and_eval.ipynb`
 (naiwne podejście + ewaluacja krok po kroku), `linear_walkthrough.ipynb` (agent liniowy),
 `planner_walkthrough.ipynb` (planer).
 
-> Najpierw upewnij się, że model działa: dla qwena uruchom Ollamę (patrz wyżej),
-> a w pierwszej komórce notebooka odkomentuj sekcję B (Ollama).
+> Najpierw uzupełnij `.env` (klucz `LLM_API_KEY`, model `gpt-5.4`) — notebooki
+> czytają konfigurację stąd.
 
 ### Najprościej: w przeglądarce (JupyterLab)
 
@@ -181,7 +154,7 @@ WomenInTech/
 │   ├── llm.py         # call_llm — jeden punkt wywołania LLM (instructor + OpenAI-compatible)
 │   ├── tokens.py      # liczenie tokenów (count_tokens, count_messages_tokens)
 │   ├── sources.py     # prepare_input_texts — selektywny kontekst (wybór dok. po nazwie)
-│   ├── eval/          # ewaluacja: coverage.py (pokrycie) + grounding.py (halucynacje)
+│   ├── eval/          # ewaluacja: coverage.py (pokrycie) + quality.py (jakość/forma)
 │   └── skills/        # umiejętności agenta — jeden folder per umiejętność
 │       ├── file_description/  # generate_file_description (main.py, prompts.py, schemas.py)
 │       ├── tasks/             # generate_tasks
@@ -225,13 +198,13 @@ WomenInTech/
   wczytuje wszystkie PDF-y z katalogu.
 - **`src/llm.py`** — `call_llm(messages, response_model, ...)` zwraca odpowiedź
   zwalidowaną względem modelu Pydantic. Klient jest zgodny z interfejsem OpenAI,
-  więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolny backend
-  (OpenAI, lokalny model przez Ollama, proxy itp.).
+  więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolnego dostawcę
+  zgodnego z interfejsem OpenAI (OpenAI, proxy itp.).
 - **`src/tokens.py`** — pomocnicze liczenie tokenów (tiktoken) dla tekstu i listy
   wiadomości.
 - **`src/eval/`** — ewaluacja: `coverage.py` (`evaluate(appeal_text)` ocenia pokrycie
-  zagadnień z `data/eval.json`, LLM-as-judge) oraz `grounding.py` (halucynacje — czy
-  fakty mają oparcie w aktach). Wyniki podejść porównujesz, odczytując je z notebooków.
+  zagadnień z `data/eval.json`, LLM-as-judge) oraz `quality.py` (ocena jakości/formy
+  wg kryteriów egzaminu radcowskiego). Wyniki podejść porównujesz, odczytując je z notebooków.
 - **`src/sources.py`** — `prepare_input_texts(documents, names)` zwraca tekst tylko
   wybranych dokumentów (selektywny kontekst); współdzielone przez agenta liniowego
   i wersję LangGraph.
@@ -262,4 +235,4 @@ WomenInTech/
 
 - Python 3.x
 - Pydantic
-- dostęp do modelu LLM przez API / Ollama
+- dostęp do modelu LLM przez API (OpenAI, `gpt-5.4`)
