@@ -52,6 +52,24 @@ ostrzeżenie wyżej). Przy modelu z dużym kontekstem naiwne podejście **techni
 zadziała**, więc pytanie warsztatowe brzmi nie „czy zadziała", tylko **„czy zrobi
 to dobrze"** — i to zweryfikujemy ewaluacją na podstawie `data/eval.json`.
 
+## Wyniki ewaluacji (przykładowy przebieg, `gpt-5.4-mini`)
+
+Z `notebooks/baseline_walkthrough.ipynb` (apelacja ~7,9 tys. znaków z jednego promptu):
+
+| miara | wynik |
+|-------|-------|
+| **pokrycie** (czy porusza wymagane zagadnienia) | **6/12 = 50%** |
+| powtarzalność (5× ta sama apelacja) | średnia **47%** (min 42%, max 50%, odch. 4,1%) |
+| **halucynacje** (fakty bez oparcia w aktach) | 3 z 40 twierdzeń → **~8%** |
+| koszt 1 oceny pokrycia (12 wywołań) | ~**$0,039** (≈ $0,003 / wywołanie) |
+
+Wnioski: jeden prompt łapie wprawdzie część zarzutów, ale **pomija połowę** klucza
+(m.in. brak wniosku o ściganie z art. 288 k.k., zarzut z art. 415 k.p.k.), a ocena
+**waha się między przebiegami** — dlatego wynik trzeba uśredniać. Halucynacje są
+niskie (~8%), bo model trzyma się akt, ale nie zerowe.
+
+> Liczby orientacyjne — zależą od modelu i losowości. Odpal notebook, by odtworzyć.
+
 ## Ograniczenia (czyli po co agent)
 
 Naiwne podejście „wszystko → jeden prompt" rodzi konkretne problemy:
