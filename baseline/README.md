@@ -29,6 +29,15 @@ uv run python -m baseline.main
 uv run python -m src.eval.compare
 ```
 
+> ⚠️ **Lokalnie na Ollamie tego podejścia nie uruchomisz.** Prompt baseline to
+> ~19–20 tys. tokenów, a Ollama domyślnie obcina kontekst do **4096 tokenów** —
+> model dostaje ~⅕ akt, gubi instrukcję o formacie odpowiedzi i zwraca błędny
+> JSON (`ValidationError: tekst Field required`). Potrzebny jest model z **dużym
+> oknem kontekstu**: użyj dostawcy API (np. OpenAI), albo — kosztem RAM —
+> podnieś kontekst Ollamy (`OLLAMA_CONTEXT_LENGTH=32768`, restart serwera).
+> Agent liniowy/planer dzielą akta na małe kawałki, więc te działają na Ollamie
+> bez problemu — baseline jest tu wyjątkiem właśnie przez jeden wielki prompt.
+
 ## Wyniki (zużycie kontekstu)
 
 | metryka | wartość |
@@ -37,10 +46,11 @@ uv run python -m src.eval.compare
 | znaki kontekstu | 53 100 |
 | tokeny wejścia (prompt) | ~19 761 |
 
-Całe akta mieszczą się w jednym oknie kontekstu (~20 tys. tokenów), więc naiwne
-podejście **technicznie zadziała**. Pytanie warsztatowe brzmi jednak nie „czy
-zadziała", tylko **„czy zrobi to dobrze"** — i to zweryfikujemy ewaluacją na
-podstawie `data/eval.json`.
+Całe akta to ~20 tys. tokenów — mieszczą się w jednym oknie kontekstu, **o ile
+model ma dość duże okno** (dostawcy API to mają; Ollama domyślnie nie — patrz
+ostrzeżenie wyżej). Przy modelu z dużym kontekstem naiwne podejście **technicznie
+zadziała**, więc pytanie warsztatowe brzmi nie „czy zadziała", tylko **„czy zrobi
+to dobrze"** — i to zweryfikujemy ewaluacją na podstawie `data/eval.json`.
 
 ## Ograniczenia (czyli po co agent)
 

@@ -120,7 +120,7 @@ ollama list               # sprawdź, że jest na liście
 
 W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_walkthrough.ipynb`
 (naiwne podejście + ewaluacja), `linear_walkthrough.ipynb` (agent liniowy),
-`planner_walkthrough.ipynb` (planer), `eval_walkthrough.ipynb` (ewaluacja).
+`planner_walkthrough.ipynb` (planer).
 
 > Najpierw upewnij się, że model działa: dla qwena uruchom Ollamę (patrz wyżej),
 > a w pierwszej komórce notebooka odkomentuj sekcję B (Ollama).
@@ -209,7 +209,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # setup + baseline/linear/planner_walkthrough + eval_walkthrough
+├── notebooks/         # setup + baseline/linear/planner_walkthrough
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -256,8 +256,7 @@ WomenInTech/
 - **`notebooks/`** (`uv run jupyter lab`): `setup.ipynb` (konfiguracja LLM + test —
   zacznij tutaj), `baseline_walkthrough.ipynb` (naiwne podejście + ewaluacja),
   `linear_walkthrough.ipynb` (umiejętności krok po kroku),
-  `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję)
-  oraz `eval_walkthrough.ipynb` (sama ewaluacja).
+  oraz `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
 ## 🛠️ Wymagania
