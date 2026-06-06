@@ -47,7 +47,9 @@ EXTRACT_SYSTEM_PROMPT = (
     "POMIŃ: oceny prawne, kwalifikacje czynów, wnioski apelacji, argumentację "
     "i interpretacje przepisów — to nie są fakty do weryfikacji.\n\n"
     "Każde twierdzenie sformułuj jako jedno samodzielne, konkretne zdanie "
-    "(rozwiń zaimki, żeby było zrozumiałe bez kontekstu)."
+    "(rozwiń zaimki, żeby było zrozumiałe bez kontekstu).\n\n"
+    "Wyciągnij NAJWYŻEJ 30 najważniejszych twierdzeń — jeśli jest ich więcej, "
+    "wybierz te najistotniejsze dla sprawy (nie rozdrabniaj na drobiazgi)."
 )
 
 
@@ -61,9 +63,11 @@ class Claim(BaseModel):
 
 
 class ClaimList(BaseModel):
-    """Lista twierdzeń faktycznych z jednej apelacji."""
+    """Lista twierdzeń faktycznych z jednej apelacji (najwyżej 30)."""
 
-    claims: list[Claim] = Field(..., description="Wszystkie twierdzenia faktyczne")
+    claims: list[Claim] = Field(
+        ..., max_length=30, description="Najważniejsze twierdzenia faktyczne (≤30)"
+    )
 
 
 def extract_claims(appeal_text: str, model: str | None = None) -> list[Claim]:
