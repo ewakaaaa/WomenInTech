@@ -14,6 +14,10 @@ from pydantic import BaseModel, Field
 
 from src.llm import call_llm
 
+# Klucz oceny liczony od korzenia repo, żeby ewaluacja działała niezależnie od
+# bieżącego katalogu (np. z notebooka w notebooks/).
+_DEFAULT_EVAL_PATH = Path(__file__).resolve().parents[2] / "data" / "eval.json"
+
 JUDGE_SYSTEM_PROMPT = (
     "Jesteś egzaminatorem na egzaminie radcowskim. Oceniasz, czy przygotowana "
     "apelacja porusza konkretne zagadnienie wymagane w kluczu odpowiedzi. Bądź "
@@ -45,7 +49,7 @@ class CoverageResult(BaseModel):
     results: list[IssueResult] = Field(..., description="Wynik per zagadnienie")
 
 
-def load_eval(path: str | Path = "data/eval.json") -> list[str]:
+def load_eval(path: str | Path = _DEFAULT_EVAL_PATH) -> list[str]:
     """Load the list of required issues from the evaluation key."""
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -67,7 +71,7 @@ def _judge_issue(appeal_text: str, issue: str, model: str | None = None) -> Issu
 
 def evaluate(
     appeal_text: str,
-    eval_path: str | Path = "data/eval.json",
+    eval_path: str | Path = _DEFAULT_EVAL_PATH,
     model: str | None = None,
 ) -> CoverageResult:
     """Evaluate an appeal against every issue in the evaluation key."""
@@ -87,7 +91,7 @@ def evaluate(
 
 
 def evaluate_file(
-    path: str | Path, eval_path: str | Path = "data/eval.json", model: str | None = None
+    path: str | Path, eval_path: str | Path = _DEFAULT_EVAL_PATH, model: str | None = None
 ) -> CoverageResult:
     """Evaluate an appeal stored in a text file."""
     return evaluate(Path(path).read_text(encoding="utf-8"), eval_path=eval_path, model=model)

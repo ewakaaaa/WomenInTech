@@ -13,6 +13,11 @@ _EXAM_HEADER = re.compile(
     r"EGZAMIN\s+RADCOWSKI\s*[-–]\s*PRAWO\s+(CYWILNE|KARNE)", re.IGNORECASE
 )
 
+# Katalog z aktami liczony od korzenia repo (a nie od bieżącego katalogu), żeby
+# `load_all()` działało niezależnie od tego, skąd uruchomiono kod (np. notebook
+# w notebooks/).
+_DEFAULT_INPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "input"
+
 
 class Document(BaseModel):
     """A single document from the case files."""
@@ -38,7 +43,7 @@ def load_pdf(path: str | Path) -> Document:
     )
 
 
-def load_all(input_dir: str | Path = "data/input") -> list[Document]:
+def load_all(input_dir: str | Path = _DEFAULT_INPUT_DIR) -> list[Document]:
     """Load every PDF from a directory, sorted by filename."""
     paths = sorted(Path(input_dir).glob("*.pdf"))
     if not paths:

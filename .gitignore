@@ -52,6 +52,9 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# Wygenerowane apelacje (artefakty przebiegów)
+data/output/
+
 # IPython
 profile_default/
 ipython_config.py
