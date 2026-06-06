@@ -74,35 +74,18 @@ Konfigurację sprawdzisz notebookiem `notebooks/setup.ipynb`.
 ### Dlaczego `gpt-5.4`?
 
 Zadanie wymaga **dużego okna kontekstu** (sam prompt baseline to ~19 tys. tokenów)
-oraz „skoków" prawniczych — wychwycenia subtelnych wątków proceduralnych. Próbowaliśmy
-taniego **`gpt-5.4-mini`** (kilka razy taniej), ale gubi on te niuanse — a użyty jako
-sędzia w ewaluacji dodatkowo ich nie zalicza („podwójne wąskie gardło mini": słaby
-autor nie robi skoków prawnych, słaby sędzia ich nie docenia). Dlatego dla wiarygodnych
+oraz wiedzy prawniczej — wychwycenia subtelnych wątków proceduralnych. Próbowaliśmy
+taniego **`gpt-5.4-mini`**, ale gubi on te niuanse — a użyty jako
+sędzia w ewaluacji dodatkowo ich nie zalicza. Dlatego dla wiarygodnych
 wyników (generacja i ocena) używamy `gpt-5.4`. Działa z każdym dostawcą zgodnym
 z interfejsem OpenAI — wystarczy zmienić `LLM_BASE_URL`.
 
-### Który model gdzie? (ważne)
-
-Rozdzieliliśmy dwa zastosowania, żeby nie przepalać budżetu na demo:
-
-| gdzie | model | po co |
-|---|---|---|
-| **notebooki** (`notebooks/*.ipynb`) | `gpt-5.4-mini` | **cele demonstracyjne** — tanio przeklikać przepływ na żywo na warsztacie. Model wymuszony w komórce konfiguracyjnej (`os.environ["LLM_MODEL"] = "gpt-5.4-mini"`), niezależnie od `.env`. |
-| **moduły podejść** (`python -m baseline.main`, `python -m agent_linear.main`) | `gpt-5.4` (z `.env`) | **właściwe wyniki** — to z nich pochodzą liczby w README podejść. |
-
-Wyjątek: **ocena jakości** (`src/eval/quality.py`) zawsze idzie mocnym sędzią
-(`gpt-5.4`), nawet wywołana z notebooka — tani model nie wyłapuje błędów formalnych.
-
 ## 📓 Notebooki — jak uruchomić
 
-W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_walkthrough.ipynb`
-(naiwne podejście — sama generacja), `eval_walkthrough.ipynb` (ewaluacja na przykładzie
-baseline: pokrycie + jakość), `linear_walkthrough.ipynb` (agent liniowy krok po kroku).
-
-> Najpierw uzupełnij `.env` (klucz `LLM_API_KEY`) — notebooki czytają stąd klucz.
-> **Model w notebookach jest wymuszony na `gpt-5.4-mini`** (tanie demo), więc wartość
-> `LLM_MODEL` z `.env` nie ma tu znaczenia. Po właściwe wyniki uruchom moduły podejść
-> (`python -m baseline.main`) — tam działa `gpt-5.4` z `.env`.
+- `setup.ipynb` (test konfiguracji),
+- `baseline_walkthrough.ipynb` (naiwne podejście — sama generacja),
+- `eval_walkthrough.ipynb` (ewaluacja na przykładzie baseline: pokrycie + jakość)
+- `linear_walkthrough.ipynb` (agent liniowy krok po kroku).
 
 ### Najprościej: w przeglądarce (JupyterLab)
 
@@ -136,17 +119,6 @@ To tworzy plik `womenintech.pth` w `site-packages`, który przy **każdym starci
 kernela** dokłada katalog projektu do `sys.path` — importy działają z dowolnego
 notebooka. Po utworzeniu pliku **zrestartuj kernel** (Kernel → Restart Kernel),
 bo `.pth` czyta się tylko przy starcie.
-
-### W edytorze Zed
-
-Zed **nie renderuje `.ipynb`** (pokazuje surowy JSON), ale ma **REPL**. Pracuj na
-pliku `.py` z komórkami `# %%`:
-
-1. Otwórz plik `.py` w Zedzie.
-2. Postaw kursor w komórce (między znacznikami `# %%`).
-3. Otwórz paletę: **⌘ ⇧ P** → wpisz **`repl: run`** (lub skrót **⌃ ⇧ Return**).
-
-Wynik pojawia się pod komórką; pierwsze uruchomienie startuje kernel.
 
 ## 📂 Struktura projektu
 
@@ -191,33 +163,6 @@ WomenInTech/
 ├── uv.lock            # zablokowane wersje
 └── requirements.txt   # fallback dla pip
 ```
-
-### Moduły i podejścia
-
-Wspólne moduły w `src/` (logika **niezależna od frameworka** — to samo działa
-liniowo i w grafie):
-
-| moduł | rola |
-|---|---|
-| `src/loader.py` | wczytywanie PDF → `Document` (`load_pdf`, `load_all`) |
-| `src/llm.py` | `call_llm` — jeden punkt wywołania LLM (instructor, klient zgodny z OpenAI) |
-| `src/tokens.py` | liczenie tokenów (tiktoken) |
-| `src/sources.py` | `prepare_input_texts` — selektywny kontekst (wybór dok. po nazwie) |
-| [`src/skills/`](src/skills/README.md) | 5 umiejętności agenta: `file_description`, `tasks`, `make_task`, `strategy`, `document` |
-| [`src/eval/`](src/eval/README.md) | ewaluacja: pokrycie (`coverage`) + jakość (`quality`), LLM-as-judge |
-
-Podejścia (każde z własnym README — tam wyniki i szczegóły):
-
-| podejście | w skrócie | więcej |
-|---|---|---|
-| `baseline/` | naiwna wersja 0: całe akta → jeden prompt | [README](baseline/README.md) |
-| `agent_linear/` | te same umiejętności po kolei (pętle `for`) | [README](agent_linear/README.md) |
-| `agent_langgraph/` | to samo jako graf — fan-out przez `Send` (szybciej, ten sam koszt) | [README](agent_langgraph/README.md) |
-| `agent_planner/` | agent nieliniowy — **sama idea, bez kodu** | [README](agent_planner/README.md) |
-
-Reszta: [`data/`](data/README.md) (akta + klucz oceny) ·
-[`notebooks/`](#-notebooki--jak-uruchomić) (demo na `gpt-5.4-mini`) ·
-[`presentation/`](presentation/README.md) (plan warsztatu).
 
 ## 🛠️ Wymagania
 

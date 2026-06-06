@@ -1,24 +1,17 @@
 # Umiejętności (skills)
 
-Każda umiejętność to **czysta funkcja** z `<umiejętność>/main.py` (wejście →
-wyjście walidowane przez Pydantic). Robi jedną rzecz i nie wie nic o pozostałych
-— dzięki temu da się ją testować osobno i opakować jako węzeł grafu.
+Każda umiejętność to **czysta funkcja** (wejście → wyjście walidowane przez Pydantic). Robi jedną rzecz i nie wie nic o pozostałych — dzięki temu da się ją testować osobno i opakować jako węzeł grafu.
 
 Te same skille spinają dwa podejścia:
 
 - [`agent_linear/`](../../agent_linear/) — wywołuje je po kolei (pętle `for`),
 - [`agent_langgraph/`](../../agent_langgraph/) — to samo, ale z równoległym fan-outem (`Send`).
 
-Jest jeszcze [`agent_planner/`](../../agent_planner/) — agent **nieliniowy** (planer
-decydujący, co dalej), ale to **tylko idea** (README + diagram, bez kodu), więc nie
-spina tu żadnego skilla.
-
 Pliki spinające (`main.py` / `graph.py`) tylko wołają umiejętności i
 przekazują wyniki — logika siedzi w skillach.
 
 ## Co robi każda umiejętność (i jaki problem baseline rozwiązuje)
 
-Baseline (`baseline/`) robił wszystko jednym promptem — całe akta w jeden strzał.
 Agent rozbija to na umiejętności, każda rozwiązuje konkretny problem naiwnego
 podejścia (lista problemów: [`baseline/README.md`](../../baseline/README.md)).
 

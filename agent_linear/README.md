@@ -38,29 +38,17 @@ fragmentach.
 
 ## Co robi każda umiejętność
 
-Opis wszystkich umiejętności (co robią i jaki problem baseline rozwiązują) jest
-wspólny dla wszystkich podejść i mieszka w [`src/skills/README.md`](../src/skills/README.md).
-Tutaj liczy się tylko, że agent liniowy odpala je **po kolei**.
+Opis wszystkich umiejętności [`src/skills/README.md`](../src/skills/README.md).
 
 ## Uruchomienie
 
 ```bash
-# generacja apelacji + ocena (pokrycie + jakość); model z .env (gpt-5.4)
 uv run python -m agent_linear.main
 ```
 
-Zapisuje apelację i log przebiegu do `agent_linear/output/`. W logu znajdziesz
-**koszt metody** (sama generacja, wszystkie wywołania pipeline'u) i — osobno —
-koszt ewaluacji.
-
-Krok po kroku (tanie demo na `gpt-5.4-mini`): `notebooks/linear_walkthrough.ipynb`
-(sam przepływ, bez oceny). Ewaluację pokazujemy na przykładzie baseline w
-`notebooks/eval_walkthrough.ipynb` — tę samą `evaluate(...)` można puścić na apelacji liniowej.
+Krok po kroku: `notebooks/linear_walkthrough.ipynb`(sam przepływ, bez oceny). 
 
 ## Wyniki ewaluacji (`gpt-5.4`)
-
-Przebieg `python -m agent_linear.main` (model z `.env`). **Koszt metody** to sama
-generacja (cały pipeline) — koszt ewaluacji liczony osobno.
 
 | miara | wynik |
 |-------|-------|
@@ -69,7 +57,3 @@ generacja (cały pipeline) — koszt ewaluacji liczony osobno.
 | **czas metody** | **433,5 s** (~7 min, 11 wywołań, ≈39,4 s/wyw.) |
 | **pokrycie** (zagadnienia z `data/eval.json`) | **8/12 = 67%** |
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
-
-Pokrycie wyraźnie wyższe niż baseline (**67% vs 33%**) — selektywny kontekst i analiza
-krok po kroku wyłapują więcej wymaganych zagadnień. Pełny log:
-`agent_linear/output/run_<znacznik>.log`.

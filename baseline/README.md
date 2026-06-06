@@ -1,4 +1,4 @@
-# Baseline — wersja 0 (naiwne podejście)
+# Baseline — (naiwne podejście)
 
 > Po co budować agenta, skoro można wrzucić wszystko do LLM-a z jednym promptem
 > „napisz apelację"? Ta sekcja to punkt wyjścia warsztatu — pokazuje najprostsze
@@ -27,16 +27,12 @@ Artefakty przebiegu lądują w `baseline/output/` (apelacja + log; poza gitem).
 uv run python -m baseline.main
 ```
 
-Zapisuje apelację i log przebiegu do `baseline/output/`, a w logu znajdziesz
-**koszt metody** (sama generacja) i — osobno — koszt ewaluacji.
-
 Krok po kroku w notebookach (tanie demo na `gpt-5.4-mini`):
 `notebooks/baseline_walkthrough.ipynb` (generacja) +
 `notebooks/eval_walkthrough.ipynb` (pokrycie + jakość).
 
 > ⚠️ Baseline wrzuca **całe akta w jeden prompt** (~19–20 tys. tokenów), więc
-> wymaga modelu z **dużym oknem kontekstu** — używamy `gpt-5.4`. (Agent
-> liniowy/grafowy dzielą akta na małe kawałki, więc są pod tym względem łagodniejsze.)
+> wymaga modelu z **dużym oknem kontekstu** — używamy `gpt-5.4`.
 
 ## Wyniki (zużycie kontekstu)
 
@@ -47,18 +43,17 @@ Krok po kroku w notebookach (tanie demo na `gpt-5.4-mini`):
 | tokeny wejścia (prompt) | ~19 761 |
 
 Całe akta to ~20 tys. tokenów — mieszczą się w jednym oknie kontekstu `gpt-5.4`,
-więc naiwne podejście **technicznie zadziała**. Pytanie warsztatowe brzmi jednak
+więc naiwne podejście **technicznie zadziała**. Pytanie brzmi jednak
 nie „czy zadziała", tylko **„czy zrobi to dobrze"** — i to zweryfikujemy ewaluacją
 na podstawie `data/eval.json`.
 
 ## Wyniki ewaluacji (`gpt-5.4`)
 
-Przebieg `python -m baseline.main` (model z `.env`). **Koszt metody** to sama
-generacja apelacji — koszt ewaluacji liczony osobno (nie wlicza się do metody).
+Przebieg `python -m baseline.main` (model z `.env`).
 
 | miara | wynik |
 |-------|-------|
-| **koszt metody** (sama generacja) | ~**$0,105** (1 wywołanie, 19 473 wej + 3 757 wyj tok) |
+| **koszt** | ~**$0,105** (1 wywołanie, 19 473 wej + 3 757 wyj tok) |
 | **czas metody** | **48,3 s** (1 wywołanie) |
 | **pokrycie** (zagadnienia z `data/eval.json`) | **4/12 = 33%** |
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
@@ -86,6 +81,3 @@ Naiwne podejście „wszystko → jeden prompt" rodzi konkretne problemy:
   aktach nie ma. W piśmie procesowym to dyskwalifikuje wynik.
 - **Trudno iterować.** To monolit — nie da się poprawić ani przetestować pojedynczego
   etapu w oderwaniu od reszty.
-
-Jak te problemy rozwiązuje podejście wieloetapowe (i co robi każdy klocek) —
-opisane w [`agent_linear/README.md`](../agent_linear/README.md).

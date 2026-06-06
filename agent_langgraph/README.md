@@ -6,9 +6,7 @@
 > *co* agent robi, tylko **jak szybko** to liczy (przy tym samym koszcie).
 >
 > ⚠️ Dlatego **pokrycia i jakości nie raportujemy tutaj** — mierzymy je na
-> `agent_linear/` (stabilny wynik **67% / 4,33**). Pojedynczy przebieg grafu potrafi
-> dać inne pokrycie (losowość modelu → inna apelacja), więc tu pokazujemy **tylko
-> czas i koszt**.
+> `agent_linear/`  
 
 📊 Diagram grafu (mermaid, generowany z kodu): [`graph.md`](graph.md).
 
@@ -64,35 +62,15 @@ orkiestracja (jak `agent_linear/`) jest tańsza w utrzymaniu niż dług zależno
 ## Morał warsztatowy
 
 Logika umiejętności (`src/skills/*`) jest **niezależna od frameworka** — dlatego
-ten sam kod działa i liniowo, i w grafie. LangGraph dokładamy na końcu po to, by
-zyskać równoległość, obserwowalność, trwałość i human-in-the-loop — a nie po to,
-by „model pisał lepiej".
+ten sam kod działa i liniowo, i w grafie.
 
 ## Uruchomienie (CLI)
 
 ```bash
-# sama generacja (BEZ oceny); model z .env (gpt-5.4)
 uv run python -m agent_langgraph.main
 ```
 
-Zapisuje apelację i log przebiegu do `agent_langgraph/output/` (jak baseline i
-agent liniowy). Świadomie **bez ewaluacji** — pokrycie/jakość mierzymy na linerze
-(stabilny wynik), bo pojedynczy przebieg grafu potrafi dać inne pokrycie (losowość
-modelu). Tu interesują nas tylko dwie rzeczy:
-
-- **czas wall-clock** — realny czas przy równoległym fan-oucie; powinien być
-  wyraźnie krótszy niż suma czasów wywołań LLM (zysk z `Send`),
-- **koszt metody** — sprawdzamy, czy LangGraph go **nie podbija**. Z założenia ma
-  wyjść jak u linera (~$0,743): te same skille, te same wywołania, opisy z cache —
-  fan-out zmienia tylko kolejność, nie liczbę wywołań. Większy koszt = sygnał, że
-  graf gdzieś dubluje wywołania.
-
 ## Wyniki — tylko czas i koszt (`gpt-5.4`)
-
-Mierzymy **wyłącznie** to, co jest sednem tej wersji: czy przy tej samej logice jest
-**szybciej** i czy graf **nie podbija kosztu**. Pokrycie/jakość → patrz `agent_linear/`.
-
-Przebieg 2026-06-06 (`gpt-5.4`, 12 wywołań):
 
 | miara | wynik | liner (sekwencyjnie) |
 |-------|-------|----------------------|
@@ -101,5 +79,4 @@ Przebieg 2026-06-06 (`gpt-5.4`, 12 wywołań):
 | **koszt metody** (cały graf) | **$0,7349** (88 188 wej + 34 292 wyj tok) | ~$0,743 |
 
 Puenta: **koszt taki sam jak liner** (~$0,74 — fan-out nie podbija liczby wywołań),
-a realny czas **≈2,6× krótszy** dzięki równoległości. Pełny log:
-`agent_langgraph/output/run_<znacznik>.log`.
+a realny czas **≈2,6× krótszy** dzięki równoległości.
