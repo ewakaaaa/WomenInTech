@@ -28,16 +28,10 @@ JUDGE_SYSTEM_PROMPT = (
 
 
 class IssueVerdict(BaseModel):
-    """LLM judge verdict for a single issue."""
+    """LLM judge verdict for a single issue (reasoning najpierw, potem ocena)."""
 
-    covered: bool = Field(..., description="Czy apelacja porusza to zagadnienie")
     reasoning: str = Field(..., description="Krótkie uzasadnienie oceny")
-
-
-class IssueResult(IssueVerdict):
-    """Verdict together with the issue it refers to."""
-
-    issue: str = Field(..., description="Treść zagadnienia z klucza")
+    covered: bool = Field(..., description="Czy apelacja porusza to zagadnienie")
 
 
 class CoverageResult(BaseModel):
@@ -46,7 +40,7 @@ class CoverageResult(BaseModel):
     total: int = Field(..., description="Liczba zagadnień w kluczu")
     covered: int = Field(..., description="Liczba poruszonych zagadnień")
     score: float = Field(..., description="covered / total (0.0–1.0)")
-    results: list[IssueResult] = Field(..., description="Wynik per zagadnienie")
+    results: list[IssueVerdict] = Field(..., description="Werdykt per zagadnienie (w kolejności klucza)")
 
 
 def load_eval(path: str | Path = _DEFAULT_EVAL_PATH) -> list[str]:
@@ -76,10 +70,7 @@ def evaluate(
 ) -> CoverageResult:
     """Evaluate an appeal against every issue in the evaluation key."""
     issues = load_eval(eval_path)
-    results = [
-        IssueResult(issue=issue, **_judge_issue(appeal_text, issue, model=model).model_dump())
-        for issue in issues
-    ]
+    results = [_judge_issue(appeal_text, issue, model=model) for issue in issues]
     covered = sum(r.covered for r in results)
     total = len(results)
     return CoverageResult(

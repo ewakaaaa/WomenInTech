@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.eval.coverage import CoverageResult, evaluate_file
+from src.eval.coverage import CoverageResult, evaluate_file, load_eval
 
 APPROACHES: list[tuple[str, str]] = [
     ("baseline", "baseline/apelacja_baseline.txt"),
@@ -38,9 +38,10 @@ def main() -> None:
     for name, r in reports:
         print(f"{name:18} {f'{r.covered}/{r.total}':>8} {r.score:>6.0%}")
 
-    # brakujące zagadnienia per podejście
+    # brakujące zagadnienia per podejście (treść zagadnień z klucza, wg kolejności)
+    issues = load_eval()
     for name, r in reports:
-        missing = [res.issue for res in r.results if not res.covered]
+        missing = [iss for iss, res in zip(issues, r.results) if not res.covered]
         if missing:
             print(f"\n{name} — niepokryte zagadnienia ({len(missing)}):")
             for issue in missing:
