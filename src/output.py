@@ -1,9 +1,10 @@
-"""Zapis artefaktów przebiegu do `data/output/<metoda>/`.
+"""Zapis artefaktów przebiegu do `<metoda>/output/`.
 
-Każda metoda ma swój podfolder (`baseline/`, `agent_linear/`, ...), a w nim
-lądują i wygenerowana apelacja, i log przebiegu — wszystko z jednego uruchomienia
-w jednym miejscu. Nazwy plików mają znacznik czasu, więc kolejne przebiegi się nie
-nadpisują. Katalog `data/output/` jest poza gitem (artefakty).
+Każda metoda zapisuje do własnego podkatalogu `output/` obok swojego kodu
+(`baseline/output/`, `agent_linear/output/`, ...), a w nim lądują i wygenerowana
+apelacja, i log przebiegu — wszystko z jednego uruchomienia w jednym miejscu.
+Nazwy plików mają znacznik czasu, więc kolejne przebiegi się nie nadpisują.
+Katalogi `output/` są poza gitem (artefakty).
 """
 
 from __future__ import annotations
@@ -13,13 +14,13 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
-# Katalog na artefakty liczony od korzenia repo (niezależnie od bieżącego katalogu).
-OUTPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "output"
+# Korzeń repo liczony od pliku (niezależnie od bieżącego katalogu).
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def approach_dir(approach: str) -> Path:
-    """Podfolder danej metody (`data/output/<approach>/`); tworzy go, jeśli brak."""
-    path = OUTPUT_DIR / approach
+    """Podkatalog artefaktów danej metody (`<approach>/output/`); tworzy go, jeśli brak."""
+    path = REPO_ROOT / approach / "output"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -29,7 +30,7 @@ def tee_output(approach: str):
     """Duplikuj wszystko, co leci na ``stdout``, do pliku logu w folderze metody.
 
     Dzięki temu printy z generacji i ewaluacji (m.in. checki z `evaluate`) lądują
-    też w pliku `data/output/<approach>/run_<RRRR-MM-DD_GGMMSS>.log` — do
+    też w pliku `<approach>/output/run_<RRRR-MM-DD_GGMMSS>.log` — do
     wklejenia/porównania bez przewijania terminala.
 
         with tee_output("baseline") as log_path:
@@ -61,7 +62,7 @@ def tee_output(approach: str):
 
 
 def save_appeal(text: str, approach: str) -> Path:
-    """Zapisz apelację do `data/output/<approach>/apelacja_<RRRR-MM-DD_GGMMSS>.txt`.
+    """Zapisz apelację do `<approach>/output/apelacja_<RRRR-MM-DD_GGMMSS>.txt`.
 
     Args:
         text: treść apelacji.
@@ -82,7 +83,7 @@ def latest_appeal_path(approach: str) -> Path | None:
     Znacznik czasu w nazwie jest sortowalny leksykograficznie, więc ostatni plik
     po posortowaniu jest najnowszy.
     """
-    files = sorted((OUTPUT_DIR / approach).glob("apelacja_*.txt"))
+    files = sorted((REPO_ROOT / approach / "output").glob("apelacja_*.txt"))
     return files[-1] if files else None
 
 
@@ -94,6 +95,6 @@ def load_latest_appeal(approach: str) -> str:
     path = latest_appeal_path(approach)
     if path is None:
         raise FileNotFoundError(
-            f"Brak zapisanej apelacji dla podejścia '{approach}' w {OUTPUT_DIR / approach}"
+            f"Brak zapisanej apelacji dla podejścia '{approach}' w {REPO_ROOT / approach / 'output'}"
         )
     return path.read_text(encoding="utf-8")

@@ -18,7 +18,7 @@
 | `prompts.py` | system prompt |
 | `main.py` | `build_context`, `generate_appeal`; uruchomiony: generacja → zapis → ocena (pokrycie + jakość) + log |
 
-Artefakty przebiegu lądują w `data/output/baseline/` (apelacja + log; poza gitem).
+Artefakty przebiegu lądują w `baseline/output/` (apelacja + log; poza gitem).
 
 ## Uruchomienie
 
@@ -27,7 +27,7 @@ Artefakty przebiegu lądują w `data/output/baseline/` (apelacja + log; poza git
 uv run python -m baseline.main
 ```
 
-Zapisuje apelację i log przebiegu do `data/output/baseline/`, a w logu znajdziesz
+Zapisuje apelację i log przebiegu do `baseline/output/`, a w logu znajdziesz
 **koszt metody** (sama generacja) i — osobno — koszt ewaluacji.
 
 Krok po kroku w notebookach (tanie demo na `gpt-5.4-mini`):
@@ -64,7 +64,7 @@ generacja apelacji — koszt ewaluacji liczony osobno (nie wlicza się do metody
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
 
 > Liczby z jednego przebiegu — zależą od losowości modelu. Pełny log:
-> `data/output/baseline/run_<znacznik>.log`.
+> `baseline/output/run_<znacznik>.log`.
 
 ## Ograniczenia (czyli po co agent)
 

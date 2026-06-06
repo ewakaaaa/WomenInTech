@@ -52,7 +52,9 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Wygenerowane apelacje (artefakty przebiegów)
+# Wygenerowane apelacje i logi przebiegów (artefakty) — per metoda: <metoda>/output/
+*/output/
+# cache opisów dokumentów (described.json) i starsze artefakty
 data/output/
 
 # IPython
