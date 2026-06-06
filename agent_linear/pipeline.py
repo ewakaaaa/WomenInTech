@@ -9,10 +9,8 @@ variables. Later, LangGraph will replace this hand-written sequencing and the
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from src.descriptions import get_descriptions
-from src.loader import load_all
+from src.loader import Document, load_all
 from src.skills.document.main import generate_document
 from src.skills.document.schemas import GeneratedDocument
 from src.skills.make_task.main import make_task
@@ -21,11 +19,14 @@ from src.skills.tasks.main import generate_tasks
 from src.sources import prepare_input_texts
 
 GOAL = "Wygeneruj apelację z perspektywy obrony"
-OUTPUT_PATH = "agent_linear/apelacja.txt"
 
 
-def run(goal: str = GOAL, model: str | None = None) -> GeneratedDocument:
-    documents = load_all()
+def run(
+    goal: str = GOAL,
+    model: str | None = None,
+    documents: list[Document] | None = None,
+) -> GeneratedDocument:
+    documents = documents if documents is not None else load_all()
     print(f"Loaded {len(documents)} documents")
 
     # 1. generate_file_description — opisz każdy dokument (z cache: liczone raz)
@@ -55,9 +56,23 @@ def run(goal: str = GOAL, model: str | None = None) -> GeneratedDocument:
 
 
 if __name__ == "__main__":
-    document = run()
+    # Generacja + ocena POKRYCIA z CLI (bez notebooka, bez halucynacji):
+    #   uv run python -m agent_linear.pipeline
+    import os
 
-    output = Path(OUTPUT_PATH)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(document.tekst, encoding="utf-8")
-    print(f"Saved to {OUTPUT_PATH} ({len(document.tekst):,} chars)")
+    from src.cost import cost_summary
+    from src.eval.report import evaluate_appeal
+    from src.llm import track_usage
+    from src.output import save_appeal
+
+    print("=== GENERACJA (agent liniowy) ===")
+    documents = load_all()
+    with track_usage() as gen_usage:
+        document = run(documents=documents)
+    appeal = document.tekst
+
+    saved = save_appeal(appeal, "agent_linear")
+    print(f"\nZapisano apelację: {saved} ({len(appeal):,} znaków)")
+    print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+
+    evaluate_appeal(appeal)

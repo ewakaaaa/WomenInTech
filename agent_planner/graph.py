@@ -64,9 +64,8 @@ def human_node(state: PlannerState) -> dict:
 def document_node(state: PlannerState) -> dict:
     decision = state["decision"]
     strategy = Strategy(
-        definition_of_success=state["goal"],
-        strategies=decision.reasoning,
-        best_strategy=decision.conclusion or decision.reasoning,
+        reasoning=decision.reasoning,
+        prioritized_grounds=[decision.conclusion or decision.reasoning],
     )
     document = generate_document(state["goal"], strategy, state.get("task_outputs", []))
     return {"document": document.tekst}

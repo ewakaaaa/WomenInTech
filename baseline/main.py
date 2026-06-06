@@ -9,16 +9,12 @@ text file, which the evaluator (``baseline/eval.py``) then reads.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from pydantic import BaseModel, Field
 
 from baseline.prompts import SYSTEM_PROMPT
 from src.llm import call_llm
 from src.loader import Document, load_all
 from src.tokens import count_tokens
-
-OUTPUT_PATH = "baseline/apelacja_baseline.txt"
 
 
 def build_context(docs: list[Document]) -> str:
@@ -43,18 +39,25 @@ def generate_appeal(docs: list[Document], model: str | None = None) -> Appeal:
 
 
 if __name__ == "__main__":
+    # Generacja + ocena POKRYCIA z CLI (model z .env, np. gpt-5.4):
+    #   uv run python -m baseline.main
+    import os
+
+    from src.cost import cost_summary
+    from src.eval.report import evaluate_appeal
+    from src.llm import track_usage
+    from src.output import save_appeal
+
     docs = load_all()
-    context = build_context(docs)
-    prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + context)
+    prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + build_context(docs))
+    print(f"Dokumentów: {len(docs)} | prompt: ~{prompt_tokens:,} tokenów\n")
 
-    print(f"Documents loaded: {len(docs)}")
-    print(f"Context characters: {len(context):,}")
-    print(f"Prompt tokens (input): ~{prompt_tokens:,}")
+    print("=== GENERACJA (baseline) ===")
+    with track_usage() as gen_usage:
+        appeal = generate_appeal(docs).tekst
 
-    print("Generating appeal...")
-    appeal = generate_appeal(docs)
+    saved = save_appeal(appeal, "baseline")
+    print(f"Zapisano apelację: {saved} ({len(appeal):,} znaków)")
+    print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
 
-    output = Path(OUTPUT_PATH)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(appeal.tekst, encoding="utf-8")
-    print(f"Saved appeal to {OUTPUT_PATH} ({len(appeal.tekst):,} chars)")
+    evaluate_appeal(appeal)
