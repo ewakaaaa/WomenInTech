@@ -56,7 +56,7 @@ def run(
 
 
 if __name__ == "__main__":
-    # Generacja + ocena POKRYCIA z CLI (bez notebooka, bez halucynacji):
+    # Generacja + ocena (pokrycie + jakość) z CLI (bez notebooka):
     #   uv run python -m agent_linear.main
     import os
 

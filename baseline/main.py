@@ -39,7 +39,7 @@ def generate_appeal(docs: list[Document], model: str | None = None) -> Appeal:
 
 
 if __name__ == "__main__":
-    # Generacja + ocena POKRYCIA z CLI (model z .env, np. gpt-5.4):
+    # Generacja + ocena (pokrycie + jakość) z CLI (model z .env, np. gpt-5.4):
     #   uv run python -m baseline.main
     import os
 
