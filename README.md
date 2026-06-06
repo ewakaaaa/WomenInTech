@@ -85,18 +85,37 @@ Konfigurację sprawdzisz notebookiem `notebooks/setup.ipynb`.
 Zadanie wymaga **dużego okna kontekstu** (sam prompt baseline to ~19 tys. tokenów)
 oraz „skoków" prawniczych — wychwycenia subtelnych wątków proceduralnych. Próbowaliśmy
 taniego **`gpt-5.4-mini`** (kilka razy taniej), ale gubi on te niuanse — a użyty jako
-sędzia w ewaluacji dodatkowo ich nie zalicza. Dlatego dla wiarygodnych wyników
-(generacja i ocena) używamy `gpt-5.4`. Działa z każdym dostawcą zgodnym z interfejsem
-OpenAI — wystarczy zmienić `LLM_BASE_URL`.
+sędzia w ewaluacji dodatkowo ich nie zalicza („podwójne wąskie gardło mini": słaby
+autor nie robi skoków prawnych, słaby sędzia ich nie docenia). Dlatego dla wiarygodnych
+wyników (generacja i ocena) używamy `gpt-5.4`. Działa z każdym dostawcą zgodnym
+z interfejsem OpenAI — wystarczy zmienić `LLM_BASE_URL`.
+
+### Który model gdzie? (ważne)
+
+Rozdzieliliśmy dwa zastosowania, żeby nie przepalać budżetu na demo:
+
+| gdzie | model | po co |
+|---|---|---|
+| **notebooki** (`notebooks/*.ipynb`) | `gpt-5.4-mini` | **cele demonstracyjne** — tanio przeklikać przepływ na żywo na warsztacie. Model wymuszony w komórce konfiguracyjnej (`os.environ["LLM_MODEL"] = "gpt-5.4-mini"`), niezależnie od `.env`. |
+| **moduły podejść** (`python -m baseline.main`, `python -m agent_linear.pipeline`) | `gpt-5.4` (z `.env`) | **właściwe wyniki** — to z nich pochodzą liczby w `WYNIKI.md` i w README podejść. |
+
+Wyjątek: **ocena jakości** (`src/eval/quality.py`) zawsze idzie mocnym sędzią
+(`gpt-5.4`), nawet wywołana z notebooka — tani model nie wyłapuje błędów formalnych.
+
+> ⚠️ Liczby czasu (s/wywołanie) w `WYNIKI.md` trzeba jeszcze raz przeliczyć po dodaniu
+> pomiaru czasu — uruchamiając moduły podejść na `gpt-5.4`.
 
 ## 📓 Notebooki — jak uruchomić
 
-W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_and_eval.ipynb`
-(naiwne podejście + ewaluacja krok po kroku), `linear_walkthrough.ipynb` (agent liniowy),
+W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_walkthrough.ipynb`
+(naiwne podejście — sama generacja), `eval_walkthrough.ipynb` (ewaluacja na przykładzie
+baseline: pokrycie + jakość), `linear_walkthrough.ipynb` (agent liniowy krok po kroku),
 `planner_walkthrough.ipynb` (planer).
 
-> Najpierw uzupełnij `.env` (klucz `LLM_API_KEY`, model `gpt-5.4`) — notebooki
-> czytają konfigurację stąd.
+> Najpierw uzupełnij `.env` (klucz `LLM_API_KEY`) — notebooki czytają stąd klucz.
+> **Model w notebookach jest wymuszony na `gpt-5.4-mini`** (tanie demo), więc wartość
+> `LLM_MODEL` z `.env` nie ma tu znaczenia. Po właściwe wyniki uruchom moduły podejść
+> (`python -m baseline.main`) — tam działa `gpt-5.4` z `.env`.
 
 ### Najprościej: w przeglądarce (JupyterLab)
 
@@ -182,7 +201,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # setup + baseline_and_eval + linear/planner_walkthrough
+├── notebooks/         # setup + baseline/eval/linear/planner_walkthrough (demo na gpt-5.4-mini)
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -225,9 +244,10 @@ WomenInTech/
   grafu decyduje, co dalej (analizuj / zapytaj człowieka / pisz / brak podstaw), więc
   graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
   potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline.
-- **`notebooks/`** (`uv run jupyter lab`): `setup.ipynb` (konfiguracja LLM + test —
-  zacznij tutaj), `baseline_and_eval.ipynb` (naiwne podejście + ewaluacja krok po kroku),
-  `linear_walkthrough.ipynb` (umiejętności krok po kroku),
+- **`notebooks/`** (`uv run jupyter lab`, **demo na `gpt-5.4-mini`**): `setup.ipynb`
+  (konfiguracja LLM + test — zacznij tutaj), `baseline_walkthrough.ipynb` (naiwne podejście —
+  sama generacja apelacji), `eval_walkthrough.ipynb` (ewaluacja na przykładzie baseline:
+  pokrycie + jakość), `linear_walkthrough.ipynb` (umiejętności krok po kroku),
   oraz `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 

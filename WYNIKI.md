@@ -42,6 +42,12 @@ Linear jest droższy (wiele wywołań: opisy → plan → wykonanie kroków → 
 Ograniczenie planu do **maks. 10 kroków** trzyma górną granicę kosztu w ryzach
 (wcześniej 19–20 kroków → ~$1.46).
 
+## Czas (do uzupełnienia)
+
+Pomiar czasu (`s/wywołanie`) dodaliśmy do `Usage`/`cost_summary` **po** tych przebiegach,
+więc powyższe liczby go nie mają. **TODO:** przepuścić jeszcze raz `python -m baseline.main`
+i `python -m agent_linear.pipeline` na `gpt-5.4`, żeby zebrać czas (i odświeżyć koszty).
+
 ## Notatki
 
 - Notebooki (`baseline_walkthrough`, `eval_walkthrough`, `linear_walkthrough`) chodzą na
