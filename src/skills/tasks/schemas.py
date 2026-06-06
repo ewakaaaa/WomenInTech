@@ -26,5 +26,6 @@ class Tasks(BaseModel):
 
     thoughts: List[Task] = Field(
         ...,
-        description="Lista kroków myślowych i działań zaplanowanych przez asystenta.",
+        max_length=10,
+        description="Lista kroków analizy (maksymalnie 10) zaplanowanych przez asystenta.",
     )

@@ -14,7 +14,11 @@ from src.skills.tasks.schemas import Task
 
 
 def make_task(
-    goal: str, task: Task, sources_text: str, model: str | None = None
+    goal: str,
+    task: Task,
+    sources_text: str,
+    model: str | None = None,
+    temperature: float = 0.0,
 ) -> TaskOutput:
     """Execute one analysis step over its selected sources."""
     result = call_llm(
@@ -29,6 +33,7 @@ def make_task(
         ],
         response_model=TaskAnalysis,
         model=model,
+        temperature=temperature,
         max_tokens=16000,
     )
     return TaskOutput(action=task.action, output=result.output)

@@ -22,6 +22,7 @@ def generate_document(
     strategy: Strategy,
     task_outputs: list[TaskOutput],
     model: str | None = None,
+    temperature: float = 0.0,
 ) -> GeneratedDocument:
     """Produce the final document from strategy and analysis."""
     return call_llm(
@@ -31,12 +32,13 @@ def generate_document(
                 "role": "user",
                 "content": USER_PROMPT.format(
                     general_goal=goal,
-                    strategy=strategy.best_strategy,
+                    strategy="\n".join(f"- {g}" for g in strategy.prioritized_grounds),
                     analysis=_format_analysis(task_outputs),
                 ),
             },
         ],
         response_model=GeneratedDocument,
         model=model,
+        temperature=temperature,
         max_tokens=16000,
     )

@@ -6,13 +6,21 @@ from pydantic import BaseModel, Field
 
 
 class Strategy(BaseModel):
-    """The chosen approach for reaching the goal."""
+    """Skonsolidowane i spriorytetyzowane wnioski z analizy (reasoning najpierw)."""
 
-    definition_of_success: str = Field(
-        ..., description="Jak należy rozumieć sukces w kontekście głównego zadania."
-    )
-    strategies: str = Field(
+    reasoning: str = Field(
         ...,
-        description="Rozumowanie na temat kilku możliwych strategii/podejść realizacji celu i osiągnięcia sukcesu",
+        description=(
+            "Podsumowanie i konsolidacja analiz: co istotne, co się powtarza "
+            "(bez dublowania), oraz uzasadnienie priorytetyzacji — wg WAGI dla "
+            "sprawy, a NIE częstości występowania (kilkukrotne pojawienie się "
+            "wątku nie znaczy, że jest najważniejszy)."
+        ),
     )
-    best_strategy: str = Field(..., description="Opis najlepszej strategii")
+    prioritized_grounds: list[str] = Field(
+        ...,
+        description=(
+            "Uporządkowana wg istotności lista zarzutów/wątków do ujęcia w "
+            "dokumencie — od najważniejszego. Bez powtórzeń."
+        ),
+    )

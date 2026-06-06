@@ -17,7 +17,10 @@ def _format_outputs(task_outputs: list[TaskOutput]) -> str:
 
 
 def generate_strategy(
-    goal: str, task_outputs: list[TaskOutput], model: str | None = None
+    goal: str,
+    task_outputs: list[TaskOutput],
+    model: str | None = None,
+    temperature: float = 0.0,
 ) -> Strategy:
     """Choose the best strategy based on the analysis results."""
     return call_llm(
@@ -30,5 +33,6 @@ def generate_strategy(
         ],
         response_model=Strategy,
         model=model,
+        temperature=temperature,
         max_tokens=16000,
     )

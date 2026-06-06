@@ -18,7 +18,10 @@ def _format_sources(files: list[DescribedFile]) -> str:
 
 
 def generate_tasks(
-    goal: str, described_files: list[DescribedFile], model: str | None = None
+    goal: str,
+    described_files: list[DescribedFile],
+    model: str | None = None,
+    temperature: float = 0.0,
 ) -> Tasks:
     """Produce the analysis plan from the goal and the described documents."""
     return call_llm(
@@ -33,5 +36,6 @@ def generate_tasks(
         ],
         response_model=Tasks,
         model=model,
+        temperature=temperature,
         max_tokens=16000,
     )
