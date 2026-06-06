@@ -118,8 +118,9 @@ ollama list               # sprawdź, że jest na liście
 
 ## 📓 Notebooki — jak uruchomić
 
-W `notebooks/`: `setup.ipynb` (test konfiguracji), `eval_walkthrough.ipynb`
-(ewaluacja), `linear_walkthrough.ipynb`, `planner_walkthrough.ipynb`.
+W `notebooks/`: `setup.ipynb` (test konfiguracji), `baseline_walkthrough.ipynb`
+(naiwne podejście + ewaluacja), `linear_walkthrough.ipynb` (agent liniowy),
+`planner_walkthrough.ipynb` (planer), `eval_walkthrough.ipynb` (ewaluacja).
 
 > Najpierw upewnij się, że model działa: dla qwena uruchom Ollamę (patrz wyżej),
 > a w pierwszej komórce notebooka odkomentuj sekcję B (Ollama).
@@ -208,7 +209,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # setup.ipynb (konfiguracja+test) + linear_walkthrough.ipynb + planner_walkthrough.ipynb
+├── notebooks/         # setup + baseline/linear/planner_walkthrough + eval_walkthrough
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -253,8 +254,10 @@ WomenInTech/
   graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
   potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline.
 - **`notebooks/`** (`uv run jupyter lab`): `setup.ipynb` (konfiguracja LLM + test —
-  zacznij tutaj), `linear_walkthrough.ipynb` (umiejętności krok po kroku) oraz
-  `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
+  zacznij tutaj), `baseline_walkthrough.ipynb` (naiwne podejście + ewaluacja),
+  `linear_walkthrough.ipynb` (umiejętności krok po kroku),
+  `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję)
+  oraz `eval_walkthrough.ipynb` (sama ewaluacja).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
 ## 🛠️ Wymagania
