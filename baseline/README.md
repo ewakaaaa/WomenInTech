@@ -58,6 +58,7 @@ Z `notebooks/baseline_and_eval.ipynb` (apelacja ~7,9 tys. znaków z jednego prom
 
 | miara | wynik |
 |-------|-------|
+| **koszt generacji apelacji** | ~**$0,0229** (19 473 wej + 1 851 wyj tok, 1 wywołanie) |
 | **pokrycie** (średnia z 5 przebiegów) | **47%** (42–50%) |
 | **halucynacje** (fakty bez oparcia / sprzeczne z aktami) | ~**17%** (5 z 30 twierdzeń) |
 
