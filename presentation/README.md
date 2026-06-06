@@ -77,7 +77,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     mnie o top-3 rzeczy, które powinien umieć data scientist *(skren z LinkedIna)*.
     Jedna z nich — odróżniająca mida od seniora — to to, że senior nie tylko zrobi
     zadanie, ale **zaplanuje całe rozwiązanie**. *(I to właśnie przed chwilą zrobiliśmy.)* — *2 min*
-17. **Kod na żywo:** `notebooks/baseline_walkthrough.ipynb` — odpalamy umiejętności po kolei i
+17. **Kod na żywo:** `notebooks/linear_walkthrough.ipynb` — odpalamy umiejętności po kolei i
     oglądamy outputy każdego etapu. Przy okazji pokazujemy, jak agent **rozwiązuje
     problemy ze slajdu 8**: — *9 min*
     - **podsumowania zamiast pełnych akt** → mniej tokenów (opisy plików, nie 16 pełnych dokumentów),
@@ -142,7 +142,7 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 - [ ] `.env` z działającym kluczem LLM (zapasowy backend: Ollama / proxy)
 - [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
 - [ ] Wyniki `uv run python -m src.eval.compare` zrzucone do slajdu (plan B bez live)
-- [ ] `uv run jupyter lab` — sprawdzone `notebooks/baseline_walkthrough.ipynb` i `notebooks/planner_walkthrough.ipynb`
+- [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb` i `notebooks/planner_walkthrough.ipynb`
 - [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) + przećwiczone demo human-in-the-loop
 - [ ] Diagram grafu (mermaid z `agent_langgraph`)
 - [ ] *(opcjonalnie)* `uv run langgraph dev` — Studio jako bonus, jeśli zostanie czas

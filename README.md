@@ -119,7 +119,7 @@ ollama list               # sprawdź, że jest na liście
 ## 📓 Notebooki — jak uruchomić
 
 W `notebooks/`: `setup.ipynb` (test konfiguracji), `eval_walkthrough.ipynb`
-(ewaluacja), `baseline_walkthrough.ipynb`, `planner_walkthrough.ipynb`.
+(ewaluacja), `linear_walkthrough.ipynb`, `planner_walkthrough.ipynb`.
 
 > Najpierw upewnij się, że model działa: dla qwena uruchom Ollamę (patrz wyżej),
 > a w pierwszej komórce notebooka odkomentuj sekcję B (Ollama).
@@ -208,7 +208,7 @@ WomenInTech/
 │   ├── main.py        # uruchomienie z checkpointerem → agent_planner/apelacja.txt
 │   ├── graph.md       # diagram grafu (mermaid)
 │   └── README.md      # jak działa planer i human-in-the-loop
-├── notebooks/         # setup.ipynb (konfiguracja+test) + baseline_walkthrough.ipynb + planner_walkthrough.ipynb
+├── notebooks/         # setup.ipynb (konfiguracja+test) + linear_walkthrough.ipynb + planner_walkthrough.ipynb
 ├── presentation/      # materiały i plan prezentacji warsztatowej
 ├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
@@ -253,7 +253,7 @@ WomenInTech/
   graf zawraca w pętli. Pokazuje **cykle** i **human-in-the-loop** (pauza na
   potwierdzenie radcy) — czyli to, co LangGraph dokłada ponad liniowy pipeline.
 - **`notebooks/`** (`uv run jupyter lab`): `setup.ipynb` (konfiguracja LLM + test —
-  zacznij tutaj), `baseline_walkthrough.ipynb` (umiejętności krok po kroku) oraz
+  zacznij tutaj), `linear_walkthrough.ipynb` (umiejętności krok po kroku) oraz
   `planner_walkthrough.ipynb` (agent nieliniowy z human-in-the-loop — pauza na Twoją decyzję).
 - **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
 
