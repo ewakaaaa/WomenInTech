@@ -141,17 +141,32 @@ Potem uruchom serwer:
 Otworzy się przeglądarka → wejdź w `notebooks/` → otwórz plik `.ipynb` →
 uruchamiaj komórki **Shift+Enter**. Kernel (prawy górny róg): **Python (WomenInTech)**.
 
+### Import `src.*` w notebookach (jednorazowo)
+
+Notebooki leżą w `notebooks/`, więc kernel startuje w tym katalogu i domyślnie **nie
+widzi** pakietów z katalogu głównego (`src`, `baseline`, `agent_*`) — `import src.llm`
+rzuca `ModuleNotFoundError: No module named 'src'`. Najprościej dodać ścieżkę projektu
+do `.venv` (raz):
+
+```bash
+.venv/bin/python -c "import site, os; open(site.getsitepackages()[0] + '/womenintech.pth', 'w').write(os.getcwd())"
+```
+
+To tworzy plik `womenintech.pth` w `site-packages`, który przy **każdym starcie
+kernela** dokłada katalog projektu do `sys.path` — importy działają z dowolnego
+notebooka. Po utworzeniu pliku **zrestartuj kernel** (Kernel → Restart Kernel),
+bo `.pth` czyta się tylko przy starcie.
+
 ### W edytorze Zed
 
 Zed **nie renderuje `.ipynb`** (pokazuje surowy JSON), ale ma **REPL**. Pracuj na
-wersji `.py` z komórkami `# %%` (np. `notebooks/setup.py`):
+pliku `.py` z komórkami `# %%`:
 
 1. Otwórz plik `.py` w Zedzie.
 2. Postaw kursor w komórce (między znacznikami `# %%`).
 3. Otwórz paletę: **⌘ ⇧ P** → wpisz **`repl: run`** (lub skrót **⌃ ⇧ Return**).
 
-Wynik pojawia się pod komórką; pierwsze uruchomienie startuje kernel. Cały plik
-naraz odpalisz też zwykłym `.venv/bin/python notebooks/setup.py`.
+Wynik pojawia się pod komórką; pierwsze uruchomienie startuje kernel.
 
 ## 📂 Struktura projektu
 
