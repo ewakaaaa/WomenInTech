@@ -18,6 +18,7 @@ from src.llm import Usage
 # model -> (cena wejścia, cena wyjścia) za 1M tokenów [USD]
 PRICES: dict[str, tuple[float, float]] = {
     "gpt-5.5": (5.00, 30.00),
+    "gpt-5.4": (2.50, 15.00),  # najbliższy odpowiednik „pełnego GPT-5" (jak w DoGeDo)
     "gpt-5.4-mini": (0.75, 4.50),
     "gpt-5.4-nano": (0.20, 1.25),
 }
@@ -40,15 +41,16 @@ def cost_per_call(usage: Usage, model: str) -> float:
 
 
 def cost_summary(usage: Usage, model: str) -> str:
-    """Czytelne podsumowanie zużycia i kosztu."""
+    """Czytelne podsumowanie zużycia: tokeny, koszt i czas."""
     total = estimate_cost(usage, model)
+    czas = f"{usage.seconds:.1f}s (≈{usage.seconds_per_call:.1f}s/wyw.)"
     if model not in PRICES:
         return (
-            f"{model}: {usage.calls} wywołań, {usage.total_tokens:,} tok "
-            f"(brak cennika — koszt $0.00, np. model lokalny)"
+            f"{model}: {usage.calls} wywołań, {usage.total_tokens:,} tok, {czas} "
+            f"(brak cennika — koszt $0.00)"
         )
     return (
         f"{model}: {usage.calls} wywołań, "
         f"{usage.prompt_tokens:,} wej + {usage.completion_tokens:,} wyj tok "
-        f"= ${total:.4f} (≈ ${cost_per_call(usage, model):.5f}/wywołanie)"
+        f"= ${total:.4f} (≈ ${cost_per_call(usage, model):.5f}/wyw.) | {czas}"
     )
