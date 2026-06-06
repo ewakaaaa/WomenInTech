@@ -1,7 +1,7 @@
 """Opisy dokumentów (file_description) wraz z cache na dysku.
 
 Opisanie akt to po jednym wywołaniu LLM na dokument — kosztowne, a wynik jest
-wielokrotnie używany (agent liniowy, langgraph, planer, grounding). Liczymy więc
+wielokrotnie używany (agent liniowy, langgraph, planer). Liczymy więc
 raz, zapisujemy do JSON, a kolejne przebiegi/agenci wczytują gotowe opisy.
 
 Cache leży w `data/output/described.json` (poza gitem). `refresh=True` przelicza

@@ -1,10 +1,10 @@
 # Ewaluacja
 
 Wygenerować apelację to jedno — ale skąd wiadomo, że jest **dobra**? Ten moduł
-odpowiada na to liczbami. Zadajemy dwa niezależne pytania:
+odpowiada na to liczbami. Zadajemy dwa pytania:
 
 1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`)
-2. **Czy apelacja czegoś nie zmyśliła?** → ugruntowanie / halucynacje (`grounding`)
+2. **Jak jest napisana?** → jakość/forma (`quality`)
 
 Wyniki poszczególnych podejść porównujesz, odczytując je z notebooków.
 
@@ -18,54 +18,40 @@ podnieść (zarzuty + wnioski).
 Dla **każdego** zagadnienia z `data/eval.json` sędzia-LLM (egzaminator) decyduje,
 czy apelacja faktycznie je porusza (wraz z istotą argumentacji, nie tylko wzmianką).
 
-- `evaluate(appeal_text)` → `CoverageResult` z `covered`, `total`, `score`
-  (`covered / total`) i werdyktem per zagadnienie.
+- `evaluate(appeal_text, print_results=True)` → `CoverageResult` z `covered`,
+  `total`, `score` (`covered / total`) i werdyktem per zagadnienie.
 - `evaluate_file(path)` — to samo dla apelacji zapisanej w pliku.
 
 Jedna liczba (`score`) porównywalna między wszystkimi podejściami. Powtarzalność
 oceny (kilka przebiegów → średnia) oraz koszt pokazuje notebook
 `notebooks/baseline_and_eval.ipynb`.
 
-## 2. Halucynacje / ugruntowanie — `grounding.py`
+## 2. Jakość / forma — `quality.py`
 
-Sprawdza, czy apelacja nie powołuje faktów (dat, kwot, nazwisk, zdarzeń,
-cytatów), których w aktach nie ma. Zbudowane **etapowo**:
+Ocena „miękka", jak u egzaminatora — nie *czy* odhaczono punkty, ale **jak**
+pismo jest napisane. Wg trzech ustawowych kryteriów (art. 36⁴ ustawy o radcach
+prawnych), w skali 2–6:
 
-- **Etap 1 — ekstrakcja** (`extract_claims`): rozkłada apelację na atomowe
-  twierdzenia faktyczne (pomija oceny i argumentację prawną).
-- **Etap 2 — weryfikacja** *bez wczytywania wszystkich akt*:
-  - **2a** (`select_sources`): na podstawie krótkich **opisów dokumentów**
-    (`describe_documents` → skill `file_description`) LLM wybiera, w których
-    plikach sprawdzić dane twierdzenie,
-  - **2b** (`verify_claim`): wczytujemy tekst **tylko wybranych** plików i w nich
-    weryfikujemy fakt → `supported` / `unsupported` / `contradicted` + cytat,
-  - `check_claim` spina 2a + 2b dla jednego twierdzenia.
-- **Etap 3 — agregacja** (`evaluate_grounding`): wskaźnik halucynacji
-  (niepotwierdzone + sprzeczne / wszystkie) + raport `GroundingResult` z
-  werdyktem per twierdzenie.
+1. zachowanie wymogów formalnych (np. właściwy sąd odwoławczy),
+2. właściwość zastosowania i interpretacji przepisów,
+3. poprawność zaproponowanego rozwiązania.
+
+- `evaluate_quality(appeal_text)` → `QualityVerdict` (3 oceny 2–6 + `reasoning` + `srednia`).
+- **Sędzią jest mocny model** (`gpt-5.4`, `QUALITY_JUDGE_MODEL`) — `gpt-5.4-mini`
+  jako oceniający nie wyłapuje błędów formalnych i nie różnicuje pism.
 
 ```bash
-uv run python -m src.eval.grounding        # demo Etapów 1–2 na przykładzie
-```
-
-End-to-end (Etap 1→2→3) z poziomu kodu:
-
-```python
-from src.loader import load_all
-from src.eval.grounding import evaluate_grounding
-
-result = evaluate_grounding(appeal_text, load_all())
-print(result.hallucination_rate)          # np. 0.15 = 15% faktów bez oparcia w aktach
+uv run python -m src.eval.quality agent_linear   # ocena najnowszej zapisanej apelacji
 ```
 
 ---
 
-## Dwa mierniki, dwa ryzyka
+## Dwa mierniki, dwa spojrzenia
 
-| Miernik | Pyta | Łapie ryzyko |
-|---------|------|--------------|
-| **pokrycie** | czy poruszono wymagane zagadnienia? | apelacja **pomija** istotny zarzut |
-| **ugruntowanie** | czy fakty pochodzą z akt? | apelacja **zmyśla** fakty (halucynacje) |
+| Miernik | Pyta | Łapie |
+|---------|------|-------|
+| **pokrycie** (`coverage`) | czy poruszono wymagane zagadnienia? | **pominięty** zarzut (twardy klucz) |
+| **jakość** (`quality`) | jak napisane — forma i argumentacja? | słaba **forma**/warsztat (miękka ocena) |
 
-Wysokie pokrycie przy zmyślonych faktach to wciąż zła apelacja — dlatego oba
-mierniki są potrzebne.
+Same punkty to nie wszystko — apelację ocenia się też za formę i jakość
+argumentacji, dlatego potrzebne są oba spojrzenia.
