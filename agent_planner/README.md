@@ -42,21 +42,26 @@ Przeanalizowałem ... Proponuję strategię ... Pisać apelację czy analizować
 Twoja decyzja (radca): pisz
 ```
 
-## Umiejętności
+## Umiejętności (gdyby to zbudować)
 
-Reużywa `src/skills/*`: `file_description`, `make_task`, `generate_document` oraz nową
-`planner` (decyzja: `analyze` / `ask_human` / `write` / `no_grounds`). Nie korzysta z
+Reużywałby `src/skills/*`: `file_description`, `make_task`, `generate_document` oraz
+osobną decyzję planera (`analyze` / `ask_human` / `write` / `no_grounds`). Nie potrzebuje
 `tasks` ani `strategy` — zadania tworzy planer, a „strategię" stanowi jego rozumowanie
 przed napisaniem pisma.
 
-## Uruchomienie
+## Dlaczego TYLKO idea (bez kodu)
 
-```bash
-uv run python -m agent_planner.main   # → agent_planner/apelacja.txt
-```
+Ten katalog to **świadomie sam pomysł** — README + diagram, **bez implementacji**.
+Powody:
 
-Wymaga klucza LLM w `.env`. Przy `ask_human` graf zatrzyma się i poprosi o decyzję.
+- **Warsztat ma być „mniej, a dokładniej"** — pełny agent nieliniowy z human-in-the-loop
+  to kolejny duży kawałek do napisania, przetestowania i opłacenia (API), a narracyjnie
+  domykają go już baseline → liniowy → LangGraph.
+- **Koszt złożoności.** W LangGraph cykle i warunki to natywne krawędzie grafu, więc
+  pętlę planera *dałoby się* zrobić bez własnej orkiestracji. Ale żeby zrobić to
+  **dobrze (dynamicznie + równolegle)**, schodzi się na **logikę async**
+  (`ainvoke`/async-węzły) zamiast wygodnej ścieżki sync z wątkami — czyli więcej mocy
+  za cenę realnej złożoności.
 
-Interaktywnie (z diagramem i podglądem przebiegu): notebook
-[`notebooks/planner_walkthrough.ipynb`](../notebooks/planner_walkthrough.ipynb)
-(`uv run jupyter lab`).
+Dlatego na prezentacji planer pojawia się jako **kierunek „co dalej?"** (slajd z pytaniem
+do sali) — pokazujemy diagram i ideę, a nie uruchamiany kod.

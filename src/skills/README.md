@@ -7,8 +7,11 @@ wyjście walidowane przez Pydantic). Robi jedną rzecz i nie wie nic o pozostał
 Te same skille spinają trzy podejścia:
 
 - [`agent_linear/`](../../agent_linear/) — wywołuje je po kolei (pętle `for`),
-- [`agent_langgraph/`](../../agent_langgraph/) — to samo, ale z równoległym fan-outem (`Send`),
-- [`agent_planner/`](../../agent_planner/) — **planner** decyduje, którą umiejętność odpalić dalej (graf cykliczny).
+- [`agent_langgraph/`](../../agent_langgraph/) — to samo, ale z równoległym fan-outem (`Send`).
+
+Jest jeszcze [`agent_planner/`](../../agent_planner/) — agent **nieliniowy** (planer
+decydujący, co dalej), ale to **tylko idea** (README + diagram, bez kodu), więc nie
+spina tu żadnego skilla.
 
 Pliki spinające (`main.py` / `graph.py`) tylko wołają umiejętności i
 przekazują wyniki — logika siedzi w skillach.
@@ -26,7 +29,6 @@ podejścia (lista problemów: [`baseline/README.md`](../../baseline/README.md)).
 | **make_task** | `make_task(goal, task, sources_text)` → `TaskOutput` | Wykonuje **jeden** krok na **tylko** wskazanych dokumentach. | Zapchany kontekst i „lost in the middle"; **izolacja błędu** (zły krok nie psuje reszty, da się go powtórzyć); **audytowalność**. |
 | **strategy** | `generate_strategy(goal, task_outputs)` → `Strategy` | Z zebranych analiz wybiera linię obrony / najlepsze podejście. | Świadomy, spójny kierunek zamiast przypadkowego — zanim zacznie się pisać. |
 | **document** | `generate_document(goal, strategy, task_outputs)` → `GeneratedDocument` | Pisze pismo na **gotowej analizie i strategii**, a nie na surowych aktach. | Mniej halucynacji i pominięć — model opiera się na zweryfikowanych faktach. |
-| **planner** | `plan_next(goal, described_files, task_outputs, human_feedback)` → `PlannerDecision` | Decyduje następny ruch: `analyze` / `ask_human` / `write` / `no_grounds`. Hub agenta nieliniowego. | Sztywną kolejność kroków zastępuje **decyzją zależną od stanu** — w tym pytaniem do człowieka. |
 
 Krótko: **mały, skupiony kontekst na każdym etapie + jawny plan + możliwość
 weryfikacji i powtórzenia kroku** — to jest to, czego baseline nie daje.

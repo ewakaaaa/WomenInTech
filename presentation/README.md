@@ -13,9 +13,10 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie
 
-> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–23) ≈ **~61 min**, na końcu **10–15 min na
+> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–24) ≈ **~61 min**, na końcu **10–15 min na
 > pytania** → ~71–76 min — **przeładowane, do ścięcia** (jutro przy slajdach). Najłatwiej
-> dociąć: demo na żywo (17, 22), pytania do sali (8, 20), LangGraph (21).
+> dociąć: demo na żywo (17), pytania do sali (8, 20, 22), LangGraph (21). Agenta
+> nieliniowego (planer) **świadomie wycięliśmy z kodu** — został jako idea na slajdzie 22.
 
 ### Wstęp i kontekst — *~10 min*
 
@@ -98,39 +99,51 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
     człowiek w pętli, „domknie" zaraz LangGraph)* — *3 min*
 
-### LangGraph, graf nieliniowy i puenta — *~12 min*
+### LangGraph, „co dalej?" i puenta — *~12 min*
 
-21. **LangGraph — co wnosi, toole i koszt.** Mamy logikę **napisaną czystymi
+21. **LangGraph — co wnosi i ile kosztuje.** Mamy logikę **napisaną czystymi
     funkcjami**, więc łatwo ją opakować w węzły — ta sama logika, tylko jako graf.
-    Co dostajemy w zamian: — *~5 min*
+    Co dostajemy w zamian: — *~4 min*
     - **wspólny State przenoszony między krokami** — jawny i czysty,
     - **równoległość (fan-out `Send`)** — opisy plików i wykonanie zadań liczą się
-      **współbieżnie**, podczas gdy w `agent_linear` były to sekwencyjne pętle `for`
-      → to samo, ale szybciej,
+      **współbieżnie**, podczas gdy w `agent_linear` były to sekwencyjne pętle `for`.
+      Konkret z przebiegu: **wall-clock 169,8 s vs 433,5 s** liniowo (**≈2,6× szybciej**),
+      a **koszt ten sam** (~$0,74) — to samo, tylko szybciej,
     - **diagram grafu z kodu** — LangGraph rysuje graf w **mermaid** automatycznie
       (`graph.get_graph().draw_mermaid()`), więc obrazek na slajd robi się sam,
-    - **toole** — agentowi można dać narzędzia (function calling): model sam decyduje,
-      którego użyć. U nas planer decyduje o akcjach i tworzy zadania — ten sam pomysł,
-      zrealizowany przez **structured output** (bez formalnych tooli); LangGraph spina
-      toole bez wysiłku, gdyby były potrzebne. *(Przykład: tool sprawdzający najnowsze
-      przepisy — nie kodujemy go, ale łatwo byłoby dołożyć.)*
-    - **łatwy human-in-the-loop** — możemy wstawić pauzę, np. na **potwierdzenie strategii
-      przez radcę**, zanim agent napisze pismo → dokładnie to, czego potrzebujemy.
-    - **⚠️ Przestroga:** to kolejna, niemała **zależność** (dług) — świetne do POC, na
-      produkcji rozważ świadomie.
-22. **Graf nieliniowy: agent z planerem + wynik.** Dotąd graf był liniowy (to samo, co
-    pipeline). Teraz **`agent_planner`** — planer w centrum **sam decyduje** (analizuj /
-    zapytaj człowieka / pisz / brak podstaw), więc graf **zawraca w pętli**. — *~4 min*
-    - pokaż **diagram** (nieliniowy, „hub" — `agent_planner/graph.md`),
-    - **human-in-the-loop na żywo** (`notebooks/planner_walkthrough.ipynb`): planer pauzuje,
-      pyta mnie (radcę) o potwierdzenie — wpisuję decyzję, graf leci dalej,
-    - pokaż **wynik** + ewaluację (w notebooku),
-    - puenta: **tego nie zrobisz liniowym pipeline'em** — cykle + człowiek w pętli.
-23. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
+    - **toole / human-in-the-loop** — łatwo dołożyć narzędzia (function calling) albo
+      pauzę na **potwierdzenie strategii przez radcę** → ale *u nas tego nie kodujemy*
+      (pokazujemy pomysł na slajdzie 22, nie kod).
+    - **⚠️ Przestroga (do tego wracamy na końcu):** to kolejna, niemała **zależność**
+      (dług) — świetne do POC, na produkcji rozważ świadomie albo wcale.
+22. **Pytanie do sali: co jeszcze można by zrobić?** *(symetria do slajdu 8 i 20 —
+    domykamy warsztat pytaniem)*. Zbieramy pomysły, a w zanadrzu mamy **gotowe
+    odpowiedzi** (to był kierunek „agenta nieliniowego", którego świadomie *nie*
+    budujemy w kodzie — pokazujemy jako ideę + diagram `agent_planner/graph.md`): — *~5 min*
+    - **agent sam decyduje, co dalej** — zamiast sztywnej kolejności planer w pętli:
+      *analizuj / zapytaj człowieka / pisz / brak podstaw* (graf **zawraca**),
+    - **człowiek w pętli na żywo** — pauza (`interrupt`) na potwierdzenie strategii
+      przez radcę, zanim agent napisze pismo,
+    - **narzędzia (function calling)** — np. tool sprawdzający **najnowsze przepisy**,
+    - **wczesne wyjście „brak podstaw"** — agent może uznać, że apelacja jest niezasadna.
+    - **❗ Ale uwaga (puenta techniczna):** w LangGraph *dałoby się* to zrobić bez
+      pisania własnej orkiestracji (cykle i warunki to natywne krawędzie grafu) — tylko
+      żeby zrobić to **dobrze (dynamicznie + równolegle)**, schodzi się na **logikę
+      async**. Czyli: więcej mocy = więcej złożoności. Dlatego **tego nie dokładamy**.
+23. **Podsumowanie technologii: Pydantic ≫ LangGraph.** Co naprawdę zbudowało ten
+    system? — *~2 min*
+    - **Pydantic / structured output — bohater i niezbędny klej.** Bez niego umiejętności
+      by się nie spięły (każda zwraca typowany obiekt → wiem, co podać dalej). Lekki,
+      zero długu, działa w *każdym* podejściu (baseline, liniowy, graf).
+    - **LangGraph — opcjonalny cukier.** Daje równoległość, diagram, checkpointing,
+      human-in-the-loop — ale to **ciężka zależność**, a pójście dalej (planer, cykle)
+      wpycha w **async**. Świetny do POC; na produkcji **świadomie albo wcale**.
+    - **Morał:** najpierw logika + Pydantic + baseline; framework **na końcu, jeśli w
+      ogóle**. Nie zaczynaj od frameworka ani od złożonego agenta „robiącego nie wiadomo co".
+24. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
     przewinęły się przez warsztat: (1) **zaplanowanie rozwiązania**, (2) **rozmowa z
     biznesem i ekspertami** (szybko dostarcz proste → szybko zbierz feedback), (3)
-    **ewaluacja ustalona na starcie**. Plus przestroga: **nie zaczynaj od frameworka ani
-    od razu od złożonego agenta** — najpierw logika i baseline. (Szczegóły poniżej.) — *~3 min*
+    **ewaluacja ustalona na starcie**. (Szczegóły poniżej.) — *~3 min*
 
 ### Pytania (Q&A) — *10–15 min*
 
@@ -142,9 +155,10 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 - [ ] `.env` z działającym kluczem LLM (`gpt-5.4`; zapasowo proxy zgodne z OpenAI)
 - [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
 - [ ] Wyniki ewaluacji z notebooków zrzucone do slajdu (plan B bez live)
-- [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb` i `notebooks/planner_walkthrough.ipynb`
-- [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) + przećwiczone demo human-in-the-loop
+- [ ] Liczby do slajdu 21: wall-clock i koszt langgraph vs liner (z `agent_langgraph/output/run_*.log`)
+- [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb`
 - [ ] Diagram grafu (mermaid z `agent_langgraph`)
+- [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) — slajd 22 (idea „co dalej?", bez kodu/demo)
 - [ ] *(opcjonalnie)* `uv run langgraph dev` — Studio jako bonus, jeśli zostanie czas
 - [ ] Skren z LinkedIna (slajd 16 — oddech/anegdota)
 
@@ -168,9 +182,14 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 - Architektura > pojedynczy prompt — margines błędu zero wymusza etapowość.
 - **Selektywny kontekst** zamiast wrzucania wszystkiego (bez chunkowania/wektorów/RAG-a).
-- Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie.
-- LangGraph daje równoległość/obserwowalność/human-in-the-loop, ale to **dług
-  zależności** — dokładaj świadomie, na końcu.
+- **Pydantic / structured output ≫ LangGraph.** To structured output jest **klejem**, bez
+  którego nic by się nie spięło — lekki, zero długu, działa w *każdym* podejściu.
+  LangGraph to opcjonalny cukier (równoległość/diagram/checkpoint/human-in-the-loop) i
+  **dług zależności**; pójście dalej (planer, cykle) wpycha w **async** = złożoność.
+- Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie;
+  dzięki temu LangGraph da się w razie czego odpiąć.
+- **Najpierw logika + baseline, framework na końcu — jeśli w ogóle.** Nie zaczynaj od
+  frameworka ani od złożonego agenta „robiącego nie wiadomo co".
 - **Człowiek w pętli** jest częścią systemu, nie dodatkiem.
 
 ## Do uzupełnienia
