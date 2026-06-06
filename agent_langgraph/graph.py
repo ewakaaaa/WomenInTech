@@ -26,7 +26,7 @@ from src.sources import prepare_input_texts
 
 
 def load_node(state: OverallState) -> dict:
-    """Entry node: load the case files; podłącz opisy z cache, jeśli istnieją."""
+    """Entry node: load the case files; attach cached descriptions if they exist."""
     cached = load_descriptions() if descriptions_cached() else []
     return {"documents": load_all(), "files_out": cached}
 
@@ -37,7 +37,7 @@ def file_description_node(payload: DescribeFileIn) -> dict:
 
 
 def tasks_node(state: OverallState) -> dict:
-    # Pierwszy przebieg (cache pusty) — zapisz policzone opisy do ponownego użycia.
+    # First run (empty cache) — save the computed descriptions for reuse.
     if not descriptions_cached():
         save_descriptions(state["files_out"])
     tasks = generate_tasks(state["goal"], state["files_out"])
@@ -62,7 +62,7 @@ def document_node(state: OverallState) -> dict:
 
 
 def fan_out_files(state: OverallState):
-    # Cache trafiony — opisy już w files_out, pomijamy fan-out i liczenie.
+    # Cache hit — descriptions already in files_out, skip the fan-out and recomputation.
     if state.get("files_out"):
         return "generate_tasks"
     return [

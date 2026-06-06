@@ -1,9 +1,10 @@
-"""Walidacja apelacji z linii poleceń (zamiast notebooka).
+"""Appeal validation from the command line (instead of a notebook).
 
-Dla danej apelacji liczy i wypisuje **pokrycie** (`coverage` — czy porusza
-wymagane zagadnienia) oraz **jakość/formę** (`quality` — ocena egzaminatora),
-każde z kosztem i czasem. Używane w blokach `__main__` podejść (np.
-`agent_linear.main`), żeby iterować nad jakością bez klikania notebooka.
+For a given appeal it computes and prints **coverage** (`coverage` — whether it
+addresses the required issues) and **quality/form** (`quality` — the examiner's
+grade), each with its cost and time. Used in the `__main__` blocks of the
+approaches (e.g. `agent_linear.main`) to iterate on quality without clicking
+through a notebook.
 """
 
 from __future__ import annotations
@@ -19,11 +20,12 @@ from src.llm import track_usage
 def evaluate_appeal(
     appeal_text: str, model: str | None = None
 ) -> tuple[CoverageResult, QualityVerdict]:
-    """Oceń apelację: pokrycie + jakość, wypisz wyniki wraz z kosztem i czasem."""
+    """Evaluate an appeal: coverage + quality, printing results with cost and time."""
     model_name = model or os.environ.get("LLM_MODEL", "?")
 
-    # Uwaga: poniższe koszty/czasy dotyczą EWALUACJI i są podane osobno —
-    # nie wliczają się do kosztu metody (sama generacja apelacji liczona wyżej).
+    # Note: the costs/times below pertain to EVALUATION and are reported
+    # separately — they don't count toward the method's cost (appeal generation
+    # itself is measured above).
     print("\n--- EWALUACJA (koszt osobno, NIE wlicza się do kosztu metody) ---")
     print("\n=== POKRYCIE (czy porusza wymagane zagadnienia) ===")
     with track_usage() as cov_usage:
@@ -32,7 +34,7 @@ def evaluate_appeal(
     print(f"  koszt: {cost_summary(cov_usage, model_name)}")
     print(f"  czas:  {cov_usage.seconds:.1f}s (≈{cov_usage.seconds_per_call:.1f}s/wyw.)")
 
-    # Jakość oceniamy MOCNYM sędzią (gpt-5.4) — niezależnie od modelu generacji.
+    # Quality is judged by a STRONG judge (gpt-5.4) — independent of the generation model.
     print("\n=== JAKOŚĆ / FORMA (ocena egzaminatora, skala 2–6) ===")
     with track_usage() as q_usage:
         q = evaluate_quality(appeal_text)
@@ -48,8 +50,8 @@ def evaluate_appeal(
 
 
 if __name__ == "__main__":
-    # Sama ewaluacja (bez generacji) na ostatniej zapisanej apelacji danego podejścia.
-    # Log trafia do <podejście>/output/run_<znacznik>.log.
+    # Evaluation only (no generation) on the latest saved appeal for the given approach.
+    # The log goes to <approach>/output/run_<timestamp>.log.
     #   uv run python -m src.eval.report baseline
     #   uv run python -m src.eval.report agent_linear
     import sys

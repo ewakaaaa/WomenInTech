@@ -39,7 +39,7 @@ def generate_appeal(docs: list[Document], model: str | None = None) -> Appeal:
 
 
 if __name__ == "__main__":
-    # Generacja + ocena (pokrycie + jakość) z CLI (model z .env, np. gpt-5.4):
+    # Generation + evaluation (coverage + quality) from the CLI (model from .env, e.g. gpt-5.4):
     #   uv run python -m baseline.main
     import os
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     from src.llm import track_usage
     from src.output import save_appeal, tee_output
 
-    # tee_output: wszystkie printy (generacja + checki z evaluate) lecą też do pliku logu.
+    # tee_output: all prints (generation + checks from evaluate) also go to the log file.
     with tee_output("baseline") as log_path:
         docs = load_all()
         prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + build_context(docs))

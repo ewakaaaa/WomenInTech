@@ -1,11 +1,12 @@
-"""Opisy dokumentów (file_description) wraz z cache na dysku.
+"""Document descriptions (file_description) with an on-disk cache.
 
-Opisanie akt to po jednym wywołaniu LLM na dokument — kosztowne, a wynik jest
-wielokrotnie używany (agent liniowy, langgraph, planer). Liczymy więc
-raz, zapisujemy do JSON, a kolejne przebiegi/agenci wczytują gotowe opisy.
+Describing the case files takes one LLM call per document — expensive, and the
+result is reused many times (linear agent, langgraph, planner). So we compute it
+once, save it to JSON, and later runs/agents load the ready descriptions.
 
-Cache leży w `data/output/described.json` (poza gitem). `refresh=True` przelicza
-od nowa (np. po zmianie modelu — opisy zależą od modelu).
+The cache lives in `data/output/described.json` (outside git). `refresh=True`
+recomputes from scratch (e.g. after a model change — descriptions are
+model-dependent).
 """
 
 from __future__ import annotations
@@ -24,19 +25,19 @@ DEFAULT_GOAL = "Zrozumieć akta sprawy i wskazać, co zawiera każdy dokument"
 def describe_documents(
     documents: list[Document], goal: str = DEFAULT_GOAL, model: str | None = None
 ) -> list[DescribedFile]:
-    """Opisz każdy dokument (jedno wywołanie LLM na plik)."""
+    """Describe each document (one LLM call per file)."""
     return [generate_file_description(doc, goal, model=model) for doc in documents]
 
 
 def descriptions_cached(path: str | Path = CACHE_PATH) -> bool:
-    """Czy istnieje zapisany cache opisów."""
+    """Whether a saved description cache exists."""
     return Path(path).exists()
 
 
 def save_descriptions(
     described: list[DescribedFile], path: str | Path = CACHE_PATH
 ) -> Path:
-    """Zapisz opisy do JSON (czytelny UTF-8)."""
+    """Save descriptions to JSON (human-readable UTF-8)."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = [d.model_dump() for d in described]
@@ -45,7 +46,7 @@ def save_descriptions(
 
 
 def load_descriptions(path: str | Path = CACHE_PATH) -> list[DescribedFile]:
-    """Wczytaj opisy z cache."""
+    """Load descriptions from the cache."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     return [DescribedFile(**d) for d in data]
 
@@ -57,9 +58,9 @@ def get_descriptions(
     refresh: bool = False,
     path: str | Path = CACHE_PATH,
 ) -> list[DescribedFile]:
-    """Zwróć opisy z cache; jeśli go nie ma (lub refresh=True) — policz i zapisz.
+    """Return descriptions from the cache; if missing (or refresh=True) — compute and save.
 
-    Liczy raz, kolejne wywołania (też z innych agentów) wczytują z pliku.
+    Computed once; later calls (including from other agents) load from the file.
     """
     if not refresh and descriptions_cached(path):
         return load_descriptions(path)

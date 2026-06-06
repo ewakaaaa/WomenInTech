@@ -29,26 +29,26 @@ def run(
     documents = documents if documents is not None else load_all()
     print(f"Loaded {len(documents)} documents")
 
-    # 1. generate_file_description — opisz każdy dokument (z cache: liczone raz)
+    # 1. generate_file_description — describe each document (cached: computed once)
     described = get_descriptions(documents, goal, model=model)
     print(f"Described {len(described)} files")
 
-    # 2. generate_tasks — zaplanuj kroki analizy
+    # 2. generate_tasks — plan the analysis steps
     tasks = generate_tasks(goal, described, model=model)
     print(f"Planned {len(tasks.thoughts)} tasks")
 
-    # 3. make_task — wykonaj każdy krok na wybranych dokumentach
+    # 3. make_task — run each step over the selected documents
     task_outputs = []
     for i, task in enumerate(tasks.thoughts, 1):
         sources_text = prepare_input_texts(documents, task.input)
         task_outputs.append(make_task(goal, task, sources_text, model=model))
         print(f"  task {i}/{len(tasks.thoughts)} done")
 
-    # 4. generate_strategy — wybierz najlepszą strategię
+    # 4. generate_strategy — pick the best strategy
     strategy = generate_strategy(goal, task_outputs, model=model)
     print("Strategy ready")
 
-    # 5. generate_document — napisz pismo
+    # 5. generate_document — write the document
     document = generate_document(goal, strategy, task_outputs, model=model)
     print("Document generated")
 
@@ -56,7 +56,7 @@ def run(
 
 
 if __name__ == "__main__":
-    # Generacja + ocena (pokrycie + jakość) z CLI (bez notebooka):
+    # Generation + evaluation (coverage + quality) from the CLI (no notebook):
     #   uv run python -m agent_linear.main
     import os
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     from src.llm import track_usage
     from src.output import save_appeal, tee_output
 
-    # tee_output: wszystkie printy (generacja + checki z evaluate) lecą też do pliku logu.
+    # tee_output: all prints (generation + checks from evaluate) also go to the log file.
     with tee_output("agent_linear") as log_path:
         print("=== GENERACJA (agent liniowy) ===")
         documents = load_all()

@@ -1,10 +1,10 @@
-"""Zapis artefaktów przebiegu do `<metoda>/output/`.
+"""Saving run artifacts to `<method>/output/`.
 
-Każda metoda zapisuje do własnego podkatalogu `output/` obok swojego kodu
-(`baseline/output/`, `agent_linear/output/`, ...), a w nim lądują i wygenerowana
-apelacja, i log przebiegu — wszystko z jednego uruchomienia w jednym miejscu.
-Nazwy plików mają znacznik czasu, więc kolejne przebiegi się nie nadpisują.
-Katalogi `output/` są poza gitem (artefakty).
+Each method writes to its own `output/` subdirectory next to its code
+(`baseline/output/`, `agent_linear/output/`, ...), where both the generated
+appeal and the run log end up — everything from a single run in one place.
+File names carry a timestamp, so successive runs don't overwrite each other.
+The `output/` directories are kept out of git (artifacts).
 """
 
 from __future__ import annotations
@@ -14,12 +14,12 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
-# Korzeń repo liczony od pliku (niezależnie od bieżącego katalogu).
+# Repo root resolved from this file (independent of the current directory).
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def approach_dir(approach: str) -> Path:
-    """Podkatalog artefaktów danej metody (`<approach>/output/`); tworzy go, jeśli brak."""
+    """Artifact subdirectory for a method (`<approach>/output/`); creates it if missing."""
     path = REPO_ROOT / approach / "output"
     path.mkdir(parents=True, exist_ok=True)
     return path
@@ -27,16 +27,16 @@ def approach_dir(approach: str) -> Path:
 
 @contextmanager
 def tee_output(approach: str):
-    """Duplikuj wszystko, co leci na ``stdout``, do pliku logu w folderze metody.
+    """Mirror everything sent to ``stdout`` into a log file in the method's folder.
 
-    Dzięki temu printy z generacji i ewaluacji (m.in. checki z `evaluate`) lądują
-    też w pliku `<approach>/output/run_<RRRR-MM-DD_GGMMSS>.log` — do
-    wklejenia/porównania bez przewijania terminala.
+    This way prints from generation and evaluation (including the checks from
+    `evaluate`) also end up in `<approach>/output/run_<YYYY-MM-DD_HHMMSS>.log` —
+    for pasting/comparing without scrolling the terminal.
 
         with tee_output("baseline") as log_path:
-            ...  # wszystkie print() trafiają na ekran i do pliku
+            ...  # all print() output goes to the screen and to the file
 
-    Zwraca ścieżkę pliku logu.
+    Returns the path of the log file.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
     path = approach_dir(approach) / f"run_{timestamp}.log"
@@ -62,14 +62,14 @@ def tee_output(approach: str):
 
 
 def save_appeal(text: str, approach: str) -> Path:
-    """Zapisz apelację do `<approach>/output/apelacja_<RRRR-MM-DD_GGMMSS>.txt`.
+    """Save an appeal to `<approach>/output/apelacja_<YYYY-MM-DD_HHMMSS>.txt`.
 
     Args:
-        text: treść apelacji.
-        approach: nazwa podejścia (np. "baseline", "agent_linear", "agent_planner").
+        text: the appeal content.
+        approach: approach name (e.g. "baseline", "agent_linear", "agent_planner").
 
     Returns:
-        Ścieżka zapisanego pliku.
+        Path of the saved file.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
     path = approach_dir(approach) / f"apelacja_{timestamp}.txt"
@@ -78,19 +78,19 @@ def save_appeal(text: str, approach: str) -> Path:
 
 
 def latest_appeal_path(approach: str) -> Path | None:
-    """Zwróć ścieżkę najnowszej zapisanej apelacji danego podejścia (lub None).
+    """Return the path of the latest saved appeal for the given approach (or None).
 
-    Znacznik czasu w nazwie jest sortowalny leksykograficznie, więc ostatni plik
-    po posortowaniu jest najnowszy.
+    The timestamp in the name sorts lexicographically, so the last file after
+    sorting is the newest.
     """
     files = sorted((REPO_ROOT / approach / "output").glob("apelacja_*.txt"))
     return files[-1] if files else None
 
 
 def load_latest_appeal(approach: str) -> str:
-    """Wczytaj treść ostatnio zapisanej apelacji danego podejścia.
+    """Load the content of the most recently saved appeal for the given approach.
 
-    Pozwala puścić samą ewaluację bez generowania apelacji od nowa.
+    Lets you run evaluation alone without generating the appeal anew.
     """
     path = latest_appeal_path(approach)
     if path is None:

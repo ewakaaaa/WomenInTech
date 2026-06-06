@@ -14,8 +14,8 @@ from pydantic import BaseModel, Field
 
 from src.llm import call_llm
 
-# Klucz oceny liczony od korzenia repo, żeby ewaluacja działała niezależnie od
-# bieżącego katalogu (np. z notebooka w notebooks/).
+# Evaluation key resolved from the repo root so evaluation works regardless of
+# the current directory (e.g. from a notebook in notebooks/).
 _DEFAULT_EVAL_PATH = Path(__file__).resolve().parents[2] / "data" / "eval.json"
 
 JUDGE_SYSTEM_PROMPT = (
@@ -28,7 +28,7 @@ JUDGE_SYSTEM_PROMPT = (
 
 
 class IssueVerdict(BaseModel):
-    """LLM judge verdict for a single issue (reasoning najpierw, potem ocena)."""
+    """LLM judge verdict for a single issue (reasoning first, then the verdict)."""
 
     reasoning: str = Field(..., description="Krótkie uzasadnienie oceny")
     covered: bool = Field(..., description="Czy apelacja porusza to zagadnienie")
@@ -71,8 +71,8 @@ def evaluate(
 ) -> CoverageResult:
     """Evaluate an appeal against every issue in the evaluation key.
 
-    Gdy ``print_results=True`` (wygodne w notebooku / na prezentacji) wypisuje
-    werdykt każdego zagadnienia **na bieżąco**, w miarę jak sędzia je ocenia.
+    When ``print_results=True`` (handy in a notebook / during a demo) it prints
+    the verdict for each issue **as it goes**, as the judge evaluates them.
     """
     issues = load_eval(eval_path)
     results: list[IssueVerdict] = []

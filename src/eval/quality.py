@@ -1,14 +1,15 @@
-"""Ocena „miękka" apelacji — jakość/forma jak u egzaminatora.
+"""Soft evaluation of an appeal — quality/form, as judged by an examiner.
 
-Pokrycie (`coverage.py`) sprawdza, **czy** poruszono wymagane zagadnienia (twardy
-klucz). Ta ocena patrzy inaczej — tak, jak egzaminator na egzaminie radcowskim,
-wg ustawowych kryteriów (art. 36(4) ustawy o radcach prawnych):
+Coverage (`coverage.py`) checks **whether** the required issues were addressed
+(hard key). This evaluation takes a different angle — like an examiner at the
+legal counsel exam, against the statutory criteria (art. 36(4) of the Act on
+Legal Counsel):
 
-  1. zachowanie wymogów formalnych,
-  2. właściwość zastosowania przepisów prawa i umiejętność ich interpretacji,
-  3. poprawność zaproponowanego rozwiązania.
+  1. compliance with formal requirements,
+  2. appropriateness of applying the law and the ability to interpret it,
+  3. correctness of the proposed solution.
 
-Każde kryterium w skali ocen egzaminu: 6 (celujący) … 2 (niedostateczny).
+Each criterion on the exam grading scale: 6 (excellent) … 2 (fail).
 """
 
 from __future__ import annotations
@@ -36,14 +37,14 @@ QUALITY_SYSTEM_PROMPT = (
     "wystaw oceny."
 )
 
-# Ocenę jakości robimy MOCNYM modelem. gpt-5.4-mini jako sędzia nie wyłapuje
-# błędów formalnych (np. zła właściwość sądu odwoławczego) i nie różnicuje pism —
-# sprawdzone empirycznie. Sędzia nie musi być tym samym modelem co autor.
+# We grade quality with a STRONG model. gpt-5.4-mini as a judge misses formal
+# errors (e.g. wrong appellate court) and fails to differentiate documents —
+# verified empirically. The judge need not be the same model as the author.
 QUALITY_JUDGE_MODEL = "gpt-5.4"
 
 
 class QualityVerdict(BaseModel):
-    """Ocena jakości/formy apelacji (reasoning najpierw, potem oceny 2–6)."""
+    """Appeal quality/form evaluation (reasoning first, then the 2–6 scores)."""
 
     reasoning: str = Field(
         ..., description="Uzasadnienie: mocne i słabe strony pisma (forma + argumentacja)."
@@ -60,7 +61,7 @@ class QualityVerdict(BaseModel):
 
     @property
     def srednia(self) -> float:
-        """Średnia z trzech kryteriów (orientacyjna ocena łączna)."""
+        """Average of the three criteria (rough overall grade)."""
         return (
             self.wymogi_formalne
             + self.zastosowanie_i_interpretacja
@@ -71,9 +72,9 @@ class QualityVerdict(BaseModel):
 def evaluate_quality(
     appeal_text: str, model: str | None = QUALITY_JUDGE_MODEL
 ) -> QualityVerdict:
-    """Oceń jakość/formę apelacji wg kryteriów egzaminu radcowskiego (skala 2–6).
+    """Grade an appeal's quality/form by the legal counsel exam criteria (scale 2–6).
 
-    Domyślnie sędzią jest mocny model (``gpt-5.4``) — patrz `QUALITY_JUDGE_MODEL`.
+    By default the judge is a strong model (``gpt-5.4``) — see `QUALITY_JUDGE_MODEL`.
     """
     messages = [
         {"role": "system", "content": QUALITY_SYSTEM_PROMPT},
@@ -83,7 +84,7 @@ def evaluate_quality(
 
 
 if __name__ == "__main__":
-    # Ocena najnowszej zapisanej apelacji danego podejścia.
+    # Evaluate the latest saved appeal for the given approach.
     import sys
 
     from src.output import load_latest_appeal

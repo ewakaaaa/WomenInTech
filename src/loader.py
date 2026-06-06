@@ -8,14 +8,14 @@ from pathlib import Path
 import pdfplumber
 from pydantic import BaseModel, Field
 
-# Powtarzający się nagłówek arkusza egzaminacyjnego — czysty szum w każdym pliku.
+# Recurring exam-sheet header — pure noise in every file.
 _EXAM_HEADER = re.compile(
     r"EGZAMIN\s+RADCOWSKI\s*[-–]\s*PRAWO\s+(CYWILNE|KARNE)", re.IGNORECASE
 )
 
-# Katalog z aktami liczony od korzenia repo (a nie od bieżącego katalogu), żeby
-# `load_all()` działało niezależnie od tego, skąd uruchomiono kod (np. notebook
-# w notebooks/).
+# Case-files directory resolved from the repo root (not the current directory),
+# so `load_all()` works regardless of where the code is run from (e.g. a notebook
+# in notebooks/).
 _DEFAULT_INPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "input"
 
 

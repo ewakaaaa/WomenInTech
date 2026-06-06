@@ -33,8 +33,8 @@ T = TypeVar("T", bound=BaseModel)
 DEFAULT_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 _BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 
-# Nowe modele OpenAI (gpt-5.x) wymagają `max_completion_tokens` zamiast
-# `max_tokens`; Ollama i część proxy nadal używają `max_tokens`.
+# Newer OpenAI models (gpt-5.x) require `max_completion_tokens` instead of
+# `max_tokens`; Ollama and some proxies still use `max_tokens`.
 _MAX_TOKENS_PARAM = "max_completion_tokens" if "openai.com" in _BASE_URL else "max_tokens"
 
 client = instructor.patch(
@@ -47,17 +47,17 @@ client = instructor.patch(
 )
 
 
-# ── Pomiar zużycia tokenów (do liczenia kosztów) ──────────────────────────
+# ── Token usage tracking (for cost accounting) ──────────────────────────
 
 
 @dataclass
 class Usage:
-    """Zliczone zużycie (tokeny + czas) dla serii wywołań call_llm."""
+    """Accumulated usage (tokens + time) for a series of call_llm calls."""
 
     calls: int = 0
     prompt_tokens: int = 0
     completion_tokens: int = 0
-    seconds: float = 0.0  # łączny czas wywołań LLM (wall-clock)
+    seconds: float = 0.0  # total LLM call time (wall-clock)
 
     @property
     def total_tokens(self) -> int:
@@ -69,14 +69,14 @@ class Usage:
 
 
 _usage_var: contextvars.ContextVar = contextvars.ContextVar("llm_usage", default=None)
-# Agent langgraph odpala wywołania równolegle (wątki), a wszystkie dopisują do
-# tego samego licznika Usage — lock chroni inkrementacje przed wyścigiem.
+# The langgraph agent runs calls in parallel (threads), all adding to the same
+# Usage counter — the lock guards increments against a race condition.
 _usage_lock = threading.Lock()
 
 
 @contextmanager
 def track_usage():
-    """Zbieraj zużycie tokenów wywołań ``call_llm`` wykonanych w tym bloku.
+    """Collect token usage of ``call_llm`` calls made within this block.
 
         with track_usage() as u:
             evaluate(appeal)
@@ -91,11 +91,11 @@ def track_usage():
 
 
 def _record_usage(result, messages: list[dict], model: str, seconds: float = 0.0) -> None:
-    """Dopisz zużycie z jednego wywołania do aktywnego licznika (jeśli jest).
+    """Add usage from a single call to the active counter (if any).
 
-    Najpierw próbujemy realnych liczb z odpowiedzi API (`_raw_response.usage`);
-    gdy ich brak — szacujemy tiktokenem (import leniwy, bo src.tokens importuje
-    z tego modułu).
+    First we try the real numbers from the API response (`_raw_response.usage`);
+    if absent — we estimate with tiktoken (lazy import, since src.tokens imports
+    from this module).
     """
     usage = _usage_var.get()
     if usage is None:
