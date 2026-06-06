@@ -6,7 +6,8 @@ odpowiada na to liczbami. Zadajemy dwa pytania:
 1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`)
 2. **Jak jest napisana?** → jakość/forma (`quality`)
 
-Wyniki poszczególnych podejść porównujesz, odczytując je z notebooków.
+Wyniki poszczególnych podejść porównujesz, odczytując je z logów przebiegów
+(`<metoda>/output/run_*.log`) albo z notebooka `notebooks/eval_walkthrough.ipynb`.
 
 Klucz oceny to `data/eval.json` — lista zagadnień, które dobra apelacja powinna
 podnieść (zarzuty + wnioski).
@@ -22,9 +23,9 @@ czy apelacja faktycznie je porusza (wraz z istotą argumentacji, nie tylko wzmia
   `total`, `score` (`covered / total`) i werdyktem per zagadnienie.
 - `evaluate_file(path)` — to samo dla apelacji zapisanej w pliku.
 
-Jedna liczba (`score`) porównywalna między wszystkimi podejściami. Powtarzalność
-oceny (kilka przebiegów → średnia) oraz koszt pokazuje notebook
-`notebooks/baseline_and_eval.ipynb`.
+Jedna liczba (`score`) porównywalna między wszystkimi podejściami. Pokrycie + jakość
+na przykładzie baseline pokazuje notebook `notebooks/eval_walkthrough.ipynb`; z CLI
+ocenę zapisanej apelacji odpalisz przez `uv run python -m src.eval.report <metoda>`.
 
 ## 2. Jakość / forma — `quality.py`
 

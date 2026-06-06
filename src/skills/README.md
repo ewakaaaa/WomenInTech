@@ -4,7 +4,7 @@ Każda umiejętność to **czysta funkcja** z `<umiejętność>/main.py` (wejśc
 wyjście walidowane przez Pydantic). Robi jedną rzecz i nie wie nic o pozostałych
 — dzięki temu da się ją testować osobno i opakować jako węzeł grafu.
 
-Te same skille spinają trzy podejścia:
+Te same skille spinają dwa podejścia:
 
 - [`agent_linear/`](../../agent_linear/) — wywołuje je po kolei (pętle `for`),
 - [`agent_langgraph/`](../../agent_langgraph/) — to samo, ale z równoległym fan-outem (`Send`).

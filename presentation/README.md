@@ -13,10 +13,11 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie
 
-> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–24) ≈ **~61 min**, na końcu **10–15 min na
-> pytania** → ~71–76 min — **przeładowane, do ścięcia** (jutro przy slajdach). Najłatwiej
-> dociąć: demo na żywo (17), pytania do sali (8, 20, 22), LangGraph (21). Agenta
-> nieliniowego (planer) **świadomie wycięliśmy z kodu** — został jako idea na slajdzie 22.
+> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–24) ≈ **~64 min** (sekcje: 10 + 10 + 8 +
+> 13 + 9 + 14), na końcu **10–15 min na pytania** → **~74–79 min** — **przeładowane, do
+> ścięcia** (jutro przy slajdach). Najłatwiej dociąć: demo na żywo (17), pytania do sali
+> (8, 20, 22), LangGraph (21). Agenta nieliniowego (planer) **świadomie wycięliśmy z
+> kodu** — został jako idea na slajdzie 22.
 
 ### Wstęp i kontekst — *~10 min*
 
@@ -41,7 +42,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 ### Baseline i jego problemy — *~10 min*
 
 7. **Baseline + wyniki.** Warto zacząć od czegoś prostego — mamy punkt startowy.
-   Pokaż wygenerowaną apelację + wynik ewaluacji `X/12` + niepokryte zagadnienia.
+   Pokaż wygenerowaną apelację + wynik ewaluacji **4/12 (33%)** + niepokryte zagadnienia.
    Pointa: **„technicznie działa, ale czy *dobrze*?"** — *4 min*
 8. **Pytanie do sali:** jakie widzicie z tym problemy? *(odpowiedzi złożą się w listę
    ograniczeń: zapchany kontekst, wszystko naraz, brak audytu, halucynacje…)* — *4 min*
@@ -93,13 +94,14 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     tym, że każda umiejętność zwraca **typowany obiekt** (Pydantic), więc dokładnie
     wiem, jakiego outputu się spodziewać i mogę go podać dalej. Bez structured output
     te kroki by się nie połączyły. — *3 min*
-19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline
-    (odczyt z notebooków `baseline_and_eval` / `linear_walkthrough`): pokrycie `Y/12` vs `X/12`. — *3 min*
+19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline (odczyt z notebooków
+    `eval_walkthrough` / `linear_walkthrough` lub logów `*/output/`): pokrycie
+    **8/12 (67%) vs 4/12 (33%)**, jakość **4,33 = 4,33** (różnicę robi pokrycie). — *3 min*
 20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
     *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
     człowiek w pętli, „domknie" zaraz LangGraph)* — *3 min*
 
-### LangGraph, „co dalej?" i puenta — *~12 min*
+### LangGraph, „co dalej?" i puenta — *~14 min*
 
 21. **LangGraph — co wnosi i ile kosztuje.** Mamy logikę **napisaną czystymi
     funkcjami**, więc łatwo ją opakować w węzły — ta sama logika, tylko jako graf.
@@ -193,5 +195,8 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 ## Do uzupełnienia
 
-- [ ] Realne liczby do tabeli wyników (po uruchomieniu na żywo)
-- [ ] Slajdy
+- [x] Realne liczby (przebieg 2026-06-06, `gpt-5.4`): baseline **4/12 (33%)**, liner
+  **8/12 (67%)**, jakość **4,33** w obu; langgraph **169,8 s ≈2,6×** szybciej, koszt
+  **$0,73 ≈ liner**. Szczegóły w README podejść.
+- [ ] Slajdy (na podstawie tego planu)
+- [ ] Agenda (slajd 2) — uzupełnić na końcu, zapowiedzieć, że pytania zbieramy na finał

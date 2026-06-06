@@ -36,7 +36,7 @@ Krok po kroku w notebookach (tanie demo na `gpt-5.4-mini`):
 
 > ⚠️ Baseline wrzuca **całe akta w jeden prompt** (~19–20 tys. tokenów), więc
 > wymaga modelu z **dużym oknem kontekstu** — używamy `gpt-5.4`. (Agent
-> liniowy/planer dzielą akta na małe kawałki, więc są pod tym względem łagodniejsze.)
+> liniowy/grafowy dzielą akta na małe kawałki, więc są pod tym względem łagodniejsze.)
 
 ## Wyniki (zużycie kontekstu)
 

@@ -47,23 +47,18 @@ Plik `data/eval.json` to **lista zagadnień, które apelacja powinna poruszyć**
 
 ## 🚀 Uruchomienie
 
-### 1. Środowisko wirtualne (`.venv`)
+Projekt używa **[uv](https://docs.astral.sh/uv/)** (zależności w `pyproject.toml`,
+zablokowane w `uv.lock`). Jedna komenda tworzy `.venv` i instaluje wszystko:
 
 ```bash
-# Utworzenie środowiska
-python3 -m venv .venv
-
-# Aktywacja
-source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows (PowerShell / cmd)
+uv sync
 ```
 
-### 2. Instalacja zależności
+Polecenia w repo poprzedzaj `uv run` (np. `uv run python -m baseline.main`) — uv samo
+użyje właściwego środowiska, bez ręcznej aktywacji `.venv`.
 
-```bash
-pip install --upgrade pip
-pip install pdfplumber pydantic
-```
+> Fallback bez uv: `python3 -m venv .venv && source .venv/bin/activate` (Windows:
+> `.venv\Scripts\activate`), a potem `pip install -r requirements.txt`.
 
 ## 🤖 Konfiguracja LLM
 
@@ -244,6 +239,6 @@ WomenInTech/
 
 ## 🛠️ Wymagania
 
-- Python 3.x
-- Pydantic
+- Python **≥ 3.12** (zob. `pyproject.toml`)
+- [uv](https://docs.astral.sh/uv/) (zalecane) — albo pip + `requirements.txt`
 - dostęp do modelu LLM przez API (OpenAI, `gpt-5.4`)

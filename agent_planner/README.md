@@ -1,5 +1,9 @@
 # Agent z planerem (nieliniowy)
 
+> ⚠️ **To sam pomysł — bez kodu.** W repo są tylko ten README + diagram; planera
+> świadomie **nie budujemy** (dlaczego — [niżej](#dlaczego-tylko-idea-bez-kodu)).
+> Opisy poniżej są w trybie „jak by to działało".
+
 > Krok dalej niż `agent_langgraph`: zamiast sztywnego, liniowego przepływu mamy
 > **planer („mózg operacji")** w centrum grafu. To on dynamicznie decyduje, co robić
 > dalej — graf **zawraca**, dopóki planer nie uzna, że ma dość.

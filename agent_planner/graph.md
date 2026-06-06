@@ -1,6 +1,8 @@
 # Graf planera (agent nieliniowy)
 
-Diagram generowany z kodu (`graph.get_graph().draw_mermaid()`, zob. `graph.py`).
+> To **sam pomysł** — w repo nie ma kodu planera (zob. [`README.md`](README.md)).
+> Diagram poniżej pokazuje, jak wyglądałby graf (wygenerowany wcześniej z kodu przez
+> `graph.get_graph().draw_mermaid()`).
 
 ```mermaid
 graph TD;
