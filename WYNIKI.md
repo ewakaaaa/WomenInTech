@@ -17,7 +17,7 @@ do README poszczególnych podejść.
 |---|---|---|---|
 | baseline     | gpt-5.4-mini | mini    | ~47% |
 | agent_linear | gpt-5.4-mini | mini    | ~42–50% |
-| baseline     | **gpt-5.4**  | gpt-5.4 | **42%** |
+| baseline     | **gpt-5.4**  | gpt-5.4 | **58% (7/12)** — przebieg 2026-06-06 (wcześniej 42%, duża wariancja) |
 | agent_linear | **gpt-5.4**  | gpt-5.4 | **67%** |
 
 Wniosek: przewaga agenta liniowego nad baseline ujawnia się dopiero z **mocnym modelem**
@@ -28,25 +28,24 @@ gardło mini": słaby autor nie robi skoków prawnych, słaby sędzia ich nie do
 
 | podejście | model generacji | jakość (śr. 2–6) |
 |---|---|---|
-| baseline     | gpt-5.4 | **3.33** |
+| baseline     | gpt-5.4 | **4.33** (przebieg 2026-06-06: formalne 5 · zastosowanie 4 · poprawność 4; wcześniej 3.33 — wariancja) |
 | agent_linear | gpt-5.4 | **4.33** |
 
-## Koszt generacji (jednorazowo)
+## Koszt i czas metody (sama generacja, bez ewaluacji)
 
-| podejście | gpt-5.4-mini | gpt-5.4 |
-|---|---|---|
-| baseline     | ~$0.023 | ~$0.076 |
-| agent_linear | ~$0.20  | ~$0.67–1.46 |
+| podejście | model | koszt metody | czas metody |
+|---|---|---|---|
+| baseline     | **gpt-5.4** | **~$0.105** (1 wyw., 19 473 wej + 3 757 wyj) | **48,3 s** |
+| agent_linear | **gpt-5.4** | _do uzupełnienia_ (puścić `python -m agent_linear.main`) | _do uzupełnienia_ |
+
+Koszt ewaluacji liczony osobno (przebieg baseline 2026-06-06): pokrycie ~$0.161 (12 wyw., 40,5 s),
+jakość ~$0.031 (1 wyw., 18,7 s).
 
 Linear jest droższy (wiele wywołań: opisy → plan → wykonanie kroków → strategia → dokument).
 Ograniczenie planu do **maks. 10 kroków** trzyma górną granicę kosztu w ryzach
 (wcześniej 19–20 kroków → ~$1.46).
 
-## Czas (do uzupełnienia)
-
-Pomiar czasu (`s/wywołanie`) dodaliśmy do `Usage`/`cost_summary` **po** tych przebiegach,
-więc powyższe liczby go nie mają. **TODO:** przepuścić jeszcze raz `python -m baseline.main`
-i `python -m agent_linear.main` na `gpt-5.4`, żeby zebrać czas (i odświeżyć koszty).
+> **TODO:** puścić `python -m agent_linear.main` na `gpt-5.4`, żeby uzupełnić koszt i czas linera.
 
 ## Notatki
 

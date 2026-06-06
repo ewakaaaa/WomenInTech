@@ -16,18 +16,23 @@
 | Plik | Rola |
 |------|------|
 | `prompts.py` | system prompt |
-| `main.py` | `build_context`, `generate_appeal`; uruchomiony generuje apelację i zapisuje do `.txt` |
-| `apelacja_baseline.txt` | wygenerowana apelacja (artefakt) |
+| `main.py` | `build_context`, `generate_appeal`; uruchomiony: generacja → zapis → ocena (pokrycie + jakość) + log |
+
+Artefakty przebiegu lądują w `data/output/baseline/` (apelacja + log; poza gitem).
 
 ## Uruchomienie
 
 ```bash
-# wygenerowanie apelacji → baseline/apelacja_baseline.txt
+# generacja apelacji + ocena (pokrycie + jakość); model z .env (gpt-5.4)
 uv run python -m baseline.main
 ```
 
-Ewaluacja (pokrycie + jakość) krok po kroku — w notebooku
-`notebooks/baseline_and_eval.ipynb`.
+Zapisuje apelację i log przebiegu do `data/output/baseline/`, a w logu znajdziesz
+**koszt metody** (sama generacja) i — osobno — koszt ewaluacji.
+
+Krok po kroku w notebookach (tanie demo na `gpt-5.4-mini`):
+`notebooks/baseline_walkthrough.ipynb` (generacja) +
+`notebooks/eval_walkthrough.ipynb` (pokrycie + jakość).
 
 > ⚠️ Baseline wrzuca **całe akta w jeden prompt** (~19–20 tys. tokenów), więc
 > wymaga modelu z **dużym oknem kontekstu** — używamy `gpt-5.4`. (Agent
@@ -46,16 +51,20 @@ więc naiwne podejście **technicznie zadziała**. Pytanie warsztatowe brzmi jed
 nie „czy zadziała", tylko **„czy zrobi to dobrze"** — i to zweryfikujemy ewaluacją
 na podstawie `data/eval.json`.
 
-## Wyniki ewaluacji (przykładowy przebieg, `gpt-5.4-mini`)
+## Wyniki ewaluacji (`gpt-5.4`)
 
-Z `notebooks/baseline_and_eval.ipynb` (apelacja ~7,9 tys. znaków z jednego promptu):
+Przebieg `python -m baseline.main` (model z `.env`). **Koszt metody** to sama
+generacja apelacji — koszt ewaluacji liczony osobno (nie wlicza się do metody).
 
 | miara | wynik |
 |-------|-------|
-| **koszt generacji apelacji** | ~**$0,0229** (19 473 wej + 1 851 wyj tok, 1 wywołanie) |
-| **pokrycie** (średnia z 5 przebiegów) | **47%** (42–50%) |
+| **koszt metody** (sama generacja) | ~**$0,105** (1 wywołanie, 19 473 wej + 3 757 wyj tok) |
+| **czas metody** | **48,3 s** (1 wywołanie) |
+| **pokrycie** (zagadnienia z `data/eval.json`) | **7/12 = 58%** |
+| **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
 
-> Liczby orientacyjne — zależą od modelu i losowości. Odpal notebook, by odtworzyć.
+> Liczby z jednego przebiegu — zależą od losowości modelu. Pełny log:
+> `data/output/baseline/run_<znacznik>.log`.
 
 ## Ograniczenia (czyli po co agent)
 
