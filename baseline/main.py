@@ -60,8 +60,8 @@ if __name__ == "__main__":
 
         saved = save_appeal(appeal, "baseline")
         print(f"Zapisano apelację: {saved} ({len(appeal):,} znaków)")
-        print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
-        print(f"Czas generacji:  {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)")
+        print(f"KOSZT METODY (sama generacja, bez ewaluacji): {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        print(f"Czas metody:  {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)")
 
         evaluate_appeal(appeal)
 

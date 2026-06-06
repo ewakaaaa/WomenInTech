@@ -22,6 +22,9 @@ def evaluate_appeal(
     """Oceń apelację: pokrycie + jakość, wypisz wyniki wraz z kosztem i czasem."""
     model_name = model or os.environ.get("LLM_MODEL", "?")
 
+    # Uwaga: poniższe koszty/czasy dotyczą EWALUACJI i są podane osobno —
+    # nie wliczają się do kosztu metody (sama generacja apelacji liczona wyżej).
+    print("\n--- EWALUACJA (koszt osobno, NIE wlicza się do kosztu metody) ---")
     print("\n=== POKRYCIE (czy porusza wymagane zagadnienia) ===")
     with track_usage() as cov_usage:
         cov = evaluate(appeal_text, model=model, print_results=True)
