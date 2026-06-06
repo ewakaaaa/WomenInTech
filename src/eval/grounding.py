@@ -93,10 +93,10 @@ SELECT_SYSTEM_PROMPT = (
 
 
 class SourceSelection(BaseModel):
-    """Wybór dokumentów, w których należy sprawdzić twierdzenie."""
+    """Wybór dokumentów, w których należy sprawdzić twierdzenie (reasoning najpierw)."""
 
-    files: list[str] = Field(..., description="Nazwy plików do sprawdzenia")
     reasoning: str = Field(..., description="Krótkie uzasadnienie wyboru")
+    files: list[str] = Field(..., description="Nazwy plików do sprawdzenia")
 
 
 def _format_descriptions(described: list[DescribedFile]) -> str:
@@ -144,12 +144,12 @@ VERIFY_SYSTEM_PROMPT = (
 
 
 class ClaimVerdict(BaseModel):
-    """Werdykt weryfikacji jednego twierdzenia względem akt."""
+    """Werdykt weryfikacji jednego twierdzenia względem akt (reasoning najpierw)."""
 
+    reasoning: str = Field(..., description="Krótkie uzasadnienie")
     status: Literal["supported", "unsupported", "contradicted"] = Field(
         ..., description="supported / unsupported / contradicted"
     )
-    reasoning: str = Field(..., description="Krótkie uzasadnienie")
     evidence: str = Field(..., description="Cytat z akt lub pusty string")
 
 
