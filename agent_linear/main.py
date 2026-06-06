@@ -4,7 +4,7 @@ The same skills (``src/skills/*``) run one after another over plain Python
 variables. Later, LangGraph will replace this hand-written sequencing and the
 ``for`` loops with conditional edges + Send — the skills themselves won't change.
 
-    uv run python -m agent_linear.pipeline
+    uv run python -m agent_linear.main
 """
 
 from __future__ import annotations
@@ -57,22 +57,27 @@ def run(
 
 if __name__ == "__main__":
     # Generacja + ocena POKRYCIA z CLI (bez notebooka, bez halucynacji):
-    #   uv run python -m agent_linear.pipeline
+    #   uv run python -m agent_linear.main
     import os
 
     from src.cost import cost_summary
     from src.eval.report import evaluate_appeal
     from src.llm import track_usage
-    from src.output import save_appeal
+    from src.output import save_appeal, tee_output
 
-    print("=== GENERACJA (agent liniowy) ===")
-    documents = load_all()
-    with track_usage() as gen_usage:
-        document = run(documents=documents)
-    appeal = document.tekst
+    # tee_output: wszystkie printy (generacja + checki z evaluate) lecą też do pliku logu.
+    with tee_output("agent_linear") as log_path:
+        print("=== GENERACJA (agent liniowy) ===")
+        documents = load_all()
+        with track_usage() as gen_usage:
+            document = run(documents=documents)
+        appeal = document.tekst
 
-    saved = save_appeal(appeal, "agent_linear")
-    print(f"\nZapisano apelację: {saved} ({len(appeal):,} znaków)")
-    print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        saved = save_appeal(appeal, "agent_linear")
+        print(f"\nZapisano apelację: {saved} ({len(appeal):,} znaków)")
+        print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        print(f"Czas generacji:  {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)")
 
-    evaluate_appeal(appeal)
+        evaluate_appeal(appeal)
+
+    print(f"\nLog z przebiegu zapisany: {log_path}")

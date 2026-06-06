@@ -46,18 +46,23 @@ if __name__ == "__main__":
     from src.cost import cost_summary
     from src.eval.report import evaluate_appeal
     from src.llm import track_usage
-    from src.output import save_appeal
+    from src.output import save_appeal, tee_output
 
-    docs = load_all()
-    prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + build_context(docs))
-    print(f"Dokumentów: {len(docs)} | prompt: ~{prompt_tokens:,} tokenów\n")
+    # tee_output: wszystkie printy (generacja + checki z evaluate) lecą też do pliku logu.
+    with tee_output("baseline") as log_path:
+        docs = load_all()
+        prompt_tokens = count_tokens(SYSTEM_PROMPT + "\n\n" + build_context(docs))
+        print(f"Dokumentów: {len(docs)} | prompt: ~{prompt_tokens:,} tokenów\n")
 
-    print("=== GENERACJA (baseline) ===")
-    with track_usage() as gen_usage:
-        appeal = generate_appeal(docs).tekst
+        print("=== GENERACJA (baseline) ===")
+        with track_usage() as gen_usage:
+            appeal = generate_appeal(docs).tekst
 
-    saved = save_appeal(appeal, "baseline")
-    print(f"Zapisano apelację: {saved} ({len(appeal):,} znaków)")
-    print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        saved = save_appeal(appeal, "baseline")
+        print(f"Zapisano apelację: {saved} ({len(appeal):,} znaków)")
+        print(f"Koszt generacji: {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        print(f"Czas generacji:  {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)")
 
-    evaluate_appeal(appeal)
+        evaluate_appeal(appeal)
+
+    print(f"\nLog z przebiegu zapisany: {log_path}")

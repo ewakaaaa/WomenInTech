@@ -45,7 +45,7 @@ Tutaj liczy się tylko, że agent liniowy odpala je **po kolei**.
 ## Skąd biorą się umiejętności
 
 Każdy krok to czysta funkcja z `src/skills/<umiejętność>/main.py` (wejście → wyjście
-Pydantic). `pipeline.py` tylko je wywołuje i przekazuje wyniki dalej. Pętle `for`
+Pydantic). `main.py` tylko je wywołuje i przekazuje wyniki dalej. Pętle `for`
 (opis plików, wykonywanie zadań) to dokładnie te miejsca, które w `agent_langgraph/`
 zastępuje równoległy fan-out przez `Send`.
 
@@ -53,10 +53,10 @@ zastępuje równoległy fan-out przez `Send`.
 
 ```bash
 # wygenerowanie apelacji → agent_linear/apelacja.txt
-uv run python -m agent_linear.pipeline
+uv run python -m agent_linear.main
 ```
 
 Ewaluację (pokrycie + jakość) odpalasz w notebookach — porównanie z baseline
 przez odczyt wyników z `notebooks/baseline_and_eval.ipynb` i `linear_walkthrough.ipynb`.
 
-Z CLI: `uv run python -m agent_linear.pipeline` (generacja + pokrycie).
+Z CLI: `uv run python -m agent_linear.main` (generacja + pokrycie).

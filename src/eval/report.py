@@ -2,7 +2,7 @@
 
 Dla danej apelacji liczy i wypisuje **pokrycie** (`coverage` — czy porusza
 wymagane zagadnienia) wraz z kosztem. Używane w blokach `__main__` podejść
-(np. `agent_linear.pipeline`), żeby iterować nad jakością bez klikania notebooka.
+(np. `agent_linear.main`), żeby iterować nad jakością bez klikania notebooka.
 """
 
 from __future__ import annotations
@@ -23,4 +23,5 @@ def evaluate_appeal(appeal_text: str, model: str | None = None) -> CoverageResul
         cov = evaluate(appeal_text, model=model, print_results=True)
     print(f"POKRYCIE: {cov.covered}/{cov.total} = {cov.score:.0%}")
     print(f"  koszt: {cost_summary(usage, model_name)}")
+    print(f"  czas:  {usage.seconds:.1f}s (≈{usage.seconds_per_call:.1f}s/wyw.)")
     return cov

@@ -6,11 +6,50 @@ pochodzi dana apelacja. Katalog `data/output/` jest poza gitem (artefakty).
 
 from __future__ import annotations
 
+import sys
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
 # Katalog na artefakty liczony od korzenia repo (niezależnie od bieżącego katalogu).
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "output"
+
+
+@contextmanager
+def tee_output(approach: str):
+    """Duplikuj wszystko, co leci na ``stdout``, do pliku logu w `data/output/`.
+
+    Dzięki temu printy z generacji i ewaluacji (m.in. checki z `evaluate`) lądują
+    też w pliku `run_<approach>_<RRRR-MM-DD_GGMMSS>.log` — do wklejenia/porównania
+    bez przewijania terminala.
+
+        with tee_output("baseline") as log_path:
+            ...  # wszystkie print() trafiają na ekran i do pliku
+
+    Zwraca ścieżkę pliku logu.
+    """
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    path = OUTPUT_DIR / f"run_{approach}_{timestamp}.log"
+    log_file = path.open("w", encoding="utf-8")
+    real_stdout = sys.stdout
+
+    class _Tee:
+        def write(self, data: str) -> int:
+            real_stdout.write(data)
+            log_file.write(data)
+            return len(data)
+
+        def flush(self) -> None:
+            real_stdout.flush()
+            log_file.flush()
+
+    sys.stdout = _Tee()  # type: ignore[assignment]
+    try:
+        yield path
+    finally:
+        sys.stdout = real_stdout
+        log_file.close()
 
 
 def save_appeal(text: str, approach: str) -> Path:

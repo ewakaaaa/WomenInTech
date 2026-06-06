@@ -46,7 +46,7 @@ Ograniczenie planu do **maks. 10 kroków** trzyma górną granicę kosztu w ryza
 
 Pomiar czasu (`s/wywołanie`) dodaliśmy do `Usage`/`cost_summary` **po** tych przebiegach,
 więc powyższe liczby go nie mają. **TODO:** przepuścić jeszcze raz `python -m baseline.main`
-i `python -m agent_linear.pipeline` na `gpt-5.4`, żeby zebrać czas (i odświeżyć koszty).
+i `python -m agent_linear.main` na `gpt-5.4`, żeby zebrać czas (i odświeżyć koszty).
 
 ## Notatki
 
