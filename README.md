@@ -109,6 +109,50 @@ Ollama wystawia API zgodne z OpenAI (`/v1`), więc `call_llm` działa bez zmian.
 Uwaga: structured output (JSON wg schematu) lepiej wychodzi większym modelom
 instrukcyjnym — małe modele bywają zawodne przy złożonych schematach.
 
+**Szybki start qwena (Ollama):**
+```bash
+open -a Ollama            # uruchom serwer (raz; chodzi w tle)
+ollama pull qwen2.5:14b   # pobierz model (raz)
+ollama list               # sprawdź, że jest na liście
+```
+
+## 📓 Notebooki — jak uruchomić
+
+W `notebooks/`: `setup.ipynb` (test konfiguracji), `eval_walkthrough.ipynb`
+(ewaluacja), `baseline_walkthrough.ipynb`, `planner_walkthrough.ipynb`.
+
+> Najpierw upewnij się, że model działa: dla qwena uruchom Ollamę (patrz wyżej),
+> a w pierwszej komórce notebooka odkomentuj sekcję B (Ollama).
+
+### Najprościej: w przeglądarce (JupyterLab)
+
+Jednorazowo zarejestruj kernel wskazujący na `.venv`:
+
+```bash
+.venv/bin/python -m ipykernel install --user --name womenintech --display-name "Python (WomenInTech)"
+```
+
+Potem uruchom serwer:
+
+```bash
+.venv/bin/jupyter lab
+```
+
+Otworzy się przeglądarka → wejdź w `notebooks/` → otwórz plik `.ipynb` →
+uruchamiaj komórki **Shift+Enter**. Kernel (prawy górny róg): **Python (WomenInTech)**.
+
+### W edytorze Zed
+
+Zed **nie renderuje `.ipynb`** (pokazuje surowy JSON), ale ma **REPL**. Pracuj na
+wersji `.py` z komórkami `# %%` (np. `notebooks/setup.py`):
+
+1. Otwórz plik `.py` w Zedzie.
+2. Postaw kursor w komórce (między znacznikami `# %%`).
+3. Otwórz paletę: **⌘ ⇧ P** → wpisz **`repl: run`** (lub skrót **⌃ ⇧ Return**).
+
+Wynik pojawia się pod komórką; pierwsze uruchomienie startuje kernel. Cały plik
+naraz odpalisz też zwykłym `.venv/bin/python notebooks/setup.py`.
+
 ## 📂 Struktura projektu
 
 ```
