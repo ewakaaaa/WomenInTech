@@ -13,11 +13,11 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie
 
-> ⏱️ Czasy orientacyjne. **Treść** (slajdy 1–24) ≈ **~64 min** (sekcje: 10 + 10 + 8 +
-> 13 + 9 + 14), na końcu **10–15 min na pytania** → **~74–79 min** — **przeładowane, do
-> ścięcia** (jutro przy slajdach). Najłatwiej dociąć: demo na żywo (17), pytania do sali
-> (8, 20, 22), LangGraph (21). Agenta nieliniowego (planer) **świadomie wycięliśmy z
-> kodu** — został jako idea na slajdzie 22.
+> ⏱️ Czasy orientacyjne, **docięte do 70 min**. **Treść** (slajdy 1–24) ≈ **~60 min**
+> (sekcje: 10 + 9 + 8 + 12 + 8 + 13), na końcu **~10 min na pytania** → **~70 min**.
+> Bufor jest cienki — gdyby trzeba ściąć więcej, najłatwiej: pytania do sali (8, 20, 22)
+> i kod na żywo (17). Agenta nieliniowego (planer) **świadomie wycięliśmy z kodu** —
+> został jako idea na slajdzie 22.
 
 ### Wstęp i kontekst — *~10 min*
 
@@ -39,13 +39,13 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
    tysiącach spraw). Liczy się dobre **przygotowanie danych** — i można z nich wyciągać
    jeszcze więcej **metadanych**. — *3 min*
 
-### Baseline i jego problemy — *~10 min*
+### Baseline i jego problemy — *~9 min*
 
 7. **Baseline + wyniki.** Warto zacząć od czegoś prostego — mamy punkt startowy.
    Pokaż wygenerowaną apelację + wynik ewaluacji **4/12 (33%)** + niepokryte zagadnienia.
    Pointa: **„technicznie działa, ale czy *dobrze*?"** — *4 min*
 8. **Pytanie do sali:** jakie widzicie z tym problemy? *(odpowiedzi złożą się w listę
-   ograniczeń: zapchany kontekst, wszystko naraz, brak audytu, halucynacje…)* — *4 min*
+   ograniczeń: zapchany kontekst, wszystko naraz, brak audytu, halucynacje…)* — *3 min*
 9. **Eksperci domenowi.** Jak ważni są eksperci domenowi — i **jak człowiek
    podszedłby do tego zadania?** *(zawias do architektury)* — *2 min*
 
@@ -63,7 +63,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     strategii** pisania apelacji. — *1,5 min*
 14. **Plan jak człowiek (5):** skoro wiem, co chcę napisać — **piszę apelację**. — *1,5 min*
 
-### Reveal, oddech i kod — *~13 min*
+### Reveal, oddech i kod — *~12 min*
 
 15. **Reveal: to jest dokładnie nasz agent.** Mapowanie kroków człowieka na umiejętności: — *2 min*
 
@@ -81,13 +81,13 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     zadanie, ale **zaplanuje całe rozwiązanie**. *(I to właśnie przed chwilą zrobiliśmy.)* — *2 min*
 17. **Kod na żywo:** `notebooks/linear_walkthrough.ipynb` — odpalamy umiejętności po kolei i
     oglądamy outputy każdego etapu. Przy okazji pokazujemy, jak agent **rozwiązuje
-    problemy ze slajdu 8**: — *9 min*
+    problemy ze slajdu 8**: — *8 min*
     - **podsumowania zamiast pełnych akt** → mniej tokenów (opisy plików, nie 16 pełnych dokumentów),
     - **analiza wybranych dokumentów**, a nie wszystkich naraz → selektywny kontekst (model widzi tylko trafny wycinek),
     - **rozbicie dużego zadania na małe kawałki** → łatwiej i dokładniej, każdy krok robi jedno,
     - **przekazywanie głównego celu** (`goal`) przez wszystkie etapy → swego rodzaju **pamięć agenta**, dzięki której nie gubi kierunku.
 
-### Jak to się spina i wyniki — *~9 min*
+### Jak to się spina i wyniki — *~8 min*
 
 18. **Structured output — klej całego pipeline'u.** Bez tego nie dałoby się spiąć
     umiejętności w jeden przepływ. Nie ma tu żadnej magii — po prostu **polegamy** na
@@ -99,9 +99,9 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     **8/12 (67%) vs 4/12 (33%)**, jakość **4,33 = 4,33** (różnicę robi pokrycie). — *3 min*
 20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
     *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
-    człowiek w pętli, „domknie" zaraz LangGraph)* — *3 min*
+    człowiek w pętli, „domknie" zaraz LangGraph)* — *2 min*
 
-### LangGraph, „co dalej?" i puenta — *~14 min*
+### LangGraph, „co dalej?" i puenta — *~13 min*
 
 21. **LangGraph — co wnosi i ile kosztuje.** Mamy logikę **napisaną czystymi
     funkcjami**, więc łatwo ją opakować w węzły — ta sama logika, tylko jako graf.
@@ -121,7 +121,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 22. **Pytanie do sali: co jeszcze można by zrobić?** *(symetria do slajdu 8 i 20 —
     domykamy warsztat pytaniem)*. Zbieramy pomysły, a w zanadrzu mamy **gotowe
     odpowiedzi** (to był kierunek „agenta nieliniowego", którego świadomie *nie*
-    budujemy w kodzie — pokazujemy jako ideę + diagram `agent_planner/graph.md`): — *~5 min*
+    budujemy w kodzie — pokazujemy jako ideę + diagram `agent_planner/graph.md`): — *~4 min*
     - **agent sam decyduje, co dalej** — zamiast sztywnej kolejności planer w pętli:
       *analizuj / zapytaj człowieka / pisz / brak podstaw* (graf **zawraca**),
     - **człowiek w pętli na żywo** — pauza (`interrupt`) na potwierdzenie strategii
@@ -147,7 +147,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     biznesem i ekspertami** (szybko dostarcz proste → szybko zbierz feedback), (3)
     **ewaluacja ustalona na starcie**. (Szczegóły poniżej.) — *~3 min*
 
-### Pytania (Q&A) — *10–15 min*
+### Pytania (Q&A) — *~10 min*
 
 Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pamiętać,
 żeby zapowiedzieć, że pytania zbieramy na finał.)*

@@ -1,8 +1,14 @@
 # Agent w wersji LangGraph
 
 > Te same umiejętności (`src/skills/*`) co w `agent_linear/`, spięte w graf.
-> **Wynik jest taki sam — bo to ta sama logika.** Pytanie brzmi więc: skoro
-> rezultat identyczny, **co właściwie daje LangGraph?**
+> **To ta sama logika** — więc o jakość pisma tu nie chodzi. Pytanie brzmi:
+> skoro podejście jest to samo, **co właściwie daje LangGraph?** Krótko: nie zmienia
+> *co* agent robi, tylko **jak szybko** to liczy (przy tym samym koszcie).
+>
+> ⚠️ Dlatego **pokrycia i jakości nie raportujemy tutaj** — mierzymy je na
+> `agent_linear/` (stabilny wynik **67% / 4,33**). Pojedynczy przebieg grafu potrafi
+> dać inne pokrycie (losowość modelu → inna apelacja), więc tu pokazujemy **tylko
+> czas i koszt**.
 
 📊 Diagram grafu (mermaid, generowany z kodu): [`graph.md`](graph.md).
 
@@ -12,7 +18,7 @@ LangGraph nie zmienia *co* agent robi — zmienia *jak to jest wykonywane,
 obserwowane i utrzymywane*. Wartość nie leży w treści apelacji, tylko w
 inżynierii wokół niej.
 
-## Co realnie zyskujemy (przy identycznym wyniku)
+## Co realnie zyskujemy (przy tej samej logice)
 
 1. **Równoległość za darmo (fan-out przez `Send`)**
    W `agent_linear` opis 16 plików i wykonanie zadań idą w pętli `for` —
@@ -70,8 +76,9 @@ uv run python -m agent_langgraph.main
 ```
 
 Zapisuje apelację i log przebiegu do `agent_langgraph/output/` (jak baseline i
-agent liniowy). Świadomie **bez ewaluacji** — pokrycie i jakość są jak u linera
-(ta sama logika), więc tu interesują nas tylko dwie rzeczy:
+agent liniowy). Świadomie **bez ewaluacji** — pokrycie/jakość mierzymy na linerze
+(stabilny wynik), bo pojedynczy przebieg grafu potrafi dać inne pokrycie (losowość
+modelu). Tu interesują nas tylko dwie rzeczy:
 
 - **czas wall-clock** — realny czas przy równoległym fan-oucie; powinien być
   wyraźnie krótszy niż suma czasów wywołań LLM (zysk z `Send`),
@@ -80,10 +87,10 @@ agent liniowy). Świadomie **bez ewaluacji** — pokrycie i jakość są jak u l
   fan-out zmienia tylko kolejność, nie liczbę wywołań. Większy koszt = sygnał, że
   graf gdzieś dubluje wywołania.
 
-## Wyniki (`gpt-5.4`)
+## Wyniki — tylko czas i koszt (`gpt-5.4`)
 
-Te same skille i ten sam plan co `agent_linear`, więc **pokrycie i jakość są jak
-u linera** (67% / 4,33) — tu ich nie liczymy ponownie. Mierzymy czas i koszt.
+Mierzymy **wyłącznie** to, co jest sednem tej wersji: czy przy tej samej logice jest
+**szybciej** i czy graf **nie podbija kosztu**. Pokrycie/jakość → patrz `agent_linear/`.
 
 Przebieg 2026-06-06 (`gpt-5.4`, 12 wywołań):
 
@@ -92,7 +99,6 @@ Przebieg 2026-06-06 (`gpt-5.4`, 12 wywołań):
 | **czas metody (wall-clock, równolegle)** | **169,8 s** (~2,8 min) | 433,5 s |
 | suma czasów wywołań LLM / przyspieszenie | 442,3 s → **≈2,6×** | — |
 | **koszt metody** (cały graf) | **$0,7349** (88 188 wej + 34 292 wyj tok) | ~$0,743 |
-| pokrycie / jakość | _≈ liner: 67% / 4,33 (nie liczone ponownie)_ | 67% / 4,33 |
 
 Puenta: **koszt taki sam jak liner** (~$0,74 — fan-out nie podbija liczby wywołań),
 a realny czas **≈2,6× krótszy** dzięki równoległości. Pełny log:
