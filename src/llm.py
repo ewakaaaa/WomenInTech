@@ -27,10 +27,15 @@ load_dotenv()
 T = TypeVar("T", bound=BaseModel)
 
 DEFAULT_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
+
+# Nowe modele OpenAI (gpt-5.x) wymagają `max_completion_tokens` zamiast
+# `max_tokens`; Ollama i część proxy nadal używają `max_tokens`.
+_MAX_TOKENS_PARAM = "max_completion_tokens" if "openai.com" in _BASE_URL else "max_tokens"
 
 client = instructor.patch(
     OpenAI(
-        base_url=os.getenv("LLM_BASE_URL", "https://api.openai.com/v1"),
+        base_url=_BASE_URL,
         # Ollama doesn't require a key — any placeholder works.
         api_key=os.getenv("LLM_API_KEY", "not-needed"),
     ),
@@ -57,7 +62,7 @@ def call_llm(
     """
     kwargs = {}
     if max_tokens is not None:
-        kwargs["max_tokens"] = max_tokens
+        kwargs[_MAX_TOKENS_PARAM] = max_tokens
     return client.chat.completions.create(
         model=model or DEFAULT_MODEL,
         messages=messages,
