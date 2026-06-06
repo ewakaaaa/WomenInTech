@@ -55,5 +55,10 @@ Krok po kroku: `notebooks/linear_walkthrough.ipynb`(sam przepływ, bez oceny).
 | **liczba kroków planu** | **8** (limit: maks. 10) |
 | **koszt metody** (cały pipeline) | ~**$0,743** (11 wywołań, 91 265 wej + 34 331 wyj tok) |
 | **czas metody** | **433,5 s** (~7 min, 11 wywołań, ≈39,4 s/wyw.) |
-| **pokrycie** (zagadnienia z `data/eval.json`) | **8/12 = 67%** |
+| **pokrycie** (zagadnienia z `data/eval.json`) | **6–8/12 = 50–67%** (3 przebiegi, śr. ~58%) |
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
+
+> **Wariancja generacji:** pokrycie liczone na 3 przebiegach (8/12, 7/12, 6/12). Baseline
+> w tym samym teście dał 33–42% — zakresy **się nie nakładają**, więc przewaga agenta jest
+> odporna na losowość (zawsze > baseline), nawet jeśli sama liczba skacze o ~3 zagadnienia.
+> Stąd ewaluację robi się na **kilku** przebiegach, nie jednym. Jakość i koszt są stabilne.

@@ -13,11 +13,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie
 
-> ⏱️ Czasy orientacyjne, **docięte do 70 min**. **Treść** (slajdy 1–24) ≈ **~60 min**
-> (sekcje: 10 + 9 + 8 + 12 + 8 + 13), na końcu **~10 min na pytania** → **~70 min**.
-> Bufor jest cienki — gdyby trzeba ściąć więcej, najłatwiej: pytania do sali (8, 20, 22)
-> i kod na żywo (17). Agenta nieliniowego (planer) **świadomie wycięliśmy z kodu** —
-> został jako idea na slajdzie 22.
+> ⏱️ Czasy orientacyjne, **70 min**. 
 
 ### Wstęp i kontekst — *~10 min*
 
@@ -30,8 +26,9 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 4. **Repo na żywo.** Link do repozytorium — „jestem na konferencji i pokazuję wam
    swój kod". Zaproszenie: pobierzcie projekt i odpalajcie / patrzcie razem ze mną. — *2 min*
 5. **Cel i motywacja.** Chcemy mieć **generator dokumentów** (pism prawniczych). — *1 min*
-6. **Dane.** Udało się znaleźć świetne dane, bo: a) są **zanonimizowane**,
-   b) mają **klucz odpowiedzi** → możemy *mierzyć* jakość, nie tylko „patrzeć, że ładne".
+6. **Dane.** Udało się znaleźć świetne dane, bo: 
+    a) są **zanonimizowane**,
+    b) mają **klucz odpowiedzi** → możemy *mierzyć* jakość, nie tylko „patrzeć, że ładne".
    Przybliżenie sprawy: **sprawa Daniela Dzika** — o co w niej chodzi (zob.
    [`data/README.md`](../data/README.md)).
    Przygotowanie danych: **bez wektorowej bazy i bez RAG-a** — możemy sobie na to
@@ -52,7 +49,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 ### Jak zrobiłby to człowiek (intuicja, bez kodu) — *~8 min*
 
 10. **Plan jak człowiek (1):** najpierw pobieżnie przeglądasz, jakie masz dokumenty
-    *(slajd: biurko z papierami)* i zapisujesz **główny cel** — „napisać apelację".
+    i zapisujesz **główny cel** — „napisać apelację".
     *(wzmianka: na egzaminie zadaniem jest też ocena, czy apelacja ma podstawy — na
     warsztacie upraszczamy do jednego celu.)* — *1,5 min*
 11. **Plan jak człowiek (2):** skoro wiem mniej więcej, co mam w papierach, zastanawiam
@@ -95,8 +92,10 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
     wiem, jakiego outputu się spodziewać i mogę go podać dalej. Bez structured output
     te kroki by się nie połączyły. — *3 min*
 19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline (odczyt z notebooków
-    `eval_walkthrough` / `linear_walkthrough` lub logów `*/output/`): pokrycie
-    **8/12 (67%) vs 4/12 (33%)**, jakość **4,33 = 4,33** (różnicę robi pokrycie). — *3 min*
+    `eval_walkthrough` / `linear_walkthrough` lub logów `*/output/`). Pokrycie na **3
+    przebiegach**: agent **50–67%** (śr. ~58%) vs baseline **33–42%** (śr. ~36%); jakość
+    **4,33 = 4,33** (różnicę robi pokrycie). Pointa: zakresy **się nie nakładają** — agent
+    **zawsze** wyżej, choć liczba skacze → dlatego ewaluacja na kilku przebiegach, nie jednym. — *3 min*
 20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
     *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
     człowiek w pętli, „domknie" zaraz LangGraph)* — *2 min*

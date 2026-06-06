@@ -55,11 +55,12 @@ Przebieg `python -m baseline.main` (model z `.env`).
 |-------|-------|
 | **koszt** | ~**$0,105** (1 wywołanie, 19 473 wej + 3 757 wyj tok) |
 | **czas metody** | **48,3 s** (1 wywołanie) |
-| **pokrycie** (zagadnienia z `data/eval.json`) | **4/12 = 33%** |
+| **pokrycie** (zagadnienia z `data/eval.json`) | **4–5/12 = 33–42%** (3 przebiegi, śr. ~36%) |
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
 
-> Liczby z jednego przebiegu — zależą od losowości modelu. Pełny log:
-> `baseline/output/run_<znacznik>.log`.
+> Pokrycie liczone na 3 przebiegach (losowość modelu → różne apelacje); jakość i koszt
+> stabilne. Agent liniowy w tym samym teście dał 50–67% — **zawsze wyżej** niż baseline.
+> Pełne logi: `baseline/output/run_<znacznik>.log`, `data/output/wariancja_2026-06-06.log`.
 
 ## Ograniczenia (czyli po co agent)
 
