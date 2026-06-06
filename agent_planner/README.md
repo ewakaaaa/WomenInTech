@@ -1,8 +1,7 @@
 # Agent z planerem (nieliniowy)
 
 > ⚠️ **To sam pomysł — bez kodu.** W repo są tylko ten README + diagram; planera
-> świadomie **nie budujemy** (dlaczego — [niżej](#dlaczego-tylko-idea-bez-kodu)).
-> Opisy poniżej są w trybie „jak by to działało".
+> świadomie **nie budujemy** 
 
 > Krok dalej niż `agent_langgraph`: zamiast sztywnego, liniowego przepływu mamy
 > **planer („mózg operacji")** w centrum grafu. To on dynamicznie decyduje, co robić
@@ -52,20 +51,3 @@ Reużywałby `src/skills/*`: `file_description`, `make_task`, `generate_document
 osobną decyzję planera (`analyze` / `ask_human` / `write` / `no_grounds`). Nie potrzebuje
 `tasks` ani `strategy` — zadania tworzy planer, a „strategię" stanowi jego rozumowanie
 przed napisaniem pisma.
-
-## Dlaczego TYLKO idea (bez kodu)
-
-Ten katalog to **świadomie sam pomysł** — README + diagram, **bez implementacji**.
-Powody:
-
-- **Warsztat ma być „mniej, a dokładniej"** — pełny agent nieliniowy z human-in-the-loop
-  to kolejny duży kawałek do napisania, przetestowania i opłacenia (API), a narracyjnie
-  domykają go już baseline → liniowy → LangGraph.
-- **Koszt złożoności.** W LangGraph cykle i warunki to natywne krawędzie grafu, więc
-  pętlę planera *dałoby się* zrobić bez własnej orkiestracji. Ale żeby zrobić to
-  **dobrze (dynamicznie + równolegle)**, schodzi się na **logikę async**
-  (`ainvoke`/async-węzły) zamiast wygodnej ścieżki sync z wątkami — czyli więcej mocy
-  za cenę realnej złożoności.
-
-Dlatego na prezentacji planer pojawia się jako **kierunek „co dalej?"** (slajd z pytaniem
-do sali) — pokazujemy diagram i ideę, a nie uruchamiany kod.
