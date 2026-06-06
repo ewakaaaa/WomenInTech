@@ -10,7 +10,7 @@ Te same skille spinają trzy podejścia:
 - [`agent_langgraph/`](../../agent_langgraph/) — to samo, ale z równoległym fan-outem (`Send`),
 - [`agent_planner/`](../../agent_planner/) — **planner** decyduje, którą umiejętność odpalić dalej (graf cykliczny).
 
-Pliki spinające (`pipeline.py` / `graph.py`) tylko wołają umiejętności i
+Pliki spinające (`main.py` / `graph.py`) tylko wołają umiejętności i
 przekazują wyniki — logika siedzi w skillach.
 
 ## Co robi każda umiejętność (i jaki problem baseline rozwiązuje)
