@@ -159,7 +159,6 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 - [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb`
 - [ ] Diagram grafu (mermaid z `agent_langgraph`)
 - [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) — slajd 22 (idea „co dalej?", bez kodu/demo)
-- [ ] *(opcjonalnie)* `uv run langgraph dev` — Studio jako bonus, jeśli zostanie czas
 - [ ] Skren z LinkedIna (slajd 16 — oddech/anegdota)
 
 ## Kluczowe przekazy (take-aways)

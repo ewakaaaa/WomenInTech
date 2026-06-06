@@ -195,7 +195,6 @@ WomenInTech/
 │   └── README.md      # jak działałby planer + human-in-the-loop (kierunek „co dalej?")
 ├── notebooks/         # setup + baseline/eval/linear (demo na gpt-5.4-mini)
 ├── presentation/      # materiały i plan prezentacji warsztatowej
-├── langgraph.json     # konfiguracja LangGraph Studio (uv run langgraph dev)
 ├── .env.example       # szablon konfiguracji LLM (skopiuj do .env)
 ├── pyproject.toml     # zależności (uv)
 ├── uv.lock            # zablokowane wersje
@@ -229,9 +228,8 @@ WomenInTech/
   grafu.
 - **`agent_langgraph/`** — ten sam agent jako graf LangGraph: węzły to cienkie
   opakowania umiejętności, a pętle z agenta liniowego zastępuje fan-out przez `Send`
-  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Można go
-  uruchomić w **LangGraph Studio** (`uv run langgraph dev`) — szczegóły i odpowiedź
-  „po co LangGraph" w `agent_langgraph/README.md`.
+  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Szczegóły
+  i odpowiedź „po co LangGraph" w `agent_langgraph/README.md`.
 - **`agent_planner/`** — agent **nieliniowy** jako **idea, świadomie bez kodu**
   (tylko `README.md` + diagram `graph.md`). Pokazuje kierunek „co dalej?": planer
   („mózg operacji") decyduje, co robić (analizuj / zapytaj człowieka / pisz / brak

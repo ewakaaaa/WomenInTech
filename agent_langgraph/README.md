@@ -27,7 +27,7 @@ inżynierii wokół niej.
 3. **Obserwowalność i streaming**
    `graph.stream(...)` pozwala podglądać wykonanie węzeł po węźle (co jest
    nieocenione przy długim, wieloetapowym wnioskowaniu). Graf rysuje się sam
-   (mermaid), a w **LangGraph Studio** można go klikać i debugować.
+   (mermaid) — obrazek na slajd robi się z kodu.
 
 4. **Trwałość i wznawianie (checkpointing)**
    Dokładając checkpointer, dostajemy zapamiętywanie stanu: wznowienie po błędzie,
@@ -51,7 +51,7 @@ uzależnienie dało się w razie czego odpiąć. To jeden z powodów, dla który
 oddzielić logikę od frameworka.
 
 Wniosek: LangGraph jest **świetny do POC** i szybkiego prototypowania (dostajesz
-równoległość, Studio, checkpointing „za darmo"), ale do **systemu produkcyjnego**
+równoległość i checkpointing „za darmo"), ale do **systemu produkcyjnego**
 warto świadomie rozważyć, czy chcemy się na nim opierać — czasem własna, lekka
 orkiestracja (jak `agent_linear/`) jest tańsza w utrzymaniu niż dług zależności.
 
@@ -85,35 +85,15 @@ agent liniowy). Świadomie **bez ewaluacji** — pokrycie i jakość są jak u l
 Te same skille i ten sam plan co `agent_linear`, więc **pokrycie i jakość są jak
 u linera** (67% / 4,33) — tu ich nie liczymy ponownie. Mierzymy czas i koszt.
 
-| miara | wynik |
-|-------|-------|
-| **czas metody (wall-clock, równolegle)** | _do uzupełnienia po przebiegu_ |
-| suma czasów wywołań LLM / przyspieszenie | _do uzupełnienia_ |
-| **koszt metody** (cały graf) | _do uzupełnienia — ma być ≈ liner (~$0,743)_ |
-| pokrycie / jakość | _≈ liner: 67% / 4,33 (nie liczone ponownie)_ |
+Przebieg 2026-06-06 (`gpt-5.4`, 12 wywołań):
 
-> **TODO:** puścić `uv run python -m agent_langgraph.main` na `gpt-5.4` i wpisać
-> z logu (`agent_langgraph/output/run_<znacznik>.log`): wall-clock vs ~433 s linera
-> oraz koszt vs ~$0,743 linera.
+| miara | wynik | liner (sekwencyjnie) |
+|-------|-------|----------------------|
+| **czas metody (wall-clock, równolegle)** | **169,8 s** (~2,8 min) | 433,5 s |
+| suma czasów wywołań LLM / przyspieszenie | 442,3 s → **≈2,6×** | — |
+| **koszt metody** (cały graf) | **$0,7349** (88 188 wej + 34 292 wyj tok) | ~$0,743 |
+| pokrycie / jakość | _≈ liner: 67% / 4,33 (nie liczone ponownie)_ | 67% / 4,33 |
 
-## LangGraph Studio
-
-Graf jest wystawiony w `langgraph.json` (w korzeniu repo) jako `appeal_agent`,
-wskazując na `agent_langgraph/graph.py:graph`.
-
-```bash
-uv run langgraph dev
-```
-
-Polecenie startuje lokalny serwer i otwiera **LangGraph Studio** w przeglądarce —
-można tam klikać graf, podglądać stan po każdym węźle i uruchamiać przebiegi.
-
-Wejście to tylko cel, np.:
-
-```json
-{ "goal": "Wygeneruj apelację z perspektywy obrony" }
-```
-
-Akta wczytuje sam graf — pierwszy węzeł `load` woła `load_all()` z `data/input/`,
-dzięki czemu w Studio nie trzeba podawać dokumentów ręcznie. Wymaga skonfigurowanego
-`.env` (klucz LLM).
+Puenta: **koszt taki sam jak liner** (~$0,74 — fan-out nie podbija liczby wywołań),
+a realny czas **≈2,6× krótszy** dzięki równoległości. Pełny log:
+`agent_langgraph/output/run_<znacznik>.log`.
