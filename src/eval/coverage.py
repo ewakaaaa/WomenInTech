@@ -81,7 +81,7 @@ def evaluate(
         results.append(verdict)
         if print_results:
             mark = "✅" if verdict.covered else "❌"
-            print(f"[{i}/{len(issues)}] {mark} {issue[:100]}")
+            print(f"[{i}/{len(issues)}] {mark} {issue}")
             print(f"     → {verdict.reasoning}\n", flush=True)
 
     covered = sum(r.covered for r in results)
