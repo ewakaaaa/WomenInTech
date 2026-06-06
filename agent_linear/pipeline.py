@@ -11,10 +11,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from src.descriptions import get_descriptions
 from src.loader import load_all
 from src.skills.document.main import generate_document
 from src.skills.document.schemas import GeneratedDocument
-from src.skills.file_description.main import generate_file_description
 from src.skills.make_task.main import make_task
 from src.skills.strategy.main import generate_strategy
 from src.skills.tasks.main import generate_tasks
@@ -28,8 +28,8 @@ def run(goal: str = GOAL, model: str | None = None) -> GeneratedDocument:
     documents = load_all()
     print(f"Loaded {len(documents)} documents")
 
-    # 1. generate_file_description — opisz każdy dokument
-    described = [generate_file_description(doc, goal, model=model) for doc in documents]
+    # 1. generate_file_description — opisz każdy dokument (z cache: liczone raz)
+    described = get_descriptions(documents, goal, model=model)
     print(f"Described {len(described)} files")
 
     # 2. generate_tasks — zaplanuj kroki analizy

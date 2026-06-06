@@ -12,6 +12,7 @@ from langgraph.constants import END, START, Send
 from langgraph.graph import StateGraph
 
 from agent_langgraph.state import DescribeFileIn, OverallState, RunTaskIn
+from src.descriptions import descriptions_cached, load_descriptions, save_descriptions
 from src.skills.document.main import generate_document
 from src.skills.file_description.main import generate_file_description
 from src.skills.make_task.main import make_task
@@ -25,8 +26,9 @@ from src.sources import prepare_input_texts
 
 
 def load_node(state: OverallState) -> dict:
-    """Entry node: load the case files so Studio input is just the goal."""
-    return {"documents": load_all()}
+    """Entry node: load the case files; podłącz opisy z cache, jeśli istnieją."""
+    cached = load_descriptions() if descriptions_cached() else []
+    return {"documents": load_all(), "files_out": cached}
 
 
 def file_description_node(payload: DescribeFileIn) -> dict:
@@ -35,6 +37,9 @@ def file_description_node(payload: DescribeFileIn) -> dict:
 
 
 def tasks_node(state: OverallState) -> dict:
+    # Pierwszy przebieg (cache pusty) — zapisz policzone opisy do ponownego użycia.
+    if not descriptions_cached():
+        save_descriptions(state["files_out"])
     tasks = generate_tasks(state["goal"], state["files_out"])
     return {"tasks": tasks.thoughts}
 
@@ -56,7 +61,10 @@ def document_node(state: OverallState) -> dict:
 # --- routing (fan-out with Send) ---
 
 
-def fan_out_files(state: OverallState) -> list[Send]:
+def fan_out_files(state: OverallState):
+    # Cache trafiony — opisy już w files_out, pomijamy fan-out i liczenie.
+    if state.get("files_out"):
+        return "generate_tasks"
     return [
         Send("generate_file_description", DescribeFileIn(goal=state["goal"], document=doc))
         for doc in state["documents"]
@@ -88,7 +96,9 @@ def build_graph():
     graph.add_node("generate_document", document_node)
 
     graph.add_edge(START, "load")
-    graph.add_conditional_edges("load", fan_out_files, ["generate_file_description"])
+    graph.add_conditional_edges(
+        "load", fan_out_files, ["generate_file_description", "generate_tasks"]
+    )
     graph.add_edge("generate_file_description", "generate_tasks")
     graph.add_conditional_edges("generate_tasks", fan_out_tasks, ["make_task"])
     graph.add_edge("make_task", "generate_strategy")

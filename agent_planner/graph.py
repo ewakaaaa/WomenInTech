@@ -11,6 +11,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send, interrupt
 
 from agent_planner.state import DescribeFileIn, PlannerState, RunTaskIn
+from src.descriptions import descriptions_cached, load_descriptions, save_descriptions
 from src.loader import load_all
 from src.skills.document.main import generate_document
 from src.skills.file_description.main import generate_file_description
@@ -26,7 +27,9 @@ MAX_ROUNDS = 4  # bezpiecznik na nieskończoną pętlę planera
 
 
 def load_node(state: PlannerState) -> dict:
-    return {"documents": load_all()}
+    # Podłącz opisy z cache, jeśli istnieją (inaczej policzy je fan-out poniżej).
+    cached = load_descriptions() if descriptions_cached() else []
+    return {"documents": load_all(), "files_out": cached}
 
 
 def file_description_node(payload: DescribeFileIn) -> dict:
@@ -35,6 +38,9 @@ def file_description_node(payload: DescribeFileIn) -> dict:
 
 
 def planner_node(state: PlannerState) -> dict:
+    # Pierwszy raz po policzeniu opisów (cache pusty) — zapisz je do ponownego użycia.
+    if state.get("files_out") and not descriptions_cached():
+        save_descriptions(state["files_out"])
     decision = plan_next(
         state["goal"],
         state["files_out"],
@@ -73,7 +79,10 @@ def conclude_node(state: PlannerState) -> dict:
 # --- routing ---
 
 
-def fan_out_files(state: PlannerState) -> list[Send]:
+def fan_out_files(state: PlannerState):
+    # Cache trafiony — opisy już w files_out, pomijamy fan-out i od razu do planera.
+    if state.get("files_out"):
+        return "planner"
     return [
         Send("file_description", DescribeFileIn(goal=state["goal"], document=doc))
         for doc in state["documents"]
@@ -115,7 +124,7 @@ def build_graph(checkpointer=None):
     graph.add_node("conclude", conclude_node)
 
     graph.add_edge(START, "load")
-    graph.add_conditional_edges("load", fan_out_files, ["file_description"])
+    graph.add_conditional_edges("load", fan_out_files, ["file_description", "planner"])
     graph.add_edge("file_description", "planner")
     graph.add_conditional_edges(
         "planner", route_after_planner, ["make_task", "human", "document", "conclude"]

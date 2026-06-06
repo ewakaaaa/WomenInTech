@@ -26,9 +26,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from src.descriptions import describe_documents  # re-eksport: jedna definicja + cache
 from src.llm import call_llm
 from src.loader import Document
-from src.skills.file_description.main import generate_file_description
 from src.skills.file_description.schemas import DescribedFile
 from src.sources import prepare_input_texts
 
@@ -196,15 +196,6 @@ def check_claim(
     return ClaimResult(
         claim=claim, checked_files=selection.files, **verdict.model_dump()
     )
-
-
-def describe_documents(
-    documents: list[Document],
-    goal: str = "Zweryfikować fakty powołane w apelacji",
-    model: str | None = None,
-) -> list[DescribedFile]:
-    """Opisz każdy dokument raz (file_description) — opisy zasilają Etap 2a."""
-    return [generate_file_description(doc, goal, model=model) for doc in documents]
 
 
 # ──────────────────────────────────────────────────────────────────────────
