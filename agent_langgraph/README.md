@@ -65,32 +65,36 @@ by „model pisał lepiej".
 ## Uruchomienie (CLI)
 
 ```bash
-# generacja apelacji + ocena (pokrycie + jakość); model z .env (gpt-5.4)
+# sama generacja (BEZ oceny); model z .env (gpt-5.4)
 uv run python -m agent_langgraph.main
 ```
 
 Zapisuje apelację i log przebiegu do `agent_langgraph/output/` (jak baseline i
-agent liniowy). W logu znajdziesz **koszt metody** (sama generacja, wszystkie
-wywołania grafu), **czas wall-clock** (realny, przy równoległości krótszy niż suma
-czasów wywołań LLM — to właśnie zysk z `Send`) oraz — osobno — koszt ewaluacji.
+agent liniowy). Świadomie **bez ewaluacji** — pokrycie i jakość są jak u linera
+(ta sama logika), więc tu interesują nas tylko dwie rzeczy:
 
-## Wyniki ewaluacji (`gpt-5.4`)
+- **czas wall-clock** — realny czas przy równoległym fan-oucie; powinien być
+  wyraźnie krótszy niż suma czasów wywołań LLM (zysk z `Send`),
+- **koszt metody** — sprawdzamy, czy LangGraph go **nie podbija**. Z założenia ma
+  wyjść jak u linera (~$0,743): te same skille, te same wywołania, opisy z cache —
+  fan-out zmienia tylko kolejność, nie liczbę wywołań. Większy koszt = sygnał, że
+  graf gdzieś dubluje wywołania.
 
-Te same skille i ten sam plan co `agent_linear`, więc **pokrycie i jakość wychodzą
-jak u linera** (różnica jest w *sposobie* wykonania, nie w treści). Sedno tej wersji
-to **czas wall-clock**: kroki `make_task` biegną równolegle, więc realny czas jest
-krótszy niż suma czasów wywołań (liner: ~433 s sekwencyjnie).
+## Wyniki (`gpt-5.4`)
+
+Te same skille i ten sam plan co `agent_linear`, więc **pokrycie i jakość są jak
+u linera** (67% / 4,33) — tu ich nie liczymy ponownie. Mierzymy czas i koszt.
 
 | miara | wynik |
 |-------|-------|
-| **koszt metody** (cały graf) | _do uzupełnienia po przebiegu_ |
-| **czas metody (wall-clock, równolegle)** | _do uzupełnienia_ |
+| **czas metody (wall-clock, równolegle)** | _do uzupełnienia po przebiegu_ |
 | suma czasów wywołań LLM / przyspieszenie | _do uzupełnienia_ |
-| **pokrycie** (zagadnienia z `data/eval.json`) | _≈ jak liner (67%)_ |
-| **jakość** (średnia 2–6, sędzia `gpt-5.4`) | _≈ jak liner (4,33/6)_ |
+| **koszt metody** (cały graf) | _do uzupełnienia — ma być ≈ liner (~$0,743)_ |
+| pokrycie / jakość | _≈ liner: 67% / 4,33 (nie liczone ponownie)_ |
 
 > **TODO:** puścić `uv run python -m agent_langgraph.main` na `gpt-5.4` i wpisać
-> realne liczby (zwłaszcza wall-clock vs ~433 s linera) z logu `agent_langgraph/output/run_<znacznik>.log`.
+> z logu (`agent_langgraph/output/run_<znacznik>.log`): wall-clock vs ~433 s linera
+> oraz koszt vs ~$0,743 linera.
 
 ## LangGraph Studio
 
