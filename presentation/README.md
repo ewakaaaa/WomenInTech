@@ -36,11 +36,19 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
    tysiącach spraw). Liczy się dobre **przygotowanie danych** — i można z nich wyciągać
    jeszcze więcej **metadanych**. — *3 min*
 
-### Baseline i jego problemy — *~9 min*
+### Baseline i jego problemy — *~11 min*
 
-7. **Baseline + wyniki.** Warto zacząć od czegoś prostego — mamy punkt startowy.
-   Pokaż wygenerowaną apelację + wynik ewaluacji **4/12 (33%)** + niepokryte zagadnienia.
-   Pointa: **„technicznie działa, ale czy *dobrze*?"** — *4 min*
+7. **Baseline — kod, ewaluacja, wyniki.** Warto zacząć od czegoś prostego — mamy punkt
+   startowy. Trzy rzeczy: — *6 min*
+   - **Kod na żywo** (`notebooks/baseline_walkthrough.ipynb`): jak banalny jest baseline —
+     `build_context` skleja **całe akta** i jeden `call_llm` z promptem „napisz apelację".
+   - **Jak będziemy ewaluować** (`notebooks/eval_walkthrough.ipynb`) — *to umawiamy się
+     na samym początku, raz dla wszystkich podejść:*
+       - **pokrycie** — sędzia-LLM sprawdza dla **każdego** zagadnienia z `data/eval.json`,
+         czy apelacja je porusza (wynik `X/12`),
+       - **jakość** — ocena formy wg 3 kryteriów egzaminu (skala 2–6).
+   - **Wynik baseline:** pokrycie **4/12 (33%)** *(w 3 przebiegach 33–42%)* + niepokryte
+     zagadnienia. Pointa: **„technicznie działa, ale czy *dobrze*?"**
 8. **Pytanie do sali:** jakie widzicie z tym problemy? *(odpowiedzi złożą się w listę
    ograniczeń: zapchany kontekst, wszystko naraz, brak audytu, halucynacje…)* — *3 min*
 9. **Eksperci domenowi.** Jak ważni są eksperci domenowi — i **jak człowiek
@@ -153,13 +161,14 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 
 ## Demo — checklista
 
-- [ ] `.env` z działającym kluczem LLM (`gpt-5.4`; zapasowo proxy zgodne z OpenAI)
-- [ ] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (na wypadek braku sieci)
-- [ ] Wyniki ewaluacji z notebooków zrzucone do slajdu (plan B bez live)
-- [ ] Liczby do slajdu 21: wall-clock i koszt langgraph vs liner (z `agent_langgraph/output/run_*.log`)
-- [ ] `uv run jupyter lab` — sprawdzone `notebooks/linear_walkthrough.ipynb`
-- [ ] Diagram grafu (mermaid z `agent_langgraph`)
-- [ ] Diagram grafu nieliniowego (`agent_planner/graph.md`) — slajd 22 (idea „co dalej?", bez kodu/demo)
+- [x] `.env` z działającym kluczem LLM (`gpt-5.4`) — sprawdzone (przebiegi 2026-06-06/07)
+- [x] Wygenerowane apelacje w `baseline/`, `agent_linear/`, `agent_langgraph/` (`*/output/`, na wypadek braku sieci)
+- [x] Liczby ewaluacji zebrane: baseline **33–42%**, liner **50–67%**, jakość **4,33** (3 przebiegi) — *zostaje wstawić na slajdy*
+- [x] Liczby do slajdu 21: wall-clock i koszt langgraph vs liner (169,8 s, ≈2,6×, ~$0,74)
+- [x] Diagram grafu (mermaid z `agent_langgraph`) — `agent_langgraph/graph.md`
+- [x] Diagram grafu nieliniowego (`agent_planner/graph.md`) — slajd 22 (idea „co dalej?", bez kodu/demo)
+- [ ] `uv run jupyter lab` — przeklikać na żywo `notebooks/baseline_walkthrough.ipynb` (slajd 7, kod),
+      `notebooks/eval_walkthrough.ipynb` (slajd 7, jak ewaluujemy) i `notebooks/linear_walkthrough.ipynb` (slajd 17)
 - [ ] Skren z LinkedIna (slajd 16 — oddech/anegdota)
 
 ## Kluczowe przekazy (take-aways)
