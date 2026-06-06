@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import contextvars
 import os
+import threading
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -68,6 +69,9 @@ class Usage:
 
 
 _usage_var: contextvars.ContextVar = contextvars.ContextVar("llm_usage", default=None)
+# Agent langgraph odpala wywołania równolegle (wątki), a wszystkie dopisują do
+# tego samego licznika Usage — lock chroni inkrementacje przed wyścigiem.
+_usage_lock = threading.Lock()
 
 
 @contextmanager
@@ -108,10 +112,11 @@ def _record_usage(result, messages: list[dict], model: str, seconds: float = 0.0
         prompt_tokens = count_messages_tokens(messages, model)
         completion_tokens = count_tokens(result.model_dump_json(), model)
 
-    usage.calls += 1
-    usage.prompt_tokens += prompt_tokens
-    usage.completion_tokens += completion_tokens
-    usage.seconds += seconds
+    with _usage_lock:
+        usage.calls += 1
+        usage.prompt_tokens += prompt_tokens
+        usage.completion_tokens += completion_tokens
+        usage.seconds += seconds
 
 
 def call_llm(

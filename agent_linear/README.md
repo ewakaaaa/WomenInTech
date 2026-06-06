@@ -42,13 +42,6 @@ Opis wszystkich umiejętności (co robią i jaki problem baseline rozwiązują) 
 wspólny dla wszystkich podejść i mieszka w [`src/skills/README.md`](../src/skills/README.md).
 Tutaj liczy się tylko, że agent liniowy odpala je **po kolei**.
 
-## Skąd biorą się umiejętności
-
-Każdy krok to czysta funkcja z `src/skills/<umiejętność>/main.py` (wejście → wyjście
-Pydantic). `main.py` tylko je wywołuje i przekazuje wyniki dalej. Pętle `for`
-(opis plików, wykonywanie zadań) to dokładnie te miejsca, które w `agent_langgraph/`
-zastępuje równoległy fan-out przez `Send`.
-
 ## Uruchomienie
 
 ```bash

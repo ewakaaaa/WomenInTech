@@ -65,8 +65,32 @@ by „model pisał lepiej".
 ## Uruchomienie (CLI)
 
 ```bash
-uv run python -m agent_langgraph.main   # → agent_langgraph/apelacja.txt
+# generacja apelacji + ocena (pokrycie + jakość); model z .env (gpt-5.4)
+uv run python -m agent_langgraph.main
 ```
+
+Zapisuje apelację i log przebiegu do `agent_langgraph/output/` (jak baseline i
+agent liniowy). W logu znajdziesz **koszt metody** (sama generacja, wszystkie
+wywołania grafu), **czas wall-clock** (realny, przy równoległości krótszy niż suma
+czasów wywołań LLM — to właśnie zysk z `Send`) oraz — osobno — koszt ewaluacji.
+
+## Wyniki ewaluacji (`gpt-5.4`)
+
+Te same skille i ten sam plan co `agent_linear`, więc **pokrycie i jakość wychodzą
+jak u linera** (różnica jest w *sposobie* wykonania, nie w treści). Sedno tej wersji
+to **czas wall-clock**: kroki `make_task` biegną równolegle, więc realny czas jest
+krótszy niż suma czasów wywołań (liner: ~433 s sekwencyjnie).
+
+| miara | wynik |
+|-------|-------|
+| **koszt metody** (cały graf) | _do uzupełnienia po przebiegu_ |
+| **czas metody (wall-clock, równolegle)** | _do uzupełnienia_ |
+| suma czasów wywołań LLM / przyspieszenie | _do uzupełnienia_ |
+| **pokrycie** (zagadnienia z `data/eval.json`) | _≈ jak liner (67%)_ |
+| **jakość** (średnia 2–6, sędzia `gpt-5.4`) | _≈ jak liner (4,33/6)_ |
+
+> **TODO:** puścić `uv run python -m agent_langgraph.main` na `gpt-5.4` i wpisać
+> realne liczby (zwłaszcza wall-clock vs ~433 s linera) z logu `agent_langgraph/output/run_<znacznik>.log`.
 
 ## LangGraph Studio
 
