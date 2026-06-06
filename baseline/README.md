@@ -54,7 +54,7 @@ to dobrze"** — i to zweryfikujemy ewaluacją na podstawie `data/eval.json`.
 
 ## Wyniki ewaluacji (przykładowy przebieg, `gpt-5.4-mini`)
 
-Z `notebooks/baseline_walkthrough.ipynb` (apelacja ~7,9 tys. znaków z jednego promptu):
+Z `notebooks/baseline_and_eval.ipynb` (apelacja ~7,9 tys. znaków z jednego promptu):
 
 | miara | wynik |
 |-------|-------|

@@ -3,7 +3,7 @@
 Wygenerować apelację to jedno — ale skąd wiadomo, że jest **dobra**? Ten moduł
 odpowiada na to liczbami. Zadajemy dwa niezależne pytania:
 
-1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`, `compare`, `repeat`)
+1. **Czy apelacja porusza to, co powinna?** → pokrycie (`coverage`, `compare`)
 2. **Czy apelacja czegoś nie zmyśliła?** → ugruntowanie / halucynacje (`grounding`)
 
 Klucz oceny to `data/eval.json` — lista zagadnień, które dobra apelacja powinna
@@ -20,7 +20,9 @@ czy apelacja faktycznie je porusza (wraz z istotą argumentacji, nie tylko wzmia
   (`covered / total`) i werdyktem per zagadnienie.
 - `evaluate_file(path)` — to samo dla apelacji zapisanej w pliku.
 
-Jedna liczba (`score`) porównywalna między wszystkimi podejściami.
+Jedna liczba (`score`) porównywalna między wszystkimi podejściami. Powtarzalność
+oceny (kilka przebiegów → średnia) oraz koszt pokazuje notebook
+`notebooks/baseline_and_eval.ipynb`.
 
 ## 2. Porównanie podejść — `compare.py`
 
@@ -33,23 +35,7 @@ uv run python -m src.eval.compare
 
 Wymaga wcześniej wygenerowanych apelacji (np. `baseline/apelacja_baseline.txt`).
 
-## 3. Powtarzalność — `repeat.py`
-
-Pojedynczy przebieg LLM to za mało: ten sam prompt za każdym razem daje nieco
-inną apelację, więc i pokrycie się waha. `repeat` generuje apelację **N razy**
-tym samym sposobem, ocenia każdą i liczy **średnią, min, max i odchylenie**.
-
-```bash
-uv run python -m src.eval.repeat                              # baseline, 5 przebiegów
-uv run python -m src.eval.repeat --approach agent_linear --runs 3
-uv run python -m src.eval.repeat --approach agent_planner --runs 5
-```
-
-Sposoby: `baseline`, `agent_linear`, `agent_planner`. Planer ma człowieka w
-pętli — przy automatycznych przebiegach dostaje auto-potwierdzenie kierunku
-obrony (i bierze model z `.env`, nie z `--model`).
-
-## 4. Halucynacje / ugruntowanie — `grounding.py`
+## 3. Halucynacje / ugruntowanie — `grounding.py`
 
 Sprawdza, czy apelacja nie powołuje faktów (dat, kwot, nazwisk, zdarzeń,
 cytatów), których w aktach nie ma. Zbudowane **etapowo**:
