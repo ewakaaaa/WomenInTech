@@ -60,7 +60,7 @@ generacja apelacji — koszt ewaluacji liczony osobno (nie wlicza się do metody
 |-------|-------|
 | **koszt metody** (sama generacja) | ~**$0,105** (1 wywołanie, 19 473 wej + 3 757 wyj tok) |
 | **czas metody** | **48,3 s** (1 wywołanie) |
-| **pokrycie** (zagadnienia z `data/eval.json`) | **7/12 = 58%** |
+| **pokrycie** (zagadnienia z `data/eval.json`) | **4/12 = 33%** |
 | **jakość** (średnia 2–6, sędzia `gpt-5.4`) | **4,33/6** (formalne 5 · zastosowanie 4 · poprawność 4) |
 
 > Liczby z jednego przebiegu — zależą od losowości modelu. Pełny log:

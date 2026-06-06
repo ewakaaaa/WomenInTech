@@ -45,3 +45,21 @@ def evaluate_appeal(
     print(f"  czas:  {q_usage.seconds:.1f}s (≈{q_usage.seconds_per_call:.1f}s/wyw.)")
 
     return cov, q
+
+
+if __name__ == "__main__":
+    # Sama ewaluacja (bez generacji) na ostatniej zapisanej apelacji danego podejścia.
+    # Log trafia do <podejście>/output/run_<znacznik>.log.
+    #   uv run python -m src.eval.report baseline
+    #   uv run python -m src.eval.report agent_linear
+    import sys
+
+    from src.output import load_latest_appeal, tee_output
+
+    approach = sys.argv[1] if len(sys.argv) > 1 else "baseline"
+    with tee_output(approach) as log_path:
+        appeal = load_latest_appeal(approach)
+        print(f"=== EWALUACJA (sama ocena, bez generacji): {approach} ===")
+        print(f"Apelacja: {len(appeal):,} znaków")
+        evaluate_appeal(appeal)
+    print(f"\nLog z ewaluacji zapisany: {log_path}")

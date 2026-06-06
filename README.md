@@ -97,13 +97,10 @@ Rozdzieliliśmy dwa zastosowania, żeby nie przepalać budżetu na demo:
 | gdzie | model | po co |
 |---|---|---|
 | **notebooki** (`notebooks/*.ipynb`) | `gpt-5.4-mini` | **cele demonstracyjne** — tanio przeklikać przepływ na żywo na warsztacie. Model wymuszony w komórce konfiguracyjnej (`os.environ["LLM_MODEL"] = "gpt-5.4-mini"`), niezależnie od `.env`. |
-| **moduły podejść** (`python -m baseline.main`, `python -m agent_linear.main`) | `gpt-5.4` (z `.env`) | **właściwe wyniki** — to z nich pochodzą liczby w `WYNIKI.md` i w README podejść. |
+| **moduły podejść** (`python -m baseline.main`, `python -m agent_linear.main`) | `gpt-5.4` (z `.env`) | **właściwe wyniki** — to z nich pochodzą liczby w README podejść. |
 
 Wyjątek: **ocena jakości** (`src/eval/quality.py`) zawsze idzie mocnym sędzią
 (`gpt-5.4`), nawet wywołana z notebooka — tani model nie wyłapuje błędów formalnych.
-
-> ⚠️ Liczby czasu (s/wywołanie) w `WYNIKI.md` trzeba jeszcze raz przeliczyć po dodaniu
-> pomiaru czasu — uruchamiając moduły podejść na `gpt-5.4`.
 
 ## 📓 Notebooki — jak uruchomić
 
