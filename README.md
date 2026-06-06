@@ -35,15 +35,11 @@ a nie tylko na demo.
 
 ## 📁 Dane
 
-Akta pochodzą z oficjalnego zadania na **egzamin radcowski 2025**, opublikowanego przez
-Ministerstwo Sprawiedliwości:
+Akta z oficjalnego zadania na **egzamin radcowski 2025** (sprawa Daniela Dzika):
+16 pism w `data/input/`, a klucz oceny — zagadnienia, które apelacja powinna
+poruszyć — w `data/eval.json`.
 
-> https://www.gov.pl/web/sprawiedliwosc/zadania-wraz-z-opisem-istotnych-zagadnien-na-egzamin-radcowski-w-2025-r2
-
-Pliki zostały **pobrane** i **podzielone na pojedyncze dokumenty** (po jednym
-piśmie na plik), umieszczone w `data/input/`. 
-
-Plik `data/eval.json` to **lista zagadnień, które apelacja powinna poruszyć**.
+📄 Źródło, opis sprawy i spis dokumentów → **[`data/README.md`](data/README.md)**.
 
 ## 🚀 Uruchomienie
 
@@ -172,10 +168,10 @@ WomenInTech/
 │       ├── strategy/          # generate_strategy
 │       └── document/          # generate_document
 ├── baseline/          # wersja 0 — naiwne podejście (wszystko → jeden prompt)
-│   ├── prompts.py             # system prompt
-│   ├── main.py                # generuje apelację → baseline/apelacja_baseline.txt
-│   ├── apelacja_baseline.txt  # wygenerowana apelacja (artefakt)
-│   └── README.md              # podsumowanie i wyniki baseline
+│   ├── prompts.py     # system prompt
+│   ├── main.py        # generuje apelację → baseline/output/
+│   ├── output/        # apelacje + logi przebiegów (artefakty, poza gitem)
+│   └── README.md      # podsumowanie i wyniki baseline
 ├── agent_linear/      # agent liniowy — te same umiejętności spięte po kolei (bez LangGraph)
 │   ├── main.py        # run() spina umiejętności → zapis apelacji + ocena pokrycia
 │   └── README.md      # opis procesu krok po kroku
@@ -196,46 +192,32 @@ WomenInTech/
 └── requirements.txt   # fallback dla pip
 ```
 
-### Moduły
+### Moduły i podejścia
 
-- **`src/loader.py`** — `load_pdf(path)` wczytuje pojedynczy plik PDF i zwraca
-  `Document` (Pydantic) z nazwą pliku i wyekstrahowanym tekstem; `load_all(dir)`
-  wczytuje wszystkie PDF-y z katalogu.
-- **`src/llm.py`** — `call_llm(messages, response_model, ...)` zwraca odpowiedź
-  zwalidowaną względem modelu Pydantic. Klient jest zgodny z interfejsem OpenAI,
-  więc przez zmianę `base_url`/`api_key` w `.env` można podpiąć dowolnego dostawcę
-  zgodnego z interfejsem OpenAI (OpenAI, proxy itp.).
-- **`src/tokens.py`** — pomocnicze liczenie tokenów (tiktoken) dla tekstu i listy
-  wiadomości.
-- **`src/eval/`** — ewaluacja: `coverage.py` (`evaluate(appeal_text)` ocenia pokrycie
-  zagadnień z `data/eval.json`, LLM-as-judge) oraz `quality.py` (ocena jakości/formy
-  wg kryteriów egzaminu radcowskiego). Wyniki podejść porównujesz, odczytując je z notebooków.
-- **`src/sources.py`** — `prepare_input_texts(documents, names)` zwraca tekst tylko
-  wybranych dokumentów (selektywny kontekst); współdzielone przez agenta liniowego
-  i wersję LangGraph.
-- **`src/skills/`** — umiejętności agenta, każda w osobnym folderze (`main.py` =
-  czysta funkcja, `prompts.py`, `schemas.py`): `file_description`, `tasks`,
-  `make_task`, `strategy`, `document`.
-- **`baseline/`** — naiwna „wersja 0": całe akta + jeden prompt „napisz apelację".
-  Punkt wyjścia warsztatu (szczegóły w `baseline/README.md`).
-- **`agent_linear/`** — agent liniowy: te same umiejętności (`src/skills/*`) spięte
-  po kolei, bez LangGraph. Pętle `for` to miejsca, które później zastąpi fan-out
-  grafu.
-- **`agent_langgraph/`** — ten sam agent jako graf LangGraph: węzły to cienkie
-  opakowania umiejętności, a pętle z agenta liniowego zastępuje fan-out przez `Send`
-  (jeden plik / jedno zadanie na gałąź), z reducerami zbierającymi wyniki. Szczegóły
-  i odpowiedź „po co LangGraph" w `agent_langgraph/README.md`.
-- **`agent_planner/`** — agent **nieliniowy** jako **idea, świadomie bez kodu**
-  (tylko `README.md` + diagram `graph.md`). Pokazuje kierunek „co dalej?": planer
-  („mózg operacji") decyduje, co robić (analizuj / zapytaj człowieka / pisz / brak
-  podstaw), więc graf zawraca w pętli — **cykle** i **human-in-the-loop**. Nie
-  budujemy tego w kodzie: zrobienie tego *dobrze* (dynamicznie + równolegle) wpycha
-  w logikę **async** = złożoność, której na warsztacie unikamy.
-- **`notebooks/`** (`uv run jupyter lab`, **demo na `gpt-5.4-mini`**): `setup.ipynb`
-  (konfiguracja LLM + test — zacznij tutaj), `baseline_walkthrough.ipynb` (naiwne podejście —
-  sama generacja apelacji), `eval_walkthrough.ipynb` (ewaluacja na przykładzie baseline:
-  pokrycie + jakość), `linear_walkthrough.ipynb` (umiejętności krok po kroku).
-- **`presentation/`** — plan i materiały do warsztatu (`presentation/README.md`).
+Wspólne moduły w `src/` (logika **niezależna od frameworka** — to samo działa
+liniowo i w grafie):
+
+| moduł | rola |
+|---|---|
+| `src/loader.py` | wczytywanie PDF → `Document` (`load_pdf`, `load_all`) |
+| `src/llm.py` | `call_llm` — jeden punkt wywołania LLM (instructor, klient zgodny z OpenAI) |
+| `src/tokens.py` | liczenie tokenów (tiktoken) |
+| `src/sources.py` | `prepare_input_texts` — selektywny kontekst (wybór dok. po nazwie) |
+| [`src/skills/`](src/skills/README.md) | 5 umiejętności agenta: `file_description`, `tasks`, `make_task`, `strategy`, `document` |
+| [`src/eval/`](src/eval/README.md) | ewaluacja: pokrycie (`coverage`) + jakość (`quality`), LLM-as-judge |
+
+Podejścia (każde z własnym README — tam wyniki i szczegóły):
+
+| podejście | w skrócie | więcej |
+|---|---|---|
+| `baseline/` | naiwna wersja 0: całe akta → jeden prompt | [README](baseline/README.md) |
+| `agent_linear/` | te same umiejętności po kolei (pętle `for`) | [README](agent_linear/README.md) |
+| `agent_langgraph/` | to samo jako graf — fan-out przez `Send` (szybciej, ten sam koszt) | [README](agent_langgraph/README.md) |
+| `agent_planner/` | agent nieliniowy — **sama idea, bez kodu** | [README](agent_planner/README.md) |
+
+Reszta: [`data/`](data/README.md) (akta + klucz oceny) ·
+[`notebooks/`](#-notebooki--jak-uruchomić) (demo na `gpt-5.4-mini`) ·
+[`presentation/`](presentation/README.md) (plan warsztatu).
 
 ## 🛠️ Wymagania
 
