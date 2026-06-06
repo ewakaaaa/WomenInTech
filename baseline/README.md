@@ -59,7 +59,7 @@ Z `notebooks/baseline_and_eval.ipynb` (apelacja ~7,9 tys. znaków z jednego prom
 | miara | wynik |
 |-------|-------|
 | **pokrycie** (średnia z 5 przebiegów) | **47%** (42–50%) |
-| **halucynacje** (fakty bez oparcia w aktach) | ~**8%** (3 z 40 twierdzeń) |
+| **halucynacje** (fakty bez oparcia / sprzeczne z aktami) | ~**17%** (5 z 30 twierdzeń) |
 
 > Liczby orientacyjne — zależą od modelu i losowości. Odpal notebook, by odtworzyć.
 
