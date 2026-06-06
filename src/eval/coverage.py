@@ -67,18 +67,29 @@ def evaluate(
     appeal_text: str,
     eval_path: str | Path = _DEFAULT_EVAL_PATH,
     model: str | None = None,
+    print_results: bool = False,
 ) -> CoverageResult:
-    """Evaluate an appeal against every issue in the evaluation key."""
+    """Evaluate an appeal against every issue in the evaluation key.
+
+    Gdy ``print_results=True`` (wygodne w notebooku / na prezentacji) wypisuje
+    werdykt każdego zagadnienia **na bieżąco**, w miarę jak sędzia je ocenia.
+    """
     issues = load_eval(eval_path)
-    results = [_judge_issue(appeal_text, issue, model=model) for issue in issues]
+    results: list[IssueVerdict] = []
+    for i, issue in enumerate(issues, 1):
+        verdict = _judge_issue(appeal_text, issue, model=model)
+        results.append(verdict)
+        if print_results:
+            mark = "✅" if verdict.covered else "❌"
+            print(f"[{i}/{len(issues)}] {mark} {issue[:100]}")
+            print(f"     → {verdict.reasoning}\n", flush=True)
+
     covered = sum(r.covered for r in results)
     total = len(results)
-    return CoverageResult(
-        total=total,
-        covered=covered,
-        score=covered / total if total else 0.0,
-        results=results,
-    )
+    score = covered / total if total else 0.0
+    if print_results:
+        print(f"Pokrycie: {covered}/{total} = {score:.0%}")
+    return CoverageResult(total=total, covered=covered, score=score, results=results)
 
 
 def evaluate_file(

@@ -14,7 +14,10 @@ Configured via environment variables (see `.env.example`):
 
 from __future__ import annotations
 
+import contextvars
 import os
+from contextlib import contextmanager
+from dataclasses import dataclass
 from typing import TypeVar
 
 import instructor
@@ -43,6 +46,68 @@ client = instructor.patch(
 )
 
 
+# ── Pomiar zużycia tokenów (do liczenia kosztów) ──────────────────────────
+
+
+@dataclass
+class Usage:
+    """Zliczone zużycie tokenów dla serii wywołań call_llm."""
+
+    calls: int = 0
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+
+    @property
+    def total_tokens(self) -> int:
+        return self.prompt_tokens + self.completion_tokens
+
+
+_usage_var: contextvars.ContextVar = contextvars.ContextVar("llm_usage", default=None)
+
+
+@contextmanager
+def track_usage():
+    """Zbieraj zużycie tokenów wywołań ``call_llm`` wykonanych w tym bloku.
+
+        with track_usage() as u:
+            evaluate(appeal)
+        print(u.calls, u.total_tokens)
+    """
+    usage = Usage()
+    token = _usage_var.set(usage)
+    try:
+        yield usage
+    finally:
+        _usage_var.reset(token)
+
+
+def _record_usage(result, messages: list[dict], model: str) -> None:
+    """Dopisz zużycie z jednego wywołania do aktywnego licznika (jeśli jest).
+
+    Najpierw próbujemy realnych liczb z odpowiedzi API (`_raw_response.usage`);
+    gdy ich brak — szacujemy tiktokenem (import leniwy, bo src.tokens importuje
+    z tego modułu).
+    """
+    usage = _usage_var.get()
+    if usage is None:
+        return
+
+    raw = getattr(result, "_raw_response", None)
+    api_usage = getattr(raw, "usage", None)
+    if api_usage is not None:
+        prompt_tokens = getattr(api_usage, "prompt_tokens", 0) or 0
+        completion_tokens = getattr(api_usage, "completion_tokens", 0) or 0
+    else:
+        from src.tokens import count_messages_tokens, count_tokens
+
+        prompt_tokens = count_messages_tokens(messages, model)
+        completion_tokens = count_tokens(result.model_dump_json(), model)
+
+    usage.calls += 1
+    usage.prompt_tokens += prompt_tokens
+    usage.completion_tokens += completion_tokens
+
+
 def call_llm(
     messages: list[dict],
     response_model: type[T],
@@ -63,13 +128,15 @@ def call_llm(
     kwargs = {}
     if max_tokens is not None:
         kwargs[_MAX_TOKENS_PARAM] = max_tokens
-    return client.chat.completions.create(
+    result = client.chat.completions.create(
         model=model or DEFAULT_MODEL,
         messages=messages,
         response_model=response_model,
         temperature=temperature,
         **kwargs,
     )
+    _record_usage(result, messages, model or DEFAULT_MODEL)
+    return result
 
 
 if __name__ == "__main__":
