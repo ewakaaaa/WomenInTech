@@ -28,3 +28,26 @@ def save_appeal(text: str, approach: str) -> Path:
     path = OUTPUT_DIR / f"apelacja_{approach}_{timestamp}.txt"
     path.write_text(text, encoding="utf-8")
     return path
+
+
+def latest_appeal_path(approach: str) -> Path | None:
+    """Zwróć ścieżkę najnowszej zapisanej apelacji danego podejścia (lub None).
+
+    Znacznik czasu w nazwie jest sortowalny leksykograficznie, więc ostatni plik
+    po posortowaniu jest najnowszy.
+    """
+    files = sorted(OUTPUT_DIR.glob(f"apelacja_{approach}_*.txt"))
+    return files[-1] if files else None
+
+
+def load_latest_appeal(approach: str) -> str:
+    """Wczytaj treść ostatnio zapisanej apelacji danego podejścia.
+
+    Pozwala puścić samą ewaluację bez generowania apelacji od nowa.
+    """
+    path = latest_appeal_path(approach)
+    if path is None:
+        raise FileNotFoundError(
+            f"Brak zapisanej apelacji dla podejścia '{approach}' w {OUTPUT_DIR}"
+        )
+    return path.read_text(encoding="utf-8")
