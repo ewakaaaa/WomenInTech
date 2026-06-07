@@ -1,9 +1,7 @@
 # Prezentacja — plan warsztatu
 
 > **Czy AI może napisać dobrą apelację? Case study systemu, który zdałby egzamin radcowski.**
-> Format: 70 min, case study + live demo. Perspektywy Women in Tech Summit.
-
-Tu trzymamy materiały do prezentacji (slajdy, notatki) i poniższy plan.
+> Format: 70 min, case study + live demo. Women in Tech Summit.
 
 ## Teza
 
@@ -11,153 +9,206 @@ AI potrafi napisać apelację na poziomie egzaminu radcowskiego — **ale tylko 
 odpowiedniej architekturze**. Sam prompt „napisz apelację" nie wystarczy; potrzebny
 jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
-## Plan slajd po slajdzie
+## Jak czytać ten plan
 
-> ⏱️ Czasy orientacyjne, **70 min**. 
+Każdy slajd ma dwie warstwy:
+- **Na slajdzie** — hasła, które widzi sala (minimalistycznie, ≤6 słów/bullet).
+- **Mówię** — notatki prowadzącego (to, co opowiadasz).
 
-### Wstęp i kontekst — *~10 min*
+`[demo]` = pokaz na żywo · `[img]` = obraz/diagram zamiast tekstu. **Czasy: do
+rozplanowania od nowa** (slot 70 min). Liczby do wstawienia są w README podejść.
 
-1. **Przywitanie.** — *1 min*
-2. **Agenda.** *(uzupełnimy na końcu)* — *1 min*
-3. **Kim jestem.** Matematyczka → data scientist w COI. Najbardziej kojarzalna z
-   chatbotem w mObywatelu, ale głównie pracuję w mniej widocznej działce prawnej.
-   Na studiach nie wyobrażałam sobie siebie jako programistki — a teraz pokazuję
-   publicznie swoje repo. *(„nigdy nie mów nigdy")* — *2 min*
-4. **Repo na żywo.** Link do repozytorium — „jestem na konferencji i pokazuję wam
-   swój kod". Zaproszenie: pobierzcie projekt i odpalajcie / patrzcie razem ze mną. — *2 min*
-5. **Cel i motywacja.** Chcemy mieć **generator dokumentów** (pism prawniczych). — *1 min*
-6. **Dane.** Udało się znaleźć świetne dane, bo: 
-    a) są **zanonimizowane**,
-    b) mają **klucz odpowiedzi** → możemy *mierzyć* jakość, nie tylko „patrzeć, że ładne".
-   Przybliżenie sprawy: **sprawa Daniela Dzika** — o co w niej chodzi (zob.
-   [`data/README.md`](../data/README.md)).
-   Przygotowanie danych: **bez wektorowej bazy i bez RAG-a** — możemy sobie na to
-   pozwolić, bo taką sprawę prowadzi się zwykle **raz** (nie budujemy wyszukiwarki po
-   tysiącach spraw). Liczy się dobre **przygotowanie danych** — i można z nich wyciągać
-   jeszcze więcej **metadanych**. — *3 min*
+---
 
-### Baseline i jego problemy — *~11 min*
+## Wstęp i kontekst
 
-7. **Baseline — kod, ewaluacja, wyniki.** Warto zacząć od czegoś prostego — mamy punkt
-   startowy. Trzy rzeczy: — *6 min*
-   - **Kod na żywo** (`notebooks/baseline_walkthrough.ipynb`): jak banalny jest baseline —
-     `build_context` skleja **całe akta** i jeden `call_llm` z promptem „napisz apelację".
-   - **Jak będziemy ewaluować** (`notebooks/eval_walkthrough.ipynb`) — *to umawiamy się
-     na samym początku, raz dla wszystkich podejść:*
-       - **pokrycie** — sędzia-LLM sprawdza dla **każdego** zagadnienia z `data/eval.json`,
-         czy apelacja je porusza (wynik `X/12`),
-       - **jakość** — ocena formy wg 3 kryteriów egzaminu (skala 2–6).
-   - **Wynik baseline:** pokrycie **4/12 (33%)** *(w 3 przebiegach 33–42%)* + niepokryte
-     zagadnienia. Pointa: **„technicznie działa, ale czy *dobrze*?"**
-8. **Pytanie do sali:** jakie widzicie z tym problemy? *(odpowiedzi złożą się w listę
-   ograniczeń: zapchany kontekst, wszystko naraz, brak audytu, halucynacje…)* — *3 min*
-9. **Eksperci domenowi.** Jak ważni są eksperci domenowi — i **jak człowiek
-   podszedłby do tego zadania?** *(zawias do architektury)* — *2 min*
+### 1 · Czy AI napisze dobrą apelację?
+**Na slajdzie:**
+- case study: system zdający egzamin radcowski
+- Women in Tech
+**Mówię:** przywitanie, tytuł, hook.
 
-### Jak zrobiłby to człowiek (intuicja, bez kodu) — *~8 min*
+### 2 · Agenda
+**Na slajdzie:**
+- baseline i jego granice
+- jak zrobiłby to człowiek → agent
+- ewaluacja i wyniki
+- LangGraph: co daje, co kosztuje
+- pytania na końcu
+**Mówię:** uzupełnić na końcu pracy nad slajdami; zapowiedzieć, że **pytania zbieramy na finał**.
 
-10. **Plan jak człowiek (1):** najpierw pobieżnie przeglądasz, jakie masz dokumenty
-    i zapisujesz **główny cel** — „napisać apelację".
-    *(wzmianka: na egzaminie zadaniem jest też ocena, czy apelacja ma podstawy — na
-    warsztacie upraszczamy do jednego celu.)* — *1,5 min*
-11. **Plan jak człowiek (2):** skoro wiem mniej więcej, co mam w papierach, zastanawiam
-    się, **co trzeba sprawdzić** — np. przeczytać wszystkie zeznania i poszukać
-    nieścisłości. Powstaje **lista TODO**. — *1,5 min*
-12. **Plan jak człowiek (3):** realizuję rzeczy z listy TODO i **spisuję wnioski**. — *1,5 min*
-13. **Plan jak człowiek (4):** happy path — przechodzę do **podsumowania i obmyślenia
-    strategii** pisania apelacji. — *1,5 min*
-14. **Plan jak człowiek (5):** skoro wiem, co chcę napisać — **piszę apelację**. — *1,5 min*
+### 3 · Kim jestem
+**Na slajdzie:**
+- matematyczka → data scientist (COI)
+- mObywatel, działka prawna
+- „nigdy nie mów nigdy" — pokazuję swój kod
+**Mówię:** na studiach nie wyobrażałam sobie siebie jako programistki — a teraz publicznie pokazuję repo.
 
-### Reveal, oddech i kod — *~12 min*
+### 4 · Repo na żywo
+**Na slajdzie:**
+- `github.com/ewakaaaa/WomenInTech`
+- pobierzcie, patrzcie ze mną
+**Mówię:** „jestem na konferencji i pokazuję wam swój kod" — zaproszenie do odpalania razem.
 
-15. **Reveal: to jest dokładnie nasz agent.** Mapowanie kroków człowieka na umiejętności: — *2 min*
+### 5 · Cel
+**Na slajdzie:**
+- generator pism prawniczych
+- zerowy margines błędu
+**Mówię:** chcemy generator dokumentów; halucynacja = przegrana sprawa.
 
-    | człowiek | umiejętność |
-    |----------|-------------|
-    | przegląda papiery, notuje co ważne | `generate_file_description` |
-    | robi listę TODO, co sprawdzić | `generate_tasks` |
-    | realizuje TODO, spisuje wnioski | `make_task` |
-    | podsumowuje, obmyśla strategię | `generate_strategy` |
-    | pisze apelację | `generate_document` |
+### 6 · Dane — sprawa Daniela Dzika
+**Na slajdzie:**
+- akta egzaminu radcowskiego 2025
+- zanonimizowane + **klucz odpowiedzi** → mierzymy
+- bez wektorów / RAG-a (sprawę prowadzi się raz)
+- `[img]` biurko z aktami
+**Mówię:** świetne dane, bo zanonimizowane i z kluczem odpowiedzi → *mierzymy* jakość, nie „patrzymy, że ładne".
+Przybliżenie sprawy (zob. [`data/README.md`](../data/README.md)). Bez wektorów/RAG-a — sprawę prowadzi się
+raz, liczy się dobre przygotowanie danych i metadane.
 
-16. **🫁 Oddech — anegdota.** Przed gęstą częścią techniczną: ostatnio ktoś zapytał
-    mnie o top-3 rzeczy, które powinien umieć data scientist *(skren z LinkedIna)*.
-    Jedna z nich — odróżniająca mida od seniora — to to, że senior nie tylko zrobi
-    zadanie, ale **zaplanuje całe rozwiązanie**. *(I to właśnie przed chwilą zrobiliśmy.)* — *2 min*
-17. **Kod na żywo:** `notebooks/linear_walkthrough.ipynb` — odpalamy umiejętności po kolei i
-    oglądamy outputy każdego etapu. Przy okazji pokazujemy, jak agent **rozwiązuje
-    problemy ze slajdu 8**: — *8 min*
-    - **podsumowania zamiast pełnych akt** → mniej tokenów (opisy plików, nie 16 pełnych dokumentów),
-    - **analiza wybranych dokumentów**, a nie wszystkich naraz → selektywny kontekst (model widzi tylko trafny wycinek),
-    - **rozbicie dużego zadania na małe kawałki** → łatwiej i dokładniej, każdy krok robi jedno,
-    - **przekazywanie głównego celu** (`goal`) przez wszystkie etapy → swego rodzaju **pamięć agenta**, dzięki której nie gubi kierunku.
+## Baseline i jego problemy
 
-### Jak to się spina i wyniki — *~8 min*
+### 7 · Baseline: kod, ocena, wynik
+**Na slajdzie:**
+- całe akta → **1 prompt** `[demo]`
+- ocena: **pokrycie X/12** + **jakość 2–6**
+- wynik: **4/12 (33%)** *(3 przebiegi: 33–42%)*
+- „działa — ale czy *dobrze*?"
+**Mówię:** trzy rzeczy:
+1. **Kod na żywo** (`notebooks/baseline_walkthrough.ipynb`) — jak banalny jest baseline: `build_context`
+   skleja całe akta + jeden `call_llm` „napisz apelację".
+2. **Jak będziemy ewaluować** (`notebooks/eval_walkthrough.ipynb`) — umawiamy się na starcie, raz dla
+   wszystkich podejść: **pokrycie** (sędzia-LLM sprawdza każde zagadnienie z `data/eval.json`, `X/12`) +
+   **jakość** (3 kryteria egzaminu, 2–6).
+3. **Wynik baseline** + niepokryte zagadnienia. Pointa: „technicznie działa, ale czy *dobrze*?".
 
-18. **Structured output — klej całego pipeline'u.** Bez tego nie dałoby się spiąć
-    umiejętności w jeden przepływ. Nie ma tu żadnej magii — po prostu **polegamy** na
-    tym, że każda umiejętność zwraca **typowany obiekt** (Pydantic), więc dokładnie
-    wiem, jakiego outputu się spodziewać i mogę go podać dalej. Bez structured output
-    te kroki by się nie połączyły. — *3 min*
-19. **Pokazujemy wyniki** — apelacja agenta + porównanie z baseline (odczyt z notebooków
-    `eval_walkthrough` / `linear_walkthrough` lub logów `*/output/`). Pokrycie na **3
-    przebiegach**: agent **50–67%** (śr. ~58%) vs baseline **33–42%** (śr. ~36%); jakość
-    **4,33 = 4,33** (różnicę robi pokrycie). Pointa: zakresy **się nie nakładają** — agent
-    **zawsze** wyżej, choć liczba skacze → dlatego ewaluacja na kilku przebiegach, nie jednym. — *3 min*
-20. **Pytanie do sali:** co jeszcze można by tu usprawnić? Jakie macie pomysły?
-    *(symetria do slajdu 8 — zbieramy pomysły; część z nich, np. równoległość czy
-    człowiek w pętli, „domknie" zaraz LangGraph)* — *2 min*
+### 8 · ❓ Co z tym jest nie tak?
+**Na slajdzie:**
+- *(pytanie do sali)*
+- → kontekst, wszystko naraz, audyt, halucynacje
+**Mówię:** zbieramy od sali listę ograniczeń (zapchany kontekst, wszystko naraz, brak audytu, halucynacje…).
+To wrócimy na slajdzie 17 jako „rozwiązane".
 
-### LangGraph, „co dalej?" i puenta — *~13 min*
+### 9 · A jak zrobiłby to człowiek?
+**Na slajdzie:**
+- ekspert domenowy = radca
+- intuicja zamiast jednego strzału
+**Mówię:** jak ważni są eksperci domenowi i jak człowiek podszedłby do zadania — zawias do architektury.
 
-21. **LangGraph — co wnosi i ile kosztuje.** Mamy logikę **napisaną czystymi
-    funkcjami**, więc łatwo ją opakować w węzły — ta sama logika, tylko jako graf.
-    Co dostajemy w zamian: — *~4 min*
-    - **wspólny State przenoszony między krokami** — jawny i czysty,
-    - **równoległość (fan-out `Send`)** — opisy plików i wykonanie zadań liczą się
-      **współbieżnie**, podczas gdy w `agent_linear` były to sekwencyjne pętle `for`.
-      Konkret z przebiegu: **wall-clock 169,8 s vs 433,5 s** liniowo (**≈2,6× szybciej**),
-      a **koszt ten sam** (~$0,74) — to samo, tylko szybciej,
-    - **diagram grafu z kodu** — LangGraph rysuje graf w **mermaid** automatycznie
-      (`graph.get_graph().draw_mermaid()`), więc obrazek na slajd robi się sam,
-    - **toole / human-in-the-loop** — łatwo dołożyć narzędzia (function calling) albo
-      pauzę na **potwierdzenie strategii przez radcę** → ale *u nas tego nie kodujemy*
-      (pokazujemy pomysł na slajdzie 22, nie kod).
-    - **⚠️ Przestroga (do tego wracamy na końcu):** to kolejna, niemała **zależność**
-      (dług) — świetne do POC, na produkcji rozważ świadomie albo wcale.
-22. **Pytanie do sali: co jeszcze można by zrobić?** *(symetria do slajdu 8 i 20 —
-    domykamy warsztat pytaniem)*. Zbieramy pomysły, a w zanadrzu mamy **gotowe
-    odpowiedzi** (to był kierunek „agenta nieliniowego", którego świadomie *nie*
-    budujemy w kodzie — pokazujemy jako ideę + diagram `agent_planner/graph.md`): — *~4 min*
-    - **agent sam decyduje, co dalej** — zamiast sztywnej kolejności planer w pętli:
-      *analizuj / zapytaj człowieka / pisz / brak podstaw* (graf **zawraca**),
-    - **człowiek w pętli na żywo** — pauza (`interrupt`) na potwierdzenie strategii
-      przez radcę, zanim agent napisze pismo,
-    - **narzędzia (function calling)** — np. tool sprawdzający **najnowsze przepisy**,
-    - **wczesne wyjście „brak podstaw"** — agent może uznać, że apelacja jest niezasadna.
-    - **❗ Ale uwaga (puenta techniczna):** w LangGraph *dałoby się* to zrobić bez
-      pisania własnej orkiestracji (cykle i warunki to natywne krawędzie grafu) — tylko
-      żeby zrobić to **dobrze (dynamicznie + równolegle)**, schodzi się na **logikę
-      async**. Czyli: więcej mocy = więcej złożoności. Dlatego **tego nie dokładamy**.
-23. **Podsumowanie technologii: Pydantic ≫ LangGraph.** Co naprawdę zbudowało ten
-    system? — *~2 min*
-    - **Pydantic / structured output — bohater i niezbędny klej.** Bez niego umiejętności
-      by się nie spięły (każda zwraca typowany obiekt → wiem, co podać dalej). Lekki,
-      zero długu, działa w *każdym* podejściu (baseline, liniowy, graf).
-    - **LangGraph — opcjonalny cukier.** Daje równoległość, diagram, checkpointing,
-      human-in-the-loop — ale to **ciężka zależność**, a pójście dalej (planer, cykle)
-      wpycha w **async**. Świetny do POC; na produkcji **świadomie albo wcale**.
-    - **Morał:** najpierw logika + Pydantic + baseline; framework **na końcu, jeśli w
-      ogóle**. Nie zaczynaj od frameworka ani od złożonego agenta „robiącego nie wiadomo co".
-24. **Take-awaye.** Domykamy **anegdotę o top-3 umiejętnościach DS** — wszystkie trzy
-    przewinęły się przez warsztat: (1) **zaplanowanie rozwiązania**, (2) **rozmowa z
-    biznesem i ekspertami** (szybko dostarcz proste → szybko zbierz feedback), (3)
-    **ewaluacja ustalona na starcie**. (Szczegóły poniżej.) — *~3 min*
+## Jak zrobiłby to człowiek (intuicja, bez kodu)
 
-### Pytania (Q&A) — *~10 min*
+### 10–14 · Plan jak człowiek (5 kroków)
+**Na slajdzie:**
+- przejrzyj akta → zapisz **cel**
+- co sprawdzić → **lista TODO**
+- realizuj TODO → **wnioski**
+- **strategia** pisma
+- **napisz** apelację
+- `[img]` 5 ikon kroków
+**Mówię:** prowadzimy salę przez intuicję (pięć kroków). *(Wzmianka: na egzaminie zadaniem jest też ocena,
+czy apelacja ma podstawy — na warsztacie upraszczamy do jednego celu.)* Pięć kroków celowo buduje napięcie
+do reveala na slajdzie 15.
 
-Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pamiętać,
-żeby zapowiedzieć, że pytania zbieramy na finał.)*
+## Reveal, oddech i kod
+
+### 15 · To jest dokładnie nasz agent
+**Na slajdzie:**
+- `[img]` tabela: człowiek → umiejętność
+- przegląd → `file_description`
+- TODO → `tasks` · realizacja → `make_task`
+- strategia → `strategy` · pismo → `document`
+**Mówię:** mapujemy kroki człowieka na umiejętności — to **dokładnie** to, co przed chwilą wymyśliliśmy.
+
+### 16 · 🫁 Oddech — anegdota
+**Na slajdzie:**
+- `[img]` screen z LinkedIna
+- senior = **planuje całe rozwiązanie**
+- (to właśnie zrobiliśmy)
+**Mówię:** ktoś zapytał o top-3 umiejętności DS; jedna (mid→senior) to planowanie całego rozwiązania —
+i to przed chwilą zrobiliśmy. Oddech przed gęstą częścią techniczną.
+
+### 17 · Agent liniowy na żywo
+**Na slajdzie:**
+- `[demo]` `linear_walkthrough`
+- podsumowania zamiast pełnych akt
+- selektywny kontekst (tylko trafne dok.)
+- małe kroki + cel niesiony przez pipeline
+**Mówię:** odpalamy umiejętności po kolei, oglądamy outputy etapów. Pokazujemy, jak agent **rozwiązuje
+problemy ze slajdu 8**: podsumowania (mniej tokenów), selektywny kontekst (model widzi tylko trafny
+wycinek), rozbicie na małe kroki, cel (`goal`) niesiony przez cały pipeline = pamięć agenta.
+⏰ **Ryzyko czasowe:** mieć outputy gotowe/widoczne, nie czekać na zimne wywołania na scenie.
+
+## Jak to się spina i wyniki
+
+### 18 · Structured output = klej
+**Na slajdzie:**
+- każda umiejętność → **typowany obiekt** (Pydantic)
+- wiem, co dostanę → podaję dalej
+- bez tego nic się nie spina
+**Mówię:** żadnej magii — polegamy na tym, że każdy krok zwraca typowany obiekt, więc wiem, czego się
+spodziewać i mogę go podać dalej. Bez structured output kroki by się nie połączyły.
+
+### 19 · Wyniki (3 przebiegi)
+**Na slajdzie:**
+- agent **50–67%** vs baseline **33–42%**
+- jakość 4,33 = 4,33
+- zakresy się **nie nakładają** → agent zawsze wyżej
+- 1 przebieg kłamie → mierz kilka
+**Mówię:** porównanie pokrycia (odczyt z `eval_walkthrough`/`linear_walkthrough` lub logów `*/output/`).
+Różnicę robi pokrycie (jakość remis). Pointa: zakresy się nie nakładają — agent **zawsze** wyżej, choć
+liczba skacze → dlatego ewaluacja na kilku przebiegach, nie jednym.
+
+### 20 · ❓ Co jeszcze usprawnić?
+**Na slajdzie:**
+- *(pytanie do sali)*
+**Mówię:** symetria do slajdu 8 — zbieramy pomysły; część (równoległość, człowiek w pętli) domknie
+zaraz LangGraph. *(Rozważ cięcie — bliźniacze do slajdu 22; jeśli brakuje czasu, zrób retoryczne.)*
+
+## LangGraph, „co dalej?" i puenta
+
+### 21 · LangGraph — co daje, co kosztuje
+**Na slajdzie:**
+- równoległość (`Send`): **2,6× szybciej**, ten sam koszt
+- wspólny State, diagram z kodu
+- ⚠️ ciężka **zależność** (dług)
+**Mówię:** logika w czystych funkcjach → łatwo opakować w węzły. Zyski: wspólny State, równoległość
+(fan-out `Send` — konkret: 169,8 s vs 433,5 s, ~$0,74 ten sam koszt), diagram z kodu (mermaid), łatwe
+toole/human-in-the-loop (ale tego nie kodujemy — pokaz idei na 22). ⚠️ Przestroga: ciężka zależność
+(dług) — świetne do POC, na produkcji świadomie albo wcale.
+
+### 22 · ❓ Co dalej? (agent nieliniowy)
+**Na slajdzie:**
+- `[img]` diagram planera (zawraca w pętli)
+- sam decyduje: analizuj / pytaj / pisz / brak podstaw
+- człowiek w pętli, narzędzia
+- robić dobrze → **async** = złożoność (nie robimy)
+**Mówię:** pytanie do sali + gotowe odpowiedzi = kierunek „agenta nieliniowego" (świadomie nie budujemy
+w kodzie — idea + diagram `agent_planner/graph.md`). Planer w pętli sam decyduje, graf zawraca; człowiek
+w pętli; narzędzia (np. najnowsze przepisy). ❗ W LangGraph *dałoby się* bez własnej orkiestracji, ale
+zrobić to dobrze (dynamicznie + równolegle) = **async** = złożoność. Dlatego nie dokładamy.
+
+### 23 · Pydantic ≫ LangGraph
+**Na slajdzie:**
+- Pydantic = **niezbędny klej**, zero długu
+- LangGraph = opcjonalny cukier
+- najpierw logika + baseline; framework na końcu
+**Mówię:** co naprawdę zbudowało system? Structured output (Pydantic) — bohater i niezbędny klej,
+działa w *każdym* podejściu. LangGraph — opcjonalny cukier i dług zależności (pójście dalej wpycha w
+async). Morał: najpierw logika + baseline; framework na końcu, jeśli w ogóle.
+
+### 24 · Take-awaye
+**Na slajdzie:**
+- planuj całe rozwiązanie
+- rozmawiaj z ekspertami, dostarczaj szybko
+- **ewaluacja ustalona na starcie**
+**Mówię:** domykamy anegdotę o top-3 umiejętnościach DS (szczegóły niżej w „Kluczowe przekazy").
+
+### 25 · Pytania
+**Na slajdzie:**
+- dzięki! · `github.com/ewakaaaa/WomenInTech`
+**Mówię:** Q&A (10–15 min). Agendę ze slajdu 2 dopisać na końcu.
+
+---
 
 ## Demo — checklista
 
@@ -181,11 +232,9 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
    „generator dokumentów", ale każdy krok po drodze to **wiedza domenowa od radców** —
    trzeba umieć z nimi rozmawiać i budować relacje. Im szybciej dostarczysz **proste**
    rozwiązanie (jak `agent_linear`, gdzie widać krok po kroku, co się dzieje), tym
-   szybciej masz **feedback** — dlatego nie wskakuj od razu na framework i agenta
-   robiącego „nie wiadomo co".
+   szybciej masz **feedback** — dlatego nie wskakuj od razu na framework.
 3. **Ewaluacja ustalona na starcie.** Na jaki rezultat się umawiamy i jak go mierzymy —
-   zanim zaczniemy. Bez kryteriów zostaje tylko „no, generuje, spoko" albo
-   bezterminowe czekanie na feedback ekspertów.
+   zanim zaczniemy. Bez kryteriów zostaje tylko „no, generuje, spoko".
 
 ### Techniczne
 
@@ -193,18 +242,13 @@ Zarezerwowane na sam koniec. *(Agendę ze slajdu 2 uzupełniamy na końcu — pa
 - **Selektywny kontekst** zamiast wrzucania wszystkiego (bez chunkowania/wektorów/RAG-a).
 - **Pydantic / structured output ≫ LangGraph.** To structured output jest **klejem**, bez
   którego nic by się nie spięło — lekki, zero długu, działa w *każdym* podejściu.
-  LangGraph to opcjonalny cukier (równoległość/diagram/checkpoint/human-in-the-loop) i
-  **dług zależności**; pójście dalej (planer, cykle) wpycha w **async** = złożoność.
-- Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie;
-  dzięki temu LangGraph da się w razie czego odpiąć.
-- **Najpierw logika + baseline, framework na końcu — jeśli w ogóle.** Nie zaczynaj od
-  frameworka ani od złożonego agenta „robiącego nie wiadomo co".
+  LangGraph to opcjonalny cukier i **dług zależności**; pójście dalej (planer, cykle) wpycha w **async**.
+- Logika umiejętności **niezależna od frameworka** — to samo działa liniowo i w grafie.
+- **Najpierw logika + baseline, framework na końcu — jeśli w ogóle.**
 - **Człowiek w pętli** jest częścią systemu, nie dodatkiem.
 
 ## Do uzupełnienia
 
-- [x] Realne liczby (przebieg 2026-06-06, `gpt-5.4`): baseline **4/12 (33%)**, liner
-  **8/12 (67%)**, jakość **4,33** w obu; langgraph **169,8 s ≈2,6×** szybciej, koszt
-  **$0,73 ≈ liner**. Szczegóły w README podejść.
 - [ ] Slajdy (na podstawie tego planu)
 - [ ] Agenda (slajd 2) — uzupełnić na końcu, zapowiedzieć, że pytania zbieramy na finał
+- [ ] Czasy per slajd/sekcja — rozplanować na nowo (slot 70 min)
