@@ -35,7 +35,9 @@ _BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 
 # Newer OpenAI models (gpt-5.x) require `max_completion_tokens` instead of
 # `max_tokens`; Ollama and some proxies still use `max_tokens`.
-_MAX_TOKENS_PARAM = "max_completion_tokens" if "openai.com" in _BASE_URL else "max_tokens"
+_MAX_TOKENS_PARAM = (
+    "max_completion_tokens" if "openai.com" in _BASE_URL else "max_tokens"
+)
 
 client = instructor.patch(
     OpenAI(
@@ -78,9 +80,9 @@ _usage_lock = threading.Lock()
 def track_usage():
     """Collect token usage of ``call_llm`` calls made within this block.
 
-        with track_usage() as u:
-            evaluate(appeal)
-        print(u.calls, u.total_tokens)
+    with track_usage() as u:
+        evaluate(appeal)
+    print(u.calls, u.total_tokens)
     """
     usage = Usage()
     token = _usage_var.set(usage)
@@ -90,7 +92,9 @@ def track_usage():
         _usage_var.reset(token)
 
 
-def _record_usage(result, messages: list[dict], model: str, seconds: float = 0.0) -> None:
+def _record_usage(
+    result, messages: list[dict], model: str, seconds: float = 0.0
+) -> None:
     """Add usage from a single call to the active counter (if any).
 
     First we try the real numbers from the API response (`_raw_response.usage`);
@@ -162,4 +166,3 @@ if __name__ == "__main__":
         response_model=Capital,
     )
     print(result)
-

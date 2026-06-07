@@ -43,12 +43,18 @@ if __name__ == "__main__":
 
         saved = save_appeal(appeal, "agent_langgraph")
         print(f"\nZapisano apelację: {saved} ({len(appeal):,} znaków)")
-        print(f"KOSZT METODY (sama generacja): {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}")
+        print(
+            f"KOSZT METODY (sama generacja): {cost_summary(gen_usage, os.environ.get('LLM_MODEL', '?'))}"
+        )
         # With parallelism the real (wall-clock) time is shorter than the sum of LLM
         # call times — that is the gain from the Send fan-out (vs the loop in agent_linear).
         print(f"Czas metody (wall-clock, równolegle): {wall_seconds:.1f}s")
-        print(f"  suma czasów wywołań LLM: {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)")
+        print(
+            f"  suma czasów wywołań LLM: {gen_usage.seconds:.1f}s ({gen_usage.calls} wyw., ≈{gen_usage.seconds_per_call:.1f}s/wyw.)"
+        )
         if wall_seconds > 0:
-            print(f"  przyspieszenie z równoległości: ≈{gen_usage.seconds / wall_seconds:.1f}×")
+            print(
+                f"  przyspieszenie z równoległości: ≈{gen_usage.seconds / wall_seconds:.1f}×"
+            )
 
     print(f"\nLog z przebiegu zapisany: {log_path}")

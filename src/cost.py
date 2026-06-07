@@ -32,7 +32,9 @@ def price_per_million(model: str) -> tuple[float, float]:
 def estimate_cost(usage: Usage, model: str) -> float:
     """Cost in USD for the given token usage and model."""
     price_in, price_out = price_per_million(model)
-    return usage.prompt_tokens / 1e6 * price_in + usage.completion_tokens / 1e6 * price_out
+    return (
+        usage.prompt_tokens / 1e6 * price_in + usage.completion_tokens / 1e6 * price_out
+    )
 
 
 def cost_per_call(usage: Usage, model: str) -> float:

@@ -27,7 +27,9 @@ def make_task(
             {
                 "role": "user",
                 "content": USER_PROMPT.format(
-                    action_step=task.action, context=task.reasoning, sources=sources_text
+                    action_step=task.action,
+                    context=task.reasoning,
+                    sources=sources_text,
                 ),
             },
         ],

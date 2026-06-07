@@ -32,7 +32,9 @@ def evaluate_appeal(
         cov = evaluate(appeal_text, model=model, print_results=True)
     print(f"POKRYCIE: {cov.covered}/{cov.total} = {cov.score:.0%}")
     print(f"  koszt: {cost_summary(cov_usage, model_name)}")
-    print(f"  czas:  {cov_usage.seconds:.1f}s (≈{cov_usage.seconds_per_call:.1f}s/wyw.)")
+    print(
+        f"  czas:  {cov_usage.seconds:.1f}s (≈{cov_usage.seconds_per_call:.1f}s/wyw.)"
+    )
 
     # Quality is judged by a STRONG judge (gpt-5.4) — independent of the generation model.
     print("\n=== JAKOŚĆ / FORMA (ocena egzaminatora, skala 2–6) ===")

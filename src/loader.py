@@ -21,6 +21,7 @@ _DEFAULT_INPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "input"
 
 class Document(BaseModel):
     """A single document from the case files."""
+
     filename: str = Field(..., description="Source file name")
     text: str = Field(..., description="Extracted document text")
 

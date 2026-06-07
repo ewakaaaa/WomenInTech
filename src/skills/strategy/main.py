@@ -28,7 +28,9 @@ def generate_strategy(
             {"role": "system", "content": SYSTEM_PROMPT.format(general_goal=goal)},
             {
                 "role": "user",
-                "content": USER_PROMPT.format(action_outputs=_format_outputs(task_outputs)),
+                "content": USER_PROMPT.format(
+                    action_outputs=_format_outputs(task_outputs)
+                ),
             },
         ],
         response_model=Strategy,

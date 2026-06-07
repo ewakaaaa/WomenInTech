@@ -47,13 +47,17 @@ class QualityVerdict(BaseModel):
     """Appeal quality/form evaluation (reasoning first, then the 2–6 scores)."""
 
     reasoning: str = Field(
-        ..., description="Uzasadnienie: mocne i słabe strony pisma (forma + argumentacja)."
+        ...,
+        description="Uzasadnienie: mocne i słabe strony pisma (forma + argumentacja).",
     )
     wymogi_formalne: int = Field(
         ..., ge=2, le=6, description="Zachowanie wymogów formalnych (2–6)"
     )
     zastosowanie_i_interpretacja: int = Field(
-        ..., ge=2, le=6, description="Właściwość zastosowania i interpretacji przepisów (2–6)"
+        ...,
+        ge=2,
+        le=6,
+        description="Właściwość zastosowania i interpretacji przepisów (2–6)",
     )
     poprawnosc_rozwiazania: int = Field(
         ..., ge=2, le=6, description="Poprawność zaproponowanego rozwiązania (2–6)"

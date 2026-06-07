@@ -40,7 +40,9 @@ class CoverageResult(BaseModel):
     total: int = Field(..., description="Liczba zagadnień w kluczu")
     covered: int = Field(..., description="Liczba poruszonych zagadnień")
     score: float = Field(..., description="covered / total (0.0–1.0)")
-    results: list[IssueVerdict] = Field(..., description="Werdykt per zagadnienie (w kolejności klucza)")
+    results: list[IssueVerdict] = Field(
+        ..., description="Werdykt per zagadnienie (w kolejności klucza)"
+    )
 
 
 def load_eval(path: str | Path = _DEFAULT_EVAL_PATH) -> list[str]:
@@ -48,7 +50,9 @@ def load_eval(path: str | Path = _DEFAULT_EVAL_PATH) -> list[str]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def _judge_issue(appeal_text: str, issue: str, model: str | None = None) -> IssueVerdict:
+def _judge_issue(
+    appeal_text: str, issue: str, model: str | None = None
+) -> IssueVerdict:
     """Ask the LLM whether the appeal covers a single required issue."""
     messages = [
         {"role": "system", "content": JUDGE_SYSTEM_PROMPT},
@@ -93,7 +97,11 @@ def evaluate(
 
 
 def evaluate_file(
-    path: str | Path, eval_path: str | Path = _DEFAULT_EVAL_PATH, model: str | None = None
+    path: str | Path,
+    eval_path: str | Path = _DEFAULT_EVAL_PATH,
+    model: str | None = None,
 ) -> CoverageResult:
     """Evaluate an appeal stored in a text file."""
-    return evaluate(Path(path).read_text(encoding="utf-8"), eval_path=eval_path, model=model)
+    return evaluate(
+        Path(path).read_text(encoding="utf-8"), eval_path=eval_path, model=model
+    )

@@ -66,7 +66,10 @@ def fan_out_files(state: OverallState):
     if state.get("files_out"):
         return "generate_tasks"
     return [
-        Send("generate_file_description", DescribeFileIn(goal=state["goal"], document=doc))
+        Send(
+            "generate_file_description",
+            DescribeFileIn(goal=state["goal"], document=doc),
+        )
         for doc in state["documents"]
     ]
 
