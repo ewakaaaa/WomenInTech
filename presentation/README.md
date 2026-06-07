@@ -5,7 +5,11 @@
 
 > 📌 **Źródło prawdy = `COI_prezentacja_standard.pptx.pdf`** (plik poza gitem). Ten plan
 > **podąża za PDF-em**: numeracja = strony PDF, zakresy (np. 2–7) to buildy jednego slajdu.
-> Czasy: do rozplanowania (slot 70 min). 🖥️ = demo na żywo.
+> 🖥️ = demo na żywo.
+>
+> ⏱️ **Czas (orientacyjnie):** treść **~52 min** + Q&A **~10 min** = **~62**, bufor **~8 min**
+> do slotu **70 min**. Bufor jest celowy — **3 dema lubią się przeciągać**, więc miej
+> outputy gotowe (nie czekaj na zimne wywołania). Budżet dem: baseline ~3 · ewaluacja ~3 · liner ~7 min.
 
 ## Teza
 
@@ -15,7 +19,7 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 
 ## Plan slajd po slajdzie (wg PDF)
 
-### Wstęp
+### Wstęp — *~6 min*
 - **1 · Tytuł** — Czy AI może napisać dobrą apelację?
 - **2–7 · Agenda** (build, 6 punktów): cel/dane/sprawa · baseline+ewaluacja · dlaczego to za mało? · architektura „agenta" · wyniki · podsumowanie.
 - **8 · Kim jestem** — matematyczka → data scientist w COI (zespół mObywatela), działka prawna. „nigdy nie mów nigdy".
@@ -23,31 +27,31 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 - **10 · Cel i motywacja** — chcemy **generator pism prawniczych**; zerowy margines błędu.
 - **11 · Dane** — źródło: zadanie na **egzamin radcowski 2025** (gov.pl).
 
-### Dane i sprawa
+### Dane i sprawa — *~5 min*
 - **12–14 · Dlaczego dane są fantastyczne?** (build): anonimowe · czytelne PDF-y · **klucz odpowiedzi** → możemy *mierzyć*.
 - **15 · Dokumenty** — chronologia akt (02–17): interwencja, dochodzenie, świadkowie, zarzuty, oskarżenie, rozprawy, opinia biegłego, wyrok.
 - **16–18 · O czym jest sprawa Daniela Dzika?** (build): sąd + sygn. **II K 25/25** · zdarzenie (31.12.2024, Jeep w alejce cmentarnej, alkomat, ławka) · zarzuty (art. 178a § 1 i art. 288 § 1 k.k.).
 
-### Baseline + ewaluacja
+### Baseline + ewaluacja — *~12 min* (w tym 2 dema)
 - **19–21 · Baseline — wrzućmy wszystko do LLM-a** (build): wczytanie/format PDF · 1 `call_llm` „napisz apelację" · output (gotowa apelacja).
 - **22 · 🖥️ Demo techniczne — baseline** (`notebooks/baseline_walkthrough.ipynb`): całe akta → jeden prompt.
 - **23 · Ewaluacja** — *jak mierzymy (umowa na starcie, raz dla wszystkich):* **pokrycie** (LLM-as-judge per zagadnienie z `data/eval.json`, `X/12`) + **jakość/styl** (3 kryteria, 2–6).
 - **24 · 🖥️ Demo techniczne — ewaluacja** (`notebooks/eval_walkthrough.ipynb`).
 - **25 · Wyniki (baseline)** — koszt $0,105 · czas 48,3 s · **pokrycie 4–5/12 (33–42%)** · jakość 4,33/6.
 
-### Dlaczego za mało → jak człowiek
+### Dlaczego za mało → jak człowiek — *~7 min*
 - **26 · „Dlaczego?"** — dramatyczna pauza (miejsce na mem „miało wyjść inaczej"). Pointa: „działa, ale czy *dobrze*?".
 - **27 · Eksperci domenowi** — jak **człowiek/radca** podszedłby do zadania (zawias do architektury).
 - **28–33 · Jak zrobiłby to człowiek** (build, 6 kroków): cel · pobieżne zapoznanie z dokumentami · plan/lista TODO · analiza (realizacja TODO) · podsumowanie/strategia · napisanie apelacji.
 
-### Architektura agenta
+### Architektura agenta — *~14 min* (w tym demo linera ~7)
 - **34 · Architektura** — diagram pipeline'u: `file_description → tasks → make_task → strategy → document`. Sedno: **selektywny kontekst** (każdy krok widzi tylko trafny wycinek akt).
 - **35 · Top 3 umiejętności** — 🫁 oddech + **hook z LinkedIna** (pytanie o top-3 DS). Senior nie tylko robi, ale **planuje całe rozwiązanie** — to przed chwilą zrobiliśmy.
 - **36 · 🖥️ Demo techniczne — agent liniowy** (`notebooks/linear_walkthrough.ipynb`): umiejętności po kolei; jak agent rozwiązuje problemy baseline (podsumowania, selektywny kontekst, małe kroki, cel niesiony przez pipeline).
 - **37 · Structured Output** — **klej** pipeline'u: każdy krok zwraca **typowany obiekt** (Pydantic) → wiem, co podać dalej.
 - **38 · Wyniki (agent liniowy)** — koszt ~$0,743 · czas ~7 min · **pokrycie 6–8/12 (50–67%)** · jakość 4,33/6. Agent > baseline; zakresy **się nie nakładają** (przewaga odporna na losowość).
 
-### Co dalej + puenta
+### Co dalej + puenta — *~8 min* (+ Q&A ~10)
 - **39 · „Co dalej?"** — pivot do rozszerzeń.
 - **40 · LangGraph** — co daje: **zrównoleglenie (≈2,6×, ten sam koszt)**, dostęp do źródeł zewnętrznych, koordynator (powrót do planowania), human-in-the-loop. *(⚠️ rozważ dodanie przestrogi: ciężka **zależność/dług** — buduje puentę 41.)*
 - **41 · Structured Output + plan ≫ LangGraph** — puenta techniczna: klej (Pydantic) ważniejszy niż framework.
@@ -93,4 +97,4 @@ jest wieloetapowy agent **i** człowiek weryfikujący każdy etap.
 - [x] Agenda (slajdy 2–7) — gotowa
 - [x] Realne liczby — w README podejść (`baseline/`, `agent_linear/`, `agent_langgraph/`)
 - [x] Sygnatura sprawy spójna (II K 25/25)
-- [ ] Czasy per slajd/sekcja — rozplanować (slot 70 min)
+- [x] Czasy rozpisane na sekcje (~52 min treści + ~10 Q&A + ~8 bufor = 70)
