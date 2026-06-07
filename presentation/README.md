@@ -46,6 +46,7 @@ rozplanowania od nowa** (slot 70 min). Liczby do wstawienia są w README podejś
 
 ### 4 · Repo na żywo
 **Na slajdzie:**
+- `[img]` QR → repo (`qr-repo.svg`)
 - `github.com/ewakaaaa/WomenInTech`
 - pobierzcie, patrzcie ze mną
 **Mówię:** „jestem na konferencji i pokazuję wam swój kod" — zaproszenie do odpalania razem.
