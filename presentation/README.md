@@ -218,7 +218,7 @@ async). Morał: najpierw logika + baseline; framework na końcu, jeśli w ogóle
 - [x] Liczby do slajdu 21: wall-clock i koszt langgraph vs liner (169,8 s, ≈2,6×, ~$0,74)
 - [x] Diagram grafu (mermaid z `agent_langgraph`) — `agent_langgraph/graph.md`
 - [x] Diagram grafu nieliniowego (`agent_planner/graph.md`) — slajd 22 (idea „co dalej?", bez kodu/demo)
-- [ ] `uv run jupyter lab` — przeklikać na żywo `notebooks/baseline_walkthrough.ipynb` (slajd 7, kod),
+- [x] `uv run jupyter lab` — przeklikane na żywo `notebooks/baseline_walkthrough.ipynb` (slajd 7, kod),
       `notebooks/eval_walkthrough.ipynb` (slajd 7, jak ewaluujemy) i `notebooks/linear_walkthrough.ipynb` (slajd 17)
 - [ ] Skren z LinkedIna (slajd 16 — oddech/anegdota)
 

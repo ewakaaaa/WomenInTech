@@ -80,6 +80,27 @@ sędzia w ewaluacji dodatkowo ich nie zalicza. Dlatego dla wiarygodnych
 wyników (generacja i ocena) używamy `gpt-5.4`. Działa z każdym dostawcą zgodnym
 z interfejsem OpenAI — wystarczy zmienić `LLM_BASE_URL`.
 
+### Lokalnie i za darmo: Ollama
+
+Można odpalić wszystko na **lokalnym modelu przez [Ollama](https://ollama.com/)** —
+bez klucza i bez kosztów. Ollama wystawia API zgodne z interfejsem OpenAI, więc
+wystarczy zmienić `.env` (kod w `src/llm.py` sam ogarnia brak klucza i `max_tokens`):
+
+```bash
+# 1. zainstaluj Ollamę, potem pobierz model
+ollama pull qwen2.5:14b
+```
+```dotenv
+LLM_BASE_URL=http://localhost:11434/v1
+LLM_API_KEY=ollama          # dowolny placeholder — Ollama nie wymaga klucza
+LLM_MODEL=qwen2.5:14b
+```
+
+> ⚠️ **Tylko demonstracyjnie.** Modele z Ollamy są **za słabe prawniczo** do tego
+> zadania — gubią subtelne wątki proceduralne („skoki" prawnicze), a użyte jako sędzia
+> dodatkowo ich nie doceniają. Nadają się, by **za darmo przeklikać przepływ** (offline,
+> bez kosztów API), ale **wiarygodne wyniki** dają dopiero mocne modele (`gpt-5.4`).
+
 ## 📓 Notebooki — jak uruchomić
 
 - `setup.ipynb` (test konfiguracji),
