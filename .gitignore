@@ -57,6 +57,12 @@ venv.bak/
 # cache opisów dokumentów (described.json) i starsze artefakty
 data/output/
 
+# Eksporty slajdów (trzymamy plan w presentation/README.md, nie binaria)
+presentation/*.pptx
+presentation/*.pdf
+presentation/*.key
+presentation/*.odp
+
 # IPython
 profile_default/
 ipython_config.py
